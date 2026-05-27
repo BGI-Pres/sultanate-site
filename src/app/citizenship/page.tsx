@@ -35,50 +35,72 @@ export default function CitizenshipPage() {
             <div className="flex-1 h-px bg-[var(--gold)]/20" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             {[
               {
-                name: "Associate Member",
+                name: "Affiliate",
+                price: "Free",
                 description:
-                  "For those beginning their journey with the Sultanate. Gain access to community events, newsletters, and educational resources.",
+                  "Support the mission. Attend virtual and physical meetings and community events — no card, no dues.",
                 features: [
-                  "Community newsletter",
-                  "Public event access",
-                  "Educational resources",
-                  "Digital membership card",
+                  "Virtual & physical meeting access",
+                  "Community event attendance",
+                  "On-site news & press updates",
                 ],
+                rankUp:
+                  "Begin attending meetings regularly and apply for Community membership.",
                 featured: false,
               },
               {
-                name: "Full Member",
+                name: "Community",
+                price: "$50/mo dues",
                 description:
-                  "Full membership in the Sultanate of Amexem with all rights, privileges, and responsibilities of nationhood.",
+                  "A recognized member of the Sultanate. Required to attend meetings, pay monthly dues, and participate in community affairs.",
                 features: [
-                  "Official membership documents",
-                  "Voting rights",
-                  "Full event access",
-                  "Community support network",
-                  "Governance participation",
+                  "All Affiliate benefits",
+                  "Official membership card (purchase required)",
+                  "Newsletter via mail & SMS",
+                  "Required meeting attendance",
+                  "Involvement in community affairs",
                 ],
+                rankUp:
+                  "Organize a local chapter/temple body and register to advance to General.",
                 featured: true,
               },
               {
-                name: "Diplomatic Member",
+                name: "General",
+                price: "$50/mo dues + $100 body registration",
                 description:
-                  "For representatives, ambassadors, and those serving the Sultanate in official or diplomatic capacities.",
+                  "Part of the Grand Body. Required to organize and lead a local chapter or temple under the Sultanate.",
                 features: [
-                  "All member benefits",
-                  "Diplomatic credentials",
-                  "International representation",
-                  "Advisory council access",
-                  "Priority communications",
+                  "All Community benefits",
+                  "Organize a local chapter/temple",
+                  "Chapter leadership authority",
+                  "Access to expanded resources & incentives",
                 ],
+                rankUp:
+                  "Establish a physical location for your body to advance to Lead.",
+                featured: false,
+              },
+              {
+                name: "Lead",
+                price: "$50/mo dues + $100 registration",
+                description:
+                  "Operational leadership. Required to have an established body with a physical location.",
+                features: [
+                  "All General benefits",
+                  "Established body with location",
+                  "Lead meetings & mentor members",
+                  "Grant certifications",
+                  "Operational decision-making authority",
+                ],
+                rankUp: null,
                 featured: false,
               },
             ].map((tier) => (
               <div
                 key={tier.name}
-                className={`p-8 rounded-xl border transition-all duration-300 relative ${
+                className={`p-6 rounded-xl border transition-all duration-300 relative flex flex-col ${
                   tier.featured
                     ? "border-[var(--gold)] ring-2 ring-[var(--gold)]/20 hover:shadow-lg hover:shadow-[var(--gold)]/5"
                     : "border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5"
@@ -89,20 +111,23 @@ export default function CitizenshipPage() {
                     Most Popular
                   </span>
                 )}
-                <h3 className="text-xl font-semibold mb-2 text-[var(--gray-900)]">
+                <h3 className="text-lg font-semibold mb-1 text-[var(--gray-900)]">
                   {tier.name}
                 </h3>
-                <p className="text-sm text-[var(--gray-500)] mb-6 leading-relaxed">
+                <p className="text-sm font-bold text-[var(--gold)] mb-3">
+                  {tier.price}
+                </p>
+                <p className="text-sm text-[var(--gray-500)] mb-5 leading-relaxed">
                   {tier.description}
                 </p>
-                <ul className="space-y-2 mb-8">
+                <ul className="space-y-2 mb-6 flex-1">
                   {tier.features.map((feature) => (
                     <li
                       key={feature}
-                      className="flex items-center gap-2 text-sm text-[var(--gray-700)]"
+                      className="flex items-start gap-2 text-sm text-[var(--gray-700)]"
                     >
                       <svg
-                        className="w-4 h-4 shrink-0 text-[var(--gold)]"
+                        className="w-4 h-4 shrink-0 text-[var(--gold)] mt-0.5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -118,6 +143,16 @@ export default function CitizenshipPage() {
                     </li>
                   ))}
                 </ul>
+                {tier.rankUp && (
+                  <div className="mb-4 p-3 bg-[var(--gold)]/5 border border-[var(--gold)]/15 rounded-lg">
+                    <p className="text-xs text-[var(--gray-600)]">
+                      <span className="font-semibold text-[var(--gold)]">
+                        Rank up:
+                      </span>{" "}
+                      {tier.rankUp}
+                    </p>
+                  </div>
+                )}
                 <Link
                   href="/apply"
                   className={`block text-center py-2.5 rounded-md text-sm font-semibold transition-colors ${
@@ -126,7 +161,7 @@ export default function CitizenshipPage() {
                       : "border border-[var(--gray-300)] text-[var(--gray-700)] hover:bg-[var(--gray-50)]"
                   }`}
                 >
-                  Apply Now
+                  {tier.price === "Free" ? "Join as Affiliate" : "Apply Now"}
                 </Link>
               </div>
             ))}
