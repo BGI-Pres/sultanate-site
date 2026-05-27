@@ -167,8 +167,9 @@ export default function AboutPage() {
                 { year: "1913", event: "Noble Drew Ali establishes the Moorish Science Temple of America, rekindling the light of truth and laying the framework for Moorish American nationality" },
                 { year: "1929", event: "Noble Drew Ali transitions — the principles of Love, Truth, Peace, Freedom, and Justice endure through his teachings and the MSTA" },
                 { year: "2020", event: "The Sultanate of Amexem is reestablished under the House of Simmons Bey as the custodial governing authority for the descendants of the Nation of Moab" },
-                { year: "2021", event: "Founding of Bey Group International — proof of the economic infrastructure built from within the membership" },
+                { year: "2021", event: "Founding of Bey Group of Companies — economic infrastructure built from within the membership" },
                 { year: "2024", event: "Formal organization of the Supreme Grand Council, Ministerial Board, and Executive Board under the Constitution" },
+                { year: "2026", event: "Bey Group of Companies rebrands as Bey Group International — expanding the economic mission to the global stage" },
               ].map((milestone, i) => (
                 <div key={milestone.year} className="flex gap-6">
                   <div className="flex flex-col items-center">
@@ -177,7 +178,7 @@ export default function AboutPage() {
                         {milestone.year}
                       </span>
                     </div>
-                    {i < 4 && (
+                    {i < 5 && (
                       <div className="w-px flex-1 bg-[var(--gold)]/20 my-1" />
                     )}
                   </div>
