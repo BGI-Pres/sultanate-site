@@ -146,6 +146,7 @@ export default function GovernmentPage() {
                 {[
                   { name: "Allah", authority: "All governing power derives from and operates in submission to the Most High" },
                   { name: "Executive Director", authority: "Holds operational authority over the Sultanate and chairs both Boards" },
+                  { name: "Chairman", authority: "Leads the Supreme Grand Council" },
                   { name: "Supreme Grand Council", authority: "Holds constitutional authority over all offices and policies" },
                   { name: "Grand Body", authority: "Ratifies amendments and expresses the collective will of the membership" },
                   { name: "The Sheiks", authority: "Hold authority in matters of faith, heritage, and spiritual continuity" },

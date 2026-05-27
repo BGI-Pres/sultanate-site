@@ -228,7 +228,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { value: "Est. 2020", label: "Reestablished Authority" },
+              { value: "Est. 2020", label: "Reconstituted Authority" },
               { value: "3 Tiers", label: "Of Membership" },
               { value: "Active", label: "Governance & Commerce" },
               { value: "Global", label: "Cultural Presence" },

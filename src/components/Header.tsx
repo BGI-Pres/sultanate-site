@@ -37,7 +37,7 @@ export default function Header() {
       <div className="bg-[var(--dark-bg)] border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-8">
           <p className="text-[10px] uppercase tracking-[0.15em] text-[var(--gold)]">
-            Reestablished October 2020
+            Reconstituted October 2020
           </p>
           <div className="hidden sm:flex items-center gap-4 text-[11px] text-gray-400">
             <Link href="/portal" className="hover:text-[var(--gold)] transition-colors">
