@@ -55,23 +55,18 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2.5 text-sm text-gray-400">
               <li>
-                <a
-                  href="https://cash.app/$unitedroyalmonarchs"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[var(--gold)] transition-colors"
-                >
-                  CashApp: $unitedroyalmonarchs
-                </a>
-              </li>
-              <li>
                 <Link href="/gifting" className="hover:text-[var(--gold)] transition-colors">
-                  Zelle &amp; Square
+                  Contribute
                 </Link>
               </li>
               <li>
                 <Link href="/gifting" className="hover:text-[var(--gold)] transition-colors">
-                  Official Merchandise
+                  Literature &amp; Sacred Texts
+                </Link>
+              </li>
+              <li>
+                <Link href="/gifting" className="hover:text-[var(--gold)] transition-colors">
+                  Official Credentials
                 </Link>
               </li>
             </ul>

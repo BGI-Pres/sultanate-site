@@ -144,21 +144,6 @@ export default function GiftingPage() {
             ))}
           </div>
 
-          <p className="text-center text-sm text-[var(--gray-500)] mt-6">
-            CashApp:{" "}
-            <a
-              href="https://cash.app/$unitedroyalmonarchs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[var(--gold)] hover:underline font-medium"
-            >
-              $unitedroyalmonarchs
-            </a>
-            {" "}&bull;{" "}Zelle and other methods available via{" "}
-            <a href="/contact" className="text-[var(--gold)] hover:underline font-medium">
-              contact
-            </a>
-          </p>
         </div>
       </section>
 
