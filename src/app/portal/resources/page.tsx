@@ -13,14 +13,14 @@ const resources = [
     category: "Governance & Law",
     items: [
       { title: "Understanding the Constitution", type: "Guide" },
-      { title: "Rights & Responsibilities of Citizens", type: "Article" },
+      { title: "Rights & Responsibilities of Members", type: "Article" },
       { title: "Governance Structure Overview", type: "Guide" },
     ],
   },
   {
     category: "Education",
     items: [
-      { title: "New Citizen Orientation Guide", type: "Guide" },
+      { title: "New Member Orientation Guide", type: "Guide" },
       { title: "Community Building Handbook", type: "Manual" },
       { title: "Heritage Preservation Methods", type: "Article" },
     ],

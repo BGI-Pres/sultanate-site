@@ -11,7 +11,7 @@ interface EmailCaptureProps {
 export default function EmailCapture({
   variant = "inline",
   heading = "Stay Connected",
-  description = "Get updates on citizenship, events, and news from the Sultanate of Amexem.",
+  description = "Get updates on membership, events, and news from the Sultanate of Amexem.",
 }: EmailCaptureProps) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);

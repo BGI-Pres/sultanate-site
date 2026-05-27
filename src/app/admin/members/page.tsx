@@ -39,7 +39,7 @@ export default function MembersPage() {
         <div>
           <h1 className="text-2xl font-bold text-[var(--gray-900)]">Members</h1>
           <p className="text-[var(--gray-500)] mt-1">
-            Manage citizen registrations and applications
+            Manage member registrations and applications
           </p>
         </div>
         <div className="text-sm text-[var(--gray-500)]">

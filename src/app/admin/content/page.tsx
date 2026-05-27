@@ -103,7 +103,7 @@ export default function ContentPage() {
                 className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[var(--forest-green)]"
               >
                 <option>Announcement</option>
-                <option>Citizenship</option>
+                <option>Membership</option>
                 <option>Heritage</option>
                 <option>Governance</option>
                 <option>Events</option>
