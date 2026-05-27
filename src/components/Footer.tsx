@@ -41,6 +41,7 @@ export default function Footer() {
               <li><Link href="/about" className="hover:text-[var(--gold)] transition-colors">About</Link></li>
               <li><Link href="/government" className="hover:text-[var(--gold)] transition-colors">Government</Link></li>
               <li><Link href="/citizenship" className="hover:text-[var(--gold)] transition-colors">Membership</Link></li>
+              <li><Link href="/economics" className="hover:text-[var(--gold)] transition-colors">Economics</Link></li>
               <li><Link href="/gifting" className="hover:text-[var(--gold)] transition-colors">Support</Link></li>
               <li><Link href="/events" className="hover:text-[var(--gold)] transition-colors">Events</Link></li>
               <li><Link href="/press" className="hover:text-[var(--gold)] transition-colors">Press &amp; Updates</Link></li>
@@ -60,12 +61,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/gifting" className="hover:text-[var(--gold)] transition-colors">
+                <Link href="/resources" className="hover:text-[var(--gold)] transition-colors">
                   Literature &amp; Sacred Texts
                 </Link>
               </li>
               <li>
-                <Link href="/gifting" className="hover:text-[var(--gold)] transition-colors">
+                <Link href="/resources" className="hover:text-[var(--gold)] transition-colors">
                   Official Credentials
                 </Link>
               </li>

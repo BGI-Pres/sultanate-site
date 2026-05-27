@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/about", label: "About" },
   { href: "/government", label: "Government" },
   { href: "/citizenship", label: "Membership" },
+  { href: "/economics", label: "Economics" },
   { href: "/gifting", label: "Support" },
   { href: "/events", label: "Events" },
   { href: "/press", label: "Press & Updates" },
