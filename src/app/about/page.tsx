@@ -5,7 +5,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Learn about the Sultanate of Amexem, Custodian of the Nation of Moab — our history, mission, and vision.",
+    "The Sultanate of Amexem — reestablished October 2020 as the custodial governing authority for the descendants of the Nation of Moab. Nationality, economic security, and global cultural presentation are the order of the day.",
 };
 
 export default function AboutPage() {
@@ -19,9 +19,11 @@ export default function AboutPage() {
             About the Sultanate
           </h1>
           <p className="text-lg text-white/70 max-w-3xl leading-relaxed">
-            The Sultanate of Amexem serves as the Custodian of the Nation of
-            Moab, dedicated to preserving our heritage, upholding sovereignty,
-            and building a strong community.
+            The Sultanate of Amexem is the custodial governing authority for
+            the protection and security of the descendants of the Nation of
+            Moab. Nationality is the order of the day — and from that
+            foundation, we build economic power, institutional strength, and a
+            global presence worthy of our heritage.
           </p>
         </div>
       </section>
@@ -40,25 +42,29 @@ export default function AboutPage() {
                 <div className="h-px w-12 bg-[var(--gold)]" />
               </div>
               <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-6">
-                A Legacy of Resilience
+                A Governing Authority Restored
               </h2>
               <div className="space-y-4 text-[var(--gray-700)] leading-relaxed text-[15px]">
                 <p>
-                  The Sultanate of Amexem is rooted in a deep and abiding
-                  commitment to the Nation of Moab. As Custodian, the Sultanate
-                  carries forward the traditions, laws, and cultural identity of
-                  our people.
+                  In October 2020, the Sultanate of Amexem was reestablished as
+                  the custodial authority charged with the protection, security,
+                  and advancement of the descendants of the Nation of Moab. This
+                  was not the founding of something new — it was the restoration
+                  of a governing body that had always existed in principle and in
+                  the hearts of our people.
                 </p>
                 <p>
-                  Our history is one of resilience, self-determination, and an
-                  unwavering dedication to sovereignty. The Sultanate was
-                  established to serve as the governing body and custodial
-                  authority for the Nation of Moab.
+                  The Sultanate carries forward the unbroken line of governance
+                  rooted in nationality, law, and the customs of our ancestors.
+                  Our people — known by the surnames Bey and El — represent a
+                  nation with its own identity, its own institutions, and its own
+                  mandate for self-determination.
                 </p>
                 <p>
-                  Through generations of commitment, we continue to honor the
-                  legacy of our ancestors while building a future grounded in
-                  justice, community, and national pride.
+                  This is not a movement. This is the continuation of governance.
+                  The Sultanate exists to ensure that the rights, traditions, and
+                  economic interests of our people are secured for this
+                  generation and every generation to come.
                 </p>
               </div>
             </div>
@@ -73,19 +79,24 @@ export default function AboutPage() {
                 <div className="h-px w-12 bg-[var(--gold)]" />
               </div>
               <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-6">
-                Building a Sovereign Future
+                Economic Power, Global Presence
               </h2>
               <div className="space-y-4 text-[var(--gray-700)] leading-relaxed text-[15px]">
                 <p>
-                  We envision a nation where every citizen is empowered, every
-                  tradition is honored, and every right is protected. The
-                  Sultanate of Amexem works to create the conditions for our
-                  people to thrive.
+                  The Sultanate operates with a singular clarity: economic
+                  security is national security. We are building an economic
+                  infrastructure from within our own membership — collective
+                  economics in practice, not theory. Bey Group International
+                  stands as proof that when our people organize around shared
+                  purpose, institutions of real power emerge.
                 </p>
                 <p>
-                  Our vision encompasses strong governance, cultural
-                  preservation, economic development, and international
-                  recognition of our sovereign status.
+                  Equally vital is the comprehensive presentation of our customs,
+                  traditions, and culture on the global stage. The world will
+                  know us as we are — not as we have been described. Through
+                  institutional development and disciplined governance, we
+                  position our nation to operate with authority in every arena
+                  that matters.
                 </p>
               </div>
 
@@ -100,11 +111,11 @@ export default function AboutPage() {
                 </div>
                 <ul className="space-y-3">
                   {[
-                    "Sovereignty and Self-Determination",
-                    "Cultural Preservation and Heritage",
-                    "Justice and Rule of Law",
-                    "Unity and Community Building",
-                    "Education and Empowerment",
+                    "Nationality Above All Else",
+                    "Economic Security and Collective Economics",
+                    "Global Cultural Presentation",
+                    "Institutional Development from Within",
+                    "Self-Determination and Sovereign Governance",
                   ].map((value) => (
                     <li key={value} className="flex items-start gap-3">
                       <span className="mt-1.5 w-2 h-2 rounded-full bg-[var(--gold)] shrink-0" />
@@ -129,7 +140,7 @@ export default function AboutPage() {
             <div className="h-px w-12 bg-[var(--gold)]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-10 text-center">
-            Guided by Tradition, Driven by Purpose
+            The Authority of the Office
           </h2>
           <div className="max-w-2xl mx-auto text-center">
             <div className="inline-flex items-center justify-center w-28 h-28 rounded-full bg-[var(--dark-bg)] border border-[var(--gold)]/30 mb-6">

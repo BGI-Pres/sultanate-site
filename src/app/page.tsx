@@ -20,7 +20,7 @@ export default function HomePage() {
               <div className="flex items-center gap-2 mb-6">
                 <div className="h-px w-8 bg-[var(--gold)]" />
                 <p className="text-sm uppercase tracking-[0.2em] text-[var(--gold)]">
-                  Custodian of the Nation of Moab
+                  Reestablished October 2020 &bull; Custodian of the Nation of Moab
                 </p>
               </div>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6">
@@ -28,12 +28,13 @@ export default function HomePage() {
                 <span className="gold-shimmer">Amexem</span>
               </h1>
               <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-4 max-w-xl">
-                Sovereignty. Collective Economics. Cultural Identity.
+                Nationality. Economic Security. Global Standing.
               </p>
               <p className="text-base text-gray-400 leading-relaxed mb-8 max-w-xl">
-                The Sultanate of Amexem provides its citizens with legal standing,
-                economic opportunity, and a community rooted in heritage. Your
-                nationality, your network, your nation.
+                The governing authority for the protection, security, and
+                advancement of the descendants of the Nation of Moab. Securing
+                nationality, building collective economic power, and presenting
+                our customs and culture to the world.
               </p>
               <div className="flex flex-wrap gap-4 mb-10 animate-fade-in-up animate-delay-2">
                 <Link
@@ -80,11 +81,11 @@ export default function HomePage() {
               <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--gray-900)] mb-4">
-              Three Pillars of Citizenship
+              The National Imperative
             </h2>
             <p className="text-[var(--gray-500)] max-w-2xl mx-auto text-lg">
-              Citizenship in the Sultanate is not symbolic. It is a tangible
-              framework of rights, resources, and community.
+              Nationality is the order of the day. Without it, there is no
+              standing, no protection, no commerce. The Sultanate secures all three.
             </p>
           </div>
 
@@ -96,17 +97,17 @@ export default function HomePage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-[var(--gray-900)] mb-3">
-                Sovereign Standing
+                Nationality &amp; Standing
               </h3>
               <p className="text-[var(--gray-500)] leading-relaxed mb-4">
-                Official nationality documentation, constitutional protections,
-                and recognized legal standing under the custodianship of the
-                Sultanate of Amexem.
+                Formal national identity under the custodianship of the
+                Sultanate. Documentation, constitutional protections, and the
+                recognition that comes with declared standing.
               </p>
               <ul className="space-y-2 text-sm text-[var(--gray-500)]">
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Citizenship certificates</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Constitutional rights</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Official identification</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />National identification</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Constitutional protections</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Declared nationality status</li>
               </ul>
             </div>
 
@@ -117,17 +118,18 @@ export default function HomePage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-[var(--gray-900)] mb-3">
-                Collective Economics
+                Economic Security
               </h3>
               <p className="text-[var(--gray-500)] leading-relaxed mb-4">
-                Access a network of citizens building wealth together. Cooperative
-                investment, shared resources, and economic opportunities exclusive
-                to the Sultanate.
+                A nation that does not control its economics controls nothing.
+                The Sultanate builds collective wealth through cooperative
+                commerce, institutional development, and ventures born from
+                our own membership.
               </p>
               <ul className="space-y-2 text-sm text-[var(--gray-500)]">
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Community investment fund</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Business network access</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Economic opportunity alerts</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Cooperative commercial ventures</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />National business network</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Institutional development</li>
               </ul>
             </div>
 
@@ -138,17 +140,18 @@ export default function HomePage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-[var(--gray-900)] mb-3">
-                Cultural Identity
+                Culture &amp; Global Presence
               </h3>
               <p className="text-[var(--gray-500)] leading-relaxed mb-4">
-                Connect with your heritage. Education in the history of the
-                Nation of Moab, community events, and a network of citizens who
-                share your values and vision.
+                Our customs and culture are presented to the world on our terms.
+                The Sultanate advances a comprehensive global presence — ensuring
+                that our heritage, traditions, and national identity are recognized
+                and respected internationally.
               </p>
               <ul className="space-y-2 text-sm text-[var(--gray-500)]">
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Heritage education</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Community events</li>
-                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Exclusive resources</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Global cultural presentation</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />Heritage preservation</li>
+                <li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />National community network</li>
               </ul>
             </div>
           </div>
@@ -166,21 +169,22 @@ export default function HomePage() {
                 <span className="text-xs uppercase tracking-[0.2em] text-[var(--cherry-red)]">Free Download</span>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                The Citizen&apos;s Guide to the Sultanate of Amexem
+                The National&apos;s Guide to the Sultanate of Amexem
               </h2>
               <p className="text-gray-400 leading-relaxed mb-6">
-                A comprehensive guide for prospective and current citizens.
-                Learn the fundamentals of membership, proper etiquette, the
-                acumen expected of our nationals, and how to carry yourself
-                with the confidence and conviction of a sovereign citizen.
+                A comprehensive guide for prospective and current nationals.
+                Learn the fundamentals of membership, the etiquette expected
+                of those who carry the name, the commercial acumen required to
+                build with this nation, and how to move with the confidence and
+                conviction of someone who knows their standing.
               </p>
               <ul className="space-y-3 mb-8">
                 {[
-                  "Foundations of citizenship and what it means",
-                  "Etiquette and conduct as a Sultanate national",
-                  "Building acumen in governance and commerce",
-                  "Carrying conviction in your sovereign identity",
-                  "Your rights and responsibilities as a citizen",
+                  "What nationality means and why it precedes everything",
+                  "Etiquette and conduct befitting a national",
+                  "Commercial acumen and economic participation",
+                  "Moving with confidence and declared conviction",
+                  "Rights, responsibilities, and the national compact",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-sm text-gray-300">
                     <svg className="w-5 h-5 text-[var(--gold)] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,10 +217,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { value: "Est. 2024", label: "Sovereign Authority" },
-              { value: "3 Tiers", label: "Of Citizenship" },
-              { value: "Active", label: "Governance Body" },
-              { value: "Growing", label: "National Network" },
+              { value: "Est. 2020", label: "Reestablished Authority" },
+              { value: "3 Tiers", label: "Of National Membership" },
+              { value: "Active", label: "Governance &amp; Commerce" },
+              { value: "Global", label: "Cultural Presence" },
             ].map((stat) => (
               <div key={stat.label}>
                 <p className="text-2xl md:text-3xl font-bold text-[var(--gray-900)]">{stat.value}</p>
@@ -237,15 +241,17 @@ export default function HomePage() {
               <div className="h-px w-12 bg-[var(--forest-green)]" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--gray-900)] mb-4">
-              Build Wealth With Your Nation
+              The Economics of a Nation
             </h2>
             <p className="text-[var(--gray-500)] text-lg leading-relaxed mb-4">
-              The Sultanate of Amexem is building a collective economic engine
-              for its citizens. Investment opportunities, cooperative ventures,
-              and community-funded initiatives — delivered to your inbox.
+              Economic security is not optional — it is the engine that powers
+              every national objective. The Sultanate is building cooperative
+              ventures, commercial infrastructure, and institutional wealth
+              from within its own membership.
             </p>
             <p className="text-[var(--gray-700)] font-medium mb-8">
-              This is the community fund you cannot afford to ignore.
+              This is a national economic apparatus. Participate or observe — the
+              choice defines your position.
             </p>
             <div className="max-w-md mx-auto">
               <EmailCapture
@@ -263,12 +269,13 @@ export default function HomePage() {
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Your Nation Awaits
+            Declare Your Nationality
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto mb-8 text-lg">
-            Sovereignty is not given. It is claimed. Apply for citizenship
-            in the Sultanate of Amexem and take your place among a community
-            building something that endures.
+            Nationality is not inherited by accident — it is claimed with
+            intention. The Sultanate of Amexem exists for the protection and
+            advancement of the descendants of the Nation of Moab. Take your
+            standing.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
