@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -21,9 +22,13 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[var(--forest-green)] flex items-center justify-center">
-              <span className="text-white font-bold text-lg">S</span>
-            </div>
+            <Image
+              src="/images/emblem.svg"
+              alt="Sultanate of Amexem Emblem"
+              width={40}
+              height={40}
+              className="w-10 h-10"
+            />
             <div className="hidden sm:block">
               <p className="text-sm font-semibold text-[var(--gray-900)] leading-tight">
                 Sultanate of Amexem

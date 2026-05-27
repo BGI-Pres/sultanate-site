@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About",
@@ -96,9 +97,13 @@ export default function AboutPage() {
             Leadership
           </h2>
           <div className="max-w-2xl mx-auto text-center">
-            <div className="w-24 h-24 rounded-full bg-[var(--forest-green)] mx-auto mb-4 flex items-center justify-center">
-              <span className="text-white text-3xl font-bold">S</span>
-            </div>
+            <Image
+              src="/images/emblem.svg"
+              alt="Sultanate of Amexem Emblem"
+              width={96}
+              height={96}
+              className="mx-auto mb-4"
+            />
             <h3 className="text-xl font-semibold text-[var(--gray-900)] mb-2">
               The Sultan
             </h3>

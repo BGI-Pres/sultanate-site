@@ -1,4 +1,5 @@
 import Link from "next/link";
+import EmailCapture from "@/components/EmailCapture";
 
 export default function HomePage() {
   return (
@@ -18,19 +19,25 @@ export default function HomePage() {
               for future generations. Join us in honoring the legacy and advancing
               the mission of our nation.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/about"
-                className="px-6 py-3 bg-white text-[var(--forest-green)] font-semibold rounded-md hover:bg-green-50 transition-colors"
-              >
-                Learn More
-              </Link>
+            <div className="flex flex-wrap gap-4 mb-8">
               <Link
                 href="/citizenship"
-                className="px-6 py-3 border-2 border-white text-white font-semibold rounded-md hover:bg-white/10 transition-colors"
+                className="px-6 py-3 bg-white text-[var(--forest-green)] font-semibold rounded-md hover:bg-green-50 transition-colors"
               >
-                Citizenship
+                Apply for Citizenship
               </Link>
+              <Link
+                href="/gifting"
+                className="px-6 py-3 bg-[var(--cherry-red)] text-white font-semibold rounded-md hover:bg-[var(--cherry-red-dark)] transition-colors"
+              >
+                Support the Mission
+              </Link>
+            </div>
+            <div>
+              <p className="text-sm text-green-200 mb-2">
+                Join our mailing list for updates:
+              </p>
+              <EmailCapture variant="inline" />
             </div>
           </div>
         </div>
@@ -111,6 +118,13 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* Email Capture Banner */}
+      <EmailCapture
+        variant="banner"
+        heading="Don't Miss a Thing"
+        description="Subscribe to receive news, event invitations, and updates from the Sultanate."
+      />
 
       {/* Quick Links */}
       <section className="py-20 bg-[var(--gray-50)]">

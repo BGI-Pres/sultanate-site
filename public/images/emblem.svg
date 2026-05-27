@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <path id="topArc" d="M 200,200 m -158,0 a 158,158 0 0,1 316,0" fill="none"/>
+    <path id="bottomArc" d="M 200,200 m 158,0 a 158,158 0 0,1 -316,0" fill="none"/>
+    <clipPath id="innerClip">
+      <circle cx="200" cy="200" r="118"/>
+    </clipPath>
+  </defs>
+
+  <!-- Outer ring -->
+  <circle cx="200" cy="200" r="185" fill="none" stroke="#2d2d2d" stroke-width="4"/>
+  <circle cx="200" cy="200" r="130" fill="none" stroke="#2d2d2d" stroke-width="2"/>
+
+  <!-- Text band background -->
+  <circle cx="200" cy="200" r="183" fill="none" stroke="none"/>
+
+  <!-- Circular text - SULTANATE (top) -->
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="#1a1a1a" letter-spacing="14">
+    <textPath href="#topArc" startOffset="50%" text-anchor="middle">SULTANATE</textPath>
+  </text>
+
+  <!-- Circular text - OF AMEXEM (bottom) -->
+  <text font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="bold" fill="#1a1a1a" letter-spacing="10">
+    <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">OF AMEXEM</textPath>
+  </text>
+
+  <!-- Inner circle -->
+  <circle cx="200" cy="200" r="118" fill="white"/>
+  <circle cx="200" cy="200" r="118" fill="none" stroke="#c0c0c0" stroke-width="1.5"/>
+
+  <!-- Red Crescent - main body -->
+  <g clip-path="url(#innerClip)">
+    <circle cx="185" cy="190" r="75" fill="#C41E3A"/>
+    <circle cx="210" cy="190" r="60" fill="white"/>
+  </g>
+
+  <!-- Red Five-pointed Star -->
+  <path d="M 248,152 L 252,165 L 266,165 L 255,174 L 259,187 L 248,178 L 237,187 L 241,174 L 230,165 L 244,165 Z" fill="#C41E3A"/>
+
+  <!-- Arabic text - Bismillah -->
+  <text
+    x="200"
+    y="300"
+    text-anchor="middle"
+    font-family="'Noto Naskh Arabic', 'Traditional Arabic', 'Scheherazade New', 'Arial', serif"
+    font-size="20"
+    fill="#1a1a1a"
+  >&#x628;&#x633;&#x645; &#x627;&#x644;&#x644;&#x647; &#x627;&#x644;&#x631;&#x62D;&#x645;&#x646; &#x627;&#x644;&#x631;&#x62D;&#x64A;&#x645;</text>
+</svg>

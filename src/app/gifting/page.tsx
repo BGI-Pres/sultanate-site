@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PaymentMethods from "@/components/PaymentMethods";
+import EmailCapture from "@/components/EmailCapture";
 
 export const metadata: Metadata = {
   title: "Gifting",
@@ -76,7 +78,12 @@ export default function GiftingPage() {
             ))}
           </div>
 
-          <div className="bg-[var(--gray-50)] border border-[var(--gray-200)] rounded-lg p-6">
+          <h3 className="text-xl font-bold text-[var(--gray-900)] mb-4 mt-10">
+            Send Your Gift
+          </h3>
+          <PaymentMethods />
+
+          <div className="bg-[var(--gray-50)] border border-[var(--gray-200)] rounded-lg p-6 mt-8">
             <p className="text-sm text-[var(--gray-500)]">
               <strong className="text-[var(--gray-700)]">Custom Amount:</strong>{" "}
               To make a custom gift or discuss larger contributions, please{" "}
@@ -154,6 +161,19 @@ export default function GiftingPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Email Capture */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-xl mx-auto">
+            <EmailCapture
+              variant="card"
+              heading="Stay Updated"
+              description="Get notified about new merchandise, events, and ways to support the Sultanate."
+            />
           </div>
         </div>
       </section>
