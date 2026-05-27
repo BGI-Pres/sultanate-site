@@ -10,66 +10,88 @@ interface MemberData {
   tier?: string;
 }
 
-const quickLinks = [
-  {
-    href: "/portal/events",
-    title: "Events",
-    description: "Browse upcoming community events, gatherings, and ceremonies.",
-    icon: "M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5",
-  },
-  {
-    href: "/portal/status",
-    title: "Status",
-    description: "Track the progress of your membership application and any pending requests.",
-    icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4",
-  },
-  {
-    href: "/portal/documents",
-    title: "Documents",
-    description: "View and download your membership documents, certificates, and official papers.",
-    icon: "M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z",
-  },
-  {
-    href: "/portal/resources",
-    title: "Resources",
-    description: "Access members-only educational materials, guides, and historical archives.",
-    icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
-  },
-  {
-    href: "/apply/membership-card",
-    title: "Card Request",
-    description: "Request or renew your official membership identification card.",
-    icon: "M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z",
-  },
-  {
-    href: "/contact",
-    title: "Contact",
-    description: "Contact the administrative office for assistance with your account or membership.",
-    icon: "M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75",
-  },
-];
+interface Announcement {
+  id: string;
+  title: string;
+  body: string;
+  created_at: string;
+}
+
+const DUES_LINK = "https://square.link/u/iFCGR159";
+
+const tierOrder = ["Affiliate", "Community", "General", "Lead"];
+
+const rankUpSteps: Record<string, string[]> = {
+  Affiliate: [
+    "Attend meetings consistently for 3 months",
+    "Complete orientation study (sacred texts & Constitution)",
+    "Apply for Community membership",
+  ],
+  Community: [
+    "Demonstrate active involvement in community affairs",
+    "Complete leadership training",
+    "Organize a local chapter/temple body",
+  ],
+  General: [
+    "Maintain an active chapter with regular attendance",
+    "Secure a physical location for your body",
+    "Receive leadership approval",
+  ],
+  Lead: [],
+};
+
+const nextEvent = {
+  title: "Holy Day Meeting",
+  schedule: "Every Friday",
+  time: "7:30 PM CST",
+};
 
 export default function PortalDashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [memberData, setMemberData] = useState<MemberData | null>(null);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [hasRsvpd, setHasRsvpd] = useState(false);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-      if (data.user) {
+    async function init() {
+      const supabase = createClient();
+      const { data: authData } = await supabase.auth.getUser();
+      const currentUser = authData.user;
+      setUser(currentUser);
+
+      if (currentUser) {
         supabase
           .from("members")
           .select("status, tier")
-          .eq("id", data.user.id)
+          .eq("id", currentUser.id)
           .single()
           .then(({ data: member }) => {
-            if (member) {
-              setMemberData(member);
-            }
+            if (member) setMemberData(member);
+          });
+
+        if (currentUser.email) {
+          supabase
+            .from("event_rsvps")
+            .select("id")
+            .eq("email", currentUser.email)
+            .eq("event_name", "Holy Day Meeting")
+            .limit(1)
+            .then(({ data }) => {
+              if (data && data.length > 0) setHasRsvpd(true);
+            });
+        }
+
+        supabase
+          .from("announcements")
+          .select("id, title, body, created_at")
+          .order("created_at", { ascending: false })
+          .limit(3)
+          .then(({ data }) => {
+            if (data) setAnnouncements(data);
           });
       }
-    });
+    }
+    init();
   }, []);
 
   const displayName =
@@ -78,6 +100,10 @@ export default function PortalDashboard() {
   const memberStatus = memberData?.status || "Pending";
   const memberTier = memberData?.tier || "Affiliate";
   const isActive = memberStatus.toLowerCase() === "active";
+  const tierIndex = tierOrder.indexOf(memberTier);
+  const nextTier = tierIndex < tierOrder.length - 1 ? tierOrder[tierIndex + 1] : null;
+  const steps = rankUpSteps[memberTier] || [];
+  const hasDues = ["Community", "General", "Lead"].includes(memberTier);
 
   return (
     <div>
@@ -86,75 +112,179 @@ export default function PortalDashboard() {
           Welcome, {displayName}
         </h1>
         <p className="text-[var(--gray-500)] mt-1">
-          Your Member Portal dashboard
+          Your Member Portal
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-sm text-[var(--gray-500)]">Membership Status</p>
-            <span
-              className={`w-2.5 h-2.5 rounded-full ${
-                isActive ? "bg-[var(--gold)]" : "bg-gray-400"
-              }`}
-            />
+      {/* ── Stats ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="bg-white p-5 rounded-xl border border-[var(--gray-200)]">
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs text-[var(--gray-500)]">Status</p>
+            <span className={`w-2 h-2 rounded-full ${isActive ? "bg-[var(--gold)]" : "bg-gray-300"}`} />
           </div>
-          <p
-            className={`text-xl font-bold ${
-              isActive ? "text-[var(--gold)]" : "text-gray-400"
-            }`}
-          >
+          <p className={`text-lg font-bold ${isActive ? "text-[var(--gold)]" : "text-gray-400"}`}>
             {memberStatus}
           </p>
         </div>
-
-        <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
-          <p className="text-sm text-[var(--gray-500)] mb-2">Membership Tier</p>
-          <p className="text-xl font-bold text-[var(--gray-900)]">{memberTier}</p>
+        <div className="bg-white p-5 rounded-xl border border-[var(--gray-200)]">
+          <p className="text-xs text-[var(--gray-500)] mb-1">Tier</p>
+          <p className="text-lg font-bold text-[var(--gray-900)]">{memberTier}</p>
         </div>
-
-        <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
-          <p className="text-sm text-[var(--gray-500)] mb-2">Member Since</p>
-          <p className="text-xl font-bold text-[var(--gray-900)]">
+        <div className="bg-white p-5 rounded-xl border border-[var(--gray-200)]">
+          <p className="text-xs text-[var(--gray-500)] mb-1">Member Since</p>
+          <p className="text-lg font-bold text-[var(--gray-900)]">
             {user?.created_at
-              ? new Date(user.created_at).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                })
+              ? new Date(user.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long" })
               : "—"}
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {quickLinks.map((link) => (
+      {/* ── Next Event + Dues ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="bg-white p-5 rounded-xl border border-[var(--gray-200)]">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-9 h-9 rounded-lg bg-[var(--dark-bg)] flex items-center justify-center">
+              <svg className="w-5 h-5 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-xs text-[var(--gray-500)]">Next Event</p>
+              <p className="font-semibold text-sm text-[var(--gray-900)]">{nextEvent.title}</p>
+            </div>
+          </div>
+          <p className="text-xs text-[var(--gray-500)] mb-3">{nextEvent.schedule} &middot; {nextEvent.time}</p>
+          {hasRsvpd ? (
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--gold)]">
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              RSVPd
+            </span>
+          ) : (
+            <Link href="/portal/events" className="text-xs font-semibold text-[var(--gold)] hover:text-[var(--gold-dark)]">
+              RSVP &rarr;
+            </Link>
+          )}
+        </div>
+
+        {hasDues ? (
+          <div className="bg-white p-5 rounded-xl border border-[var(--gray-200)]">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-lg bg-[var(--dark-bg)] flex items-center justify-center">
+                <svg className="w-5 h-5 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs text-[var(--gray-500)]">Monthly Dues</p>
+                <p className="font-semibold text-sm text-[var(--gray-900)]">$50/month</p>
+              </div>
+            </div>
+            <a
+              href={DUES_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 px-4 py-1.5 bg-[var(--gold)] text-[var(--dark-bg)] text-xs font-semibold rounded-lg hover:bg-[var(--gold-light)] transition-colors"
+            >
+              Pay Dues &rarr;
+            </a>
+          </div>
+        ) : (
+          <div className="bg-white p-5 rounded-xl border border-[var(--gray-200)]">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-lg bg-[var(--dark-bg)] flex items-center justify-center">
+                <svg className="w-5 h-5 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-xs text-[var(--gray-500)]">Monthly Dues</p>
+                <p className="font-semibold text-sm text-[var(--gray-900)]">No dues at Affiliate tier</p>
+              </div>
+            </div>
+            <p className="text-xs text-[var(--gray-500)]">
+              Dues begin at Community tier ($50/month)
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* ── Growth / Rank Up ── */}
+      {nextTier && steps.length > 0 && (
+        <div className="bg-white p-5 rounded-xl border border-[var(--gray-200)] mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-semibold text-sm text-[var(--gray-900)]">
+              Growth Path
+            </h2>
+            <span className="text-xs text-[var(--gold)] font-medium">
+              {memberTier} &rarr; {nextTier}
+            </span>
+          </div>
+          <div className="h-1.5 bg-[var(--gray-200)] rounded-full mb-4">
+            <div
+              className="h-full bg-[var(--gold)] rounded-full"
+              style={{ width: `${((tierIndex + 1) / tierOrder.length) * 100}%` }}
+            />
+          </div>
+          <ul className="space-y-2">
+            {steps.map((step) => (
+              <li key={step} className="flex items-start gap-2 text-xs text-[var(--gray-600)]">
+                <span className="w-1 h-1 rounded-full bg-[var(--gold)] mt-1.5 shrink-0" />
+                {step}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* ── Announcements ── */}
+      <div className="bg-white p-5 rounded-xl border border-[var(--gray-200)] mb-6">
+        <h2 className="font-semibold text-sm text-[var(--gray-900)] mb-3">
+          Announcements
+        </h2>
+        {announcements.length > 0 ? (
+          <div className="space-y-3">
+            {announcements.map((a) => (
+              <div key={a.id} className="border-b border-[var(--gray-100)] last:border-0 pb-3 last:pb-0">
+                <div className="flex items-center justify-between mb-1">
+                  <p className="text-sm font-medium text-[var(--gray-900)]">{a.title}</p>
+                  <span className="text-[10px] text-[var(--gray-400)]">
+                    {new Date(a.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--gray-500)] leading-relaxed">{a.body}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-xs text-[var(--gray-400)] text-center py-4">
+            No announcements yet
+          </p>
+        )}
+      </div>
+
+      {/* ── Quick Links ── */}
+      <h2 className="font-semibold text-sm text-[var(--gray-900)] mb-3">
+        Quick Actions
+      </h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        {[
+          { href: "/portal/events", label: "Events" },
+          { href: "/portal/status", label: "Status" },
+          { href: "/portal/documents", label: "Documents" },
+          { href: "/portal/resources", label: "Resources" },
+          { href: "/apply/membership-card", label: "Card Request" },
+          { href: "/contact", label: "Contact" },
+        ].map((link) => (
           <Link
             key={link.href}
             href={link.href}
-            className="group bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
+            className="p-3 text-center text-sm font-medium text-[var(--gray-700)] bg-white rounded-lg border border-[var(--gray-200)] hover:border-[var(--gold)] hover:text-[var(--gold)] transition-all"
           >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-9 h-9 rounded-lg bg-[var(--gold)]/10 flex items-center justify-center">
-                <svg
-                  className="w-5 h-5 text-[var(--gold)]"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d={link.icon}
-                  />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-[var(--gray-900)] group-hover:text-[var(--gold)] transition-colors">
-                {link.title} &rarr;
-              </h3>
-            </div>
-            <p className="text-sm text-[var(--gray-500)]">{link.description}</p>
+            {link.label}
           </Link>
         ))}
       </div>
