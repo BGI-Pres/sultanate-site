@@ -7,6 +7,7 @@ const stats = [
   { label: "Pending Applications", value: "—", change: null, href: "/admin/members" },
   { label: "Donations (Month)", value: "—", change: null, href: "/admin/finances" },
   { label: "Merch Orders", value: "—", change: null, href: "/admin/finances" },
+  { label: "Event RSVPs", value: "—", change: null, href: "/admin/rsvps" },
 ];
 
 export default function AdminDashboard() {
@@ -83,6 +84,12 @@ export default function AdminDashboard() {
             className="px-4 py-2 text-sm border border-[var(--gray-300)] text-[var(--gray-700)] rounded-md hover:bg-[var(--gray-50)] transition-colors"
           >
             View Finances
+          </Link>
+          <Link
+            href="/admin/rsvps"
+            className="px-4 py-2 text-sm border border-[var(--gray-300)] text-[var(--gray-700)] rounded-md hover:bg-[var(--gray-50)] transition-colors"
+          >
+            View RSVPs
           </Link>
         </div>
       </div>
