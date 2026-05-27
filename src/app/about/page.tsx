@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "The Sultanate of Amexem — reestablished October 2020 as the custodial governing authority for the descendants of the Nation of Moab, modernly identified as Moorish American. Nationality, economic security, and global cultural presentation are the order of the day.",
+    "The Sultanate of Amexem — reconstituted October 2020 as the custodial governing authority for the descendants of the Nation of Moab, modernly identified as Moorish American. Nationality, economic security, and global cultural presentation are the order of the day.",
 };
 
 export default function AboutPage() {
@@ -84,7 +84,7 @@ export default function AboutPage() {
             </h2>
             <div className="space-y-4 text-white/70 leading-relaxed text-[15px]">
               <p>
-                In October 2020, the Sultanate of Amexem was reestablished
+                In October 2020, the Sultanate of Amexem was reconstituted
                 under the House of Simmons Bey — not as the founding of
                 something new, but as the restoration of a governing authority
                 that had always existed in principle and in the hearts of our
@@ -166,7 +166,7 @@ export default function AboutPage() {
               {[
                 { year: "1913", event: "Noble Drew Ali establishes the Moorish Science Temple of America, rekindling the light of truth and laying the framework for Moorish American nationality" },
                 { year: "1929", event: "Noble Drew Ali transitions — the principles of Love, Truth, Peace, Freedom, and Justice endure through his teachings and the MSTA" },
-                { year: "2020", event: "The Sultanate of Amexem is reestablished under the House of Simmons Bey as the custodial governing authority for the descendants of the Nation of Moab" },
+                { year: "2020", event: "The Sultanate of Amexem is reconstituted under the House of Simmons Bey as the custodial governing authority for the descendants of the Nation of Moab" },
                 { year: "2021", event: "Founding of Bey Group of Companies — economic infrastructure built from within the membership" },
                 { year: "2024", event: "Formal organization of the Supreme Grand Council, Ministerial Board, and Executive Board under the Constitution" },
                 { year: "2026", event: "Bey Group of Companies rebrands as Bey Group International — expanding the economic mission to the global stage" },

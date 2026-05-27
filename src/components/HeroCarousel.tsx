@@ -8,7 +8,7 @@ const slides = [
     tag: "Authority",
     headline: "The Governing Body of a Nation",
     description:
-      "The Sultanate of Amexem — reestablished October 2020 as the custodial authority for the protection and advancement of the descendants of the Nation of Moab.",
+      "The Sultanate of Amexem — reconstituted October 2020 as the custodial authority for the protection and advancement of the descendants of the Nation of Moab.",
     cta: { label: "Learn More", href: "/about" },
     accent: "var(--gold)",
   },

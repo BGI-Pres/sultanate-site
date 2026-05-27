@@ -79,10 +79,10 @@ function formatDate(dateStr: string) {
 
 const pressReleases = [
   {
-    title: "Sultanate of Amexem Reestablished as Custodial Authority",
+    title: "Sultanate of Amexem Reconstituted as Custodial Authority",
     date: "October 2020",
     summary:
-      "The Sultanate of Amexem was formally reestablished as the custodial governing authority for the protection, security, and advancement of the descendants of the Nation of Moab. This restoration marks the continuation of governance rooted in nationality, law, and the customs of our ancestors — a governing body that had always existed in principle and in the hearts of our people.",
+      "The Sultanate of Amexem was formally reconstituted as the custodial governing authority for the protection, security, and advancement of the descendants of the Nation of Moab. This restoration marks the continuation of governance rooted in nationality, law, and the customs of our ancestors — a governing body that had always existed in principle and in the hearts of our people.",
   },
   {
     title: "Digital Platform Launched for Member Services",
@@ -247,7 +247,7 @@ export default async function PressPage() {
                 <p>
                   The Sultanate of Amexem is the custodial governing authority
                   for the protection and security of the descendants of the
-                  Nation of Moab, reestablished in October 2020. The Sultanate
+                  Nation of Moab, reconstituted in October 2020. The Sultanate
                   operates under the supreme authority of Allah, administered
                   by the Executive Director and Supreme Grand Counsel.
                 </p>
