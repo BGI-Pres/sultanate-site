@@ -31,19 +31,6 @@ const purposes = [
   "Build constructive relations with other organizations and governments",
 ];
 
-const memberRights = [
-  "Participate in assemblies",
-  "Access programs and services",
-  "Seek advocacy on their behalf",
-  "Hold office within the Sultanate",
-];
-
-const memberDuties = [
-  "Uphold the Constitution",
-  "Conduct themselves lawfully",
-  "Contribute support to the body",
-  "Act in good faith toward fellow members",
-];
 
 export default function GovernmentPage() {
   return (
@@ -171,75 +158,14 @@ export default function GovernmentPage() {
         </div>
       </section>
 
-      {/* ── Article III — Membership ── */}
-      <section className="py-12 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-px w-12 bg-[var(--gold)]" />
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                Article III
-              </span>
-              <div className="h-px w-12 bg-[var(--gold)]" />
-            </div>
-            <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-4">
-              Membership
-            </h2>
-            <p className="text-[var(--gray-700)] leading-relaxed mb-10 text-[15px]">
-              Membership in the Sultanate of Amexem is open to birthright
-              members and applicants who meet the criteria established by the
-              Supreme Grand Council.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-5 md:p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
-                <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-4">
-                  Rights of Members
-                </h3>
-                <ul className="space-y-3">
-                  {memberRights.map((right, i) => (
-                    <li key={i} className="flex gap-3 items-start">
-                      <svg className="w-5 h-5 text-[var(--gold)] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                      </svg>
-                      <span className="text-[var(--gray-700)] text-[15px] leading-relaxed">
-                        {right}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="p-5 md:p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
-                <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-4">
-                  Duties of Members
-                </h3>
-                <ul className="space-y-3">
-                  {memberDuties.map((duty, i) => (
-                    <li key={i} className="flex gap-3 items-start">
-                      <svg className="w-5 h-5 text-[var(--gold)] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-                      </svg>
-                      <span className="text-[var(--gray-700)] text-[15px] leading-relaxed">
-                        {duty}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Article IV — Governing Structure ── */}
+      {/* ── Article III — Governing Structure ── */}
       <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4 justify-center">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                Article IV
+                Article III
               </span>
               <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
@@ -276,7 +202,7 @@ export default function GovernmentPage() {
         </div>
       </section>
 
-      {/* ── Articles V & VI — The Boards ── */}
+      {/* ── Articles IV & V — The Boards ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
@@ -286,7 +212,7 @@ export default function GovernmentPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-8 bg-[var(--gold)]" />
                   <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                    Article V
+                    Article IV
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2">
@@ -313,7 +239,7 @@ export default function GovernmentPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-8 bg-[var(--gold)]" />
                   <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                    Article VI
+                    Article V
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2">
