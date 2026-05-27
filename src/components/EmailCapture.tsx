@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { createClient } from "@/lib/supabase-client";
 
 interface EmailCaptureProps {
   variant?: "inline" | "banner" | "card";
@@ -15,11 +16,24 @@ export default function EmailCapture({
 }: EmailCaptureProps) {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setSubmitted(true);
-    setEmail("");
+    setLoading(true);
+    try {
+      const supabase = createClient();
+      await supabase.from("subscribers").insert({ email, source: "website" });
+      // Always show success — don't reveal if email already exists
+      setSubmitted(true);
+      setEmail("");
+    } catch {
+      // Still show success to avoid revealing whether email exists
+      setSubmitted(true);
+      setEmail("");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (variant === "banner") {
@@ -47,9 +61,10 @@ export default function EmailCapture({
                 />
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-[var(--cherry-red)] text-white text-sm font-semibold rounded-md hover:bg-[var(--cherry-red-dark)] transition-colors whitespace-nowrap"
+                  disabled={loading}
+                  className="px-6 py-2.5 bg-[var(--cherry-red)] text-white text-sm font-semibold rounded-md hover:bg-[var(--cherry-red-dark)] transition-colors whitespace-nowrap disabled:opacity-50"
                 >
-                  Subscribe
+                  {loading ? "Subscribing..." : "Subscribe"}
                 </button>
               </form>
             )}
@@ -82,9 +97,10 @@ export default function EmailCapture({
             />
             <button
               type="submit"
-              className="px-5 py-2.5 bg-[var(--forest-green)] text-white text-sm font-semibold rounded-md hover:bg-[var(--forest-green-dark)] transition-colors"
+              disabled={loading}
+              className="px-5 py-2.5 bg-[var(--forest-green)] text-white text-sm font-semibold rounded-md hover:bg-[var(--forest-green-dark)] transition-colors disabled:opacity-50"
             >
-              Join
+              {loading ? "Joining..." : "Join"}
             </button>
           </form>
         )}
@@ -109,9 +125,10 @@ export default function EmailCapture({
       />
       <button
         type="submit"
-        className="px-5 py-2.5 bg-[var(--cherry-red)] text-white text-sm font-semibold rounded-md hover:bg-[var(--cherry-red-dark)] transition-colors"
+        disabled={loading}
+        className="px-5 py-2.5 bg-[var(--cherry-red)] text-white text-sm font-semibold rounded-md hover:bg-[var(--cherry-red-dark)] transition-colors disabled:opacity-50"
       >
-        Subscribe
+        {loading ? "Subscribing..." : "Subscribe"}
       </button>
     </form>
   );

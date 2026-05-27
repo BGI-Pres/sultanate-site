@@ -2,13 +2,32 @@
 
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { createClient } from "@/lib/supabase-client";
 
 export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from("contact_submissions")
+        .insert({ name, email, subject, message });
+      if (!error) {
+        setSubmitted(true);
+      }
+    } catch {
+      // Silently handle unexpected errors
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -63,6 +82,8 @@ export default function ContactForm() {
                       id="name"
                       name="name"
                       required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                       className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
                     />
                   </div>
@@ -78,6 +99,8 @@ export default function ContactForm() {
                       id="email"
                       name="email"
                       required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
                     />
                   </div>
@@ -92,6 +115,8 @@ export default function ContactForm() {
                       id="subject"
                       name="subject"
                       required
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
                       className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent bg-white"
                     >
                       <option value="">Select a subject...</option>
@@ -115,14 +140,17 @@ export default function ContactForm() {
                       name="message"
                       rows={5}
                       required
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
                       className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent resize-y"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-8 py-3 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-xl hover:brightness-110 transition-all duration-300"
+                    disabled={loading}
+                    className="w-full sm:w-auto px-8 py-3 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-xl hover:brightness-110 transition-all duration-300 disabled:opacity-50"
                   >
-                    Send Message
+                    {loading ? "Sending..." : "Send Message"}
                   </button>
                 </form>
               )}
