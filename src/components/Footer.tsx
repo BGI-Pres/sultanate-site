@@ -27,7 +27,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-5">
-              Sovereignty. Collective Economics. Cultural Identity.
+              Self-Determination. Collective Economics. Cultural Identity.
               Building a nation that endures.
             </p>
             <SocialLinks />

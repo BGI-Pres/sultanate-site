@@ -19,7 +19,7 @@ export default function CitizenshipPage() {
           </h1>
           <p className="text-lg text-white/70 max-w-3xl">
             Become a citizen of the Sultanate of Amexem and join a community
-            dedicated to sovereignty, heritage, and mutual advancement.
+            dedicated to self-determination, heritage, and mutual advancement.
           </p>
         </div>
       </section>

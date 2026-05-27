@@ -16,7 +16,7 @@ const branches = [
       </svg>
     ),
     description:
-      "The Sultan serves as head of state and chief custodian, providing executive leadership and representing the nation in all sovereign matters.",
+      "The Sultan serves as head of state and chief custodian, providing executive leadership and representing the nation in all official matters.",
   },
   {
     title: "Legislative Body",
@@ -52,8 +52,8 @@ const branches = [
 
 const articles = [
   {
-    title: "Sovereignty",
-    text: "The Sultanate of Amexem is a sovereign entity, serving as Custodian of the Nation of Moab.",
+    title: "Governing Authority",
+    text: "The Sultanate of Amexem is an established governing authority, serving as Custodian of the Nation of Moab.",
   },
   {
     title: "Rights of Citizens",
@@ -102,11 +102,11 @@ export default function GovernmentPage() {
               <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
             <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-4">
-              A Framework for Sovereign Leadership
+              A Framework for Executive Leadership
             </h2>
             <p className="text-[var(--gray-700)] leading-relaxed mb-10 text-[15px]">
               The Sultanate of Amexem operates under a structured governance
-              framework designed to uphold the rights and sovereignty of the
+              framework designed to uphold the rights and standing of the
               Nation of Moab. Our government is organized to ensure effective
               leadership, just administration, and faithful custodianship.
             </p>
@@ -151,7 +151,7 @@ export default function GovernmentPage() {
               The Constitution of the Sultanate of Amexem serves as the supreme
               law of the nation. It establishes the framework for governance,
               defines the rights and responsibilities of citizens, and enshrines
-              the sovereign status of the Nation of Moab.
+              the established standing of the Nation of Moab.
             </p>
 
             <div className="rounded-2xl border border-[var(--gold)]/20 bg-[var(--gold)]/5 p-5 md:p-10">

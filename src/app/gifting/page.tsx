@@ -40,7 +40,7 @@ export default function GiftingPage() {
             Your gifts and donations directly support the operations,
             programs, and mission of the Sultanate of Amexem. Every
             contribution helps us preserve heritage, serve citizens, and
-            advance our sovereign goals.
+            advance our governing objectives.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -58,7 +58,7 @@ export default function GiftingPage() {
               {
                 amount: "$100",
                 label: "Benefactor",
-                description: "Fund governance operations and national development initiatives.",
+                description: "Fund governance operations and institutional development initiatives.",
               },
             ].map((tier) => (
               <div
@@ -120,7 +120,7 @@ export default function GiftingPage() {
           </div>
           <p className="text-[var(--gray-500)] max-w-3xl mb-8 leading-relaxed">
             Show your pride and support with official Sultanate of Amexem
-            merchandise. Proceeds support national operations and programs.
+            merchandise. Proceeds support the Sultanate's operations and programs.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -136,9 +136,9 @@ export default function GiftingPage() {
                 description: "Premium cotton tee with the Sultanate emblem.",
               },
               {
-                name: "Sovereignty Pin",
+                name: "Heritage Pin",
                 price: "$12",
-                description: "Enamel lapel pin featuring the national insignia.",
+                description: "Enamel lapel pin featuring the official insignia.",
               },
               {
                 name: "Document Folio",

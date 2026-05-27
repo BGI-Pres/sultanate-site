@@ -84,7 +84,7 @@ export default function AboutPage() {
               <div className="space-y-4 text-[var(--gray-700)] leading-relaxed text-[15px]">
                 <p>
                   The Sultanate operates with a singular clarity: economic
-                  security is national security. We are building an economic
+                  security is the foundation of governance. We are building an economic
                   infrastructure from within our own membership — collective
                   economics in practice, not theory. Bey Group International
                   stands as proof that when our people organize around shared
@@ -115,7 +115,7 @@ export default function AboutPage() {
                     "Economic Security and Collective Economics",
                     "Global Cultural Presentation",
                     "Institutional Development from Within",
-                    "Self-Determination and Sovereign Governance",
+                    "Self-Determination and Executive Governance",
                   ].map((value) => (
                     <li key={value} className="flex items-start gap-3">
                       <span className="mt-1.5 w-2 h-2 rounded-full bg-[var(--gold)] shrink-0" />
@@ -172,13 +172,13 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-4">
-              Claim Your Nationality
+              Proclaim Your Nationality
             </h2>
             <p className="text-white/60 mb-8 leading-relaxed">
               Nationality is the order of the day. Take your rightful place
               among the descendants of the Nation of Moab and stand within a
               governing body dedicated to economic security, cultural authority,
-              and the sovereign advancement of our people.
+              and the collective advancement of our people.
             </p>
             <Link
               href="/citizenship"

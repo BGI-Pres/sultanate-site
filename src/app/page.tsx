@@ -5,13 +5,13 @@ import EmailCapture from "@/components/EmailCapture";
 const services = [
   {
     title: "Citizenship",
-    description: "Apply for national membership — three tiers of standing",
+    description: "Apply for membership — three tiers of standing",
     href: "/citizenship",
     icon: "M3 21V7l9-4 9 4v14M3 21h18M9 21V11h6v10",
   },
   {
     title: "Economics",
-    description: "Collective ventures, cooperative commerce, national wealth",
+    description: "Collective ventures, cooperative commerce, shared wealth",
     href: "/gifting",
     icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
   },
@@ -23,13 +23,13 @@ const services = [
   },
   {
     title: "Support",
-    description: "Contribute to the national mission — donations and merchandise",
+    description: "Contribute to the Sultanate's mission — donations and merchandise",
     href: "/gifting",
     icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z",
   },
   {
     title: "News",
-    description: "Official proclamations, updates, and national developments",
+    description: "Official proclamations, updates, and developments",
     href: "/news",
     icon: "M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z",
   },
@@ -88,7 +88,7 @@ export default function HomePage() {
           <div className="text-center mb-14">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">The National Imperative</span>
+              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">The Executive Mandate</span>
               <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-[var(--gray-900)] mb-4">
@@ -104,20 +104,20 @@ export default function HomePage() {
             {[
               {
                 title: "Nationality & Standing",
-                desc: "Formal national identity under the custodianship of the Sultanate. Documentation, constitutional protections, and declared standing.",
-                items: ["National identification", "Constitutional protections", "Declared nationality status"],
+                desc: "Formal identity under the custodianship of the Sultanate. Documentation, constitutional protections, and proclaimed standing.",
+                items: ["Official identification", "Constitutional protections", "Proclaimed nationality status"],
                 icon: "M3 21V7l9-4 9 4v14M3 21h18M9 21V11h6v10",
               },
               {
                 title: "Economic Security",
                 desc: "A nation that does not control its economics controls nothing. Cooperative commerce, institutional development, and ventures born from our own membership.",
-                items: ["Cooperative commercial ventures", "National business network", "Institutional development"],
+                items: ["Cooperative commercial ventures", "Collective business network", "Institutional development"],
                 icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
               },
               {
                 title: "Culture & Global Presence",
                 desc: "Our customs and culture presented to the world on our terms. A comprehensive global presence ensuring our heritage is recognized internationally.",
-                items: ["Global cultural presentation", "Heritage preservation", "National community network"],
+                items: ["Global cultural presentation", "Heritage preservation", "Community network"],
                 icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
               },
             ].map((pillar) => (
@@ -154,19 +154,19 @@ export default function HomePage() {
                 <span className="text-xs uppercase tracking-[0.2em] text-[var(--cherry-red)]">Free Download</span>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                The National&apos;s Guide
+                The Executive Guide
               </h2>
               <p className="text-gray-400 leading-relaxed mb-6">
                 The fundamentals of membership — etiquette, commercial acumen,
-                confidence, and conviction. How to carry yourself as a national
+                confidence, and conviction. How to carry yourself as a member
                 of the Sultanate of Amexem.
               </p>
               <ul className="space-y-3 mb-8">
                 {[
                   "What nationality means and why it precedes everything",
-                  "Etiquette and conduct befitting a national",
+                  "Etiquette and conduct befitting a citizen",
                   "Commercial acumen and economic participation",
-                  "Rights, responsibilities, and the national compact",
+                  "Rights, responsibilities, and the collective compact",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-sm text-gray-300">
                     <svg className="w-5 h-5 text-[var(--gold)] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -198,7 +198,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
               { value: "Est. 2020", label: "Reestablished Authority" },
-              { value: "3 Tiers", label: "Of National Membership" },
+              { value: "3 Tiers", label: "Of Membership" },
               { value: "Active", label: "Governance & Commerce" },
               { value: "Global", label: "Cultural Presence" },
             ].map((stat) => (
@@ -224,18 +224,18 @@ export default function HomePage() {
               The Economics of a Nation
             </h2>
             <p className="text-[var(--gray-500)] text-lg leading-relaxed mb-4">
-              Economic security is the engine that powers every national objective.
+              Economic security is the engine that powers every collective objective.
               Cooperative ventures, commercial infrastructure, and institutional
               wealth — built from within our own membership.
             </p>
             <p className="text-[var(--gray-700)] font-medium mb-8">
-              This is a national economic apparatus. Participate or observe.
+              This is a collective economic engine. Participate or observe.
             </p>
             <div className="max-w-md mx-auto">
               <EmailCapture
                 variant="card"
                 heading="Economics Newsletter"
-                description="Investment opportunities, cooperative ventures, and national economic development."
+                description="Investment opportunities, cooperative ventures, and collective economic development."
               />
             </div>
           </div>
@@ -247,11 +247,11 @@ export default function HomePage() {
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Declare Your Nationality
+            Proclaim Your Nationality
           </h2>
           <p className="text-gray-400 max-w-2xl mx-auto mb-8 text-lg">
             The Sultanate of Amexem exists for the protection and advancement
-            of the descendants of the Nation of Moab. Take your standing.
+            of the descendants of the Nation of Moab. Proclaim your nationality.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

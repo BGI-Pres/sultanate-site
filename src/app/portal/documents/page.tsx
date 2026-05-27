@@ -20,7 +20,7 @@ const documents = [
     status: "Available",
   },
   {
-    name: "National Proclamation",
+    name: "Official Proclamation",
     description: "Official proclamation and declaration documents.",
     type: "PDF",
     status: "Available",

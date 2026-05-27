@@ -21,11 +21,11 @@ export const metadata: Metadata = {
     template: "%s | Sultanate of Amexem",
   },
   description:
-    "Official website of the Sultanate of Amexem, Custodian of the Nation of Moab. Preserving heritage, upholding sovereignty, and building community.",
+    "Official website of the Sultanate of Amexem, Custodian of the Nation of Moab. Preserving heritage, upholding authority, and building community.",
   keywords: [
     "Sultanate of Amexem",
     "Nation of Moab",
-    "sovereignty",
+    "authority",
     "heritage",
     "citizenship",
     "Moorish",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Sultanate of Amexem — Custodian of the Nation of Moab",
     description:
-      "Preserving heritage, upholding sovereignty, and building community for future generations.",
+      "Preserving heritage, upholding authority, and building community for future generations.",
     type: "website",
     locale: "en_US",
     siteName: "Sultanate of Amexem",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Sultanate of Amexem",
     description:
-      "Custodian of the Nation of Moab. Preserving heritage, upholding sovereignty, and building community.",
+      "Custodian of the Nation of Moab. Preserving heritage, upholding authority, and building community.",
   },
 };
 

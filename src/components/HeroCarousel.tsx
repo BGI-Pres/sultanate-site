@@ -5,11 +5,11 @@ import { useState, useEffect, useCallback } from "react";
 
 const slides = [
   {
-    tag: "Nationality",
-    headline: "Declare Your Standing",
+    tag: "Authority",
+    headline: "The Governing Body of a Nation",
     description:
-      "The Sultanate of Amexem — the governing authority for the protection and advancement of the descendants of the Nation of Moab. Nationality is the foundation of every right.",
-    cta: { label: "Apply for Citizenship", href: "/citizenship" },
+      "The Sultanate of Amexem — reestablished October 2020 as the custodial authority for the protection and advancement of the descendants of the Nation of Moab.",
+    cta: { label: "Learn More", href: "/about" },
     accent: "var(--gold)",
   },
   {
@@ -24,8 +24,8 @@ const slides = [
     tag: "Culture",
     headline: "Our Customs. Our Terms.",
     description:
-      "A comprehensive global presentation of our heritage, traditions, and national identity — ensuring the world engages with our culture on our terms.",
-    cta: { label: "Learn More", href: "/about" },
+      "A comprehensive global presentation of our heritage, traditions, and collective identity — ensuring the world engages with our culture on our terms.",
+    cta: { label: "Proclaim Your Nationality", href: "/citizenship" },
     accent: "var(--forest-green)",
   },
 ];
