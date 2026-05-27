@@ -258,9 +258,6 @@ export default function GovernmentPage() {
                 <h3 className="text-2xl font-bold text-[var(--gold)] mb-2">
                   Allah
                 </h3>
-                <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-3">
-                  The Sultan in Reality
-                </p>
                 <p className="text-white/70 text-sm leading-relaxed max-w-lg mx-auto">
                   The Most High — the supreme and absolute authority from which
                   all governing power derives. Every office, institution, and
@@ -286,9 +283,6 @@ export default function GovernmentPage() {
                 <h3 className="text-xl font-bold text-white mb-2">
                   Executive Director
                 </h3>
-                <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-3">
-                  The Sultan in Authority &amp; Operation
-                </p>
                 <p className="text-white/70 text-sm leading-relaxed max-w-lg mx-auto">
                   The living authority of the Sultanate. Carries out the will of
                   the body, chairs the Ministerial and Executive Boards, directs
@@ -313,9 +307,6 @@ export default function GovernmentPage() {
                 <h3 className="text-xl font-bold text-white mb-2">
                   Supreme Grand Council
                 </h3>
-                <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-3">
-                  The System of Enforcement &amp; Delegation
-                </p>
                 <p className="text-white/70 text-sm leading-relaxed max-w-lg mx-auto">
                   The governing system through which authority is enforced and
                   delegated. Composed of senior Sheiks and principal officers,
