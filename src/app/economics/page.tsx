@@ -34,19 +34,22 @@ const enterprises = [
 
 const frameworks = [
   {
-    title: "Community Fund",
+    title: "Uplifting Fund",
     description:
-      "A collective pool of resources directed toward community priorities — infrastructure, emergency relief, and opportunities that benefit all members.",
+      "A collective pool of resources directed toward community priorities — infrastructure, education, and business grants that benefit all members.",
+    href: "/economics/community-fund",
   },
   {
     title: "Cooperative Ventures",
     description:
       "Joint economic enterprises owned and operated by the membership. Shared risk, shared reward, shared purpose.",
+    href: "/economics/cooperative-ventures",
   },
   {
     title: "Asset Development",
     description:
       "Strategic acquisition and development of assets — real estate, intellectual property, and commercial holdings — that build generational wealth.",
+    href: "/economics/asset-development",
   },
 ];
 
@@ -170,17 +173,21 @@ export default function EconomicsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {frameworks.map((item) => (
-              <div
+              <Link
                 key={item.title}
-                className="rounded-xl border border-[var(--gold)]/15 bg-white/[0.02] p-6 hover:border-[var(--gold)]/40 transition-all duration-300"
+                href={item.href}
+                className="group rounded-xl border border-[var(--gold)]/15 bg-white/[0.02] p-6 hover:border-[var(--gold)]/40 transition-all duration-300"
               >
-                <h3 className="text-lg font-semibold text-white mb-3">
+                <h3 className="text-lg font-semibold text-white mb-3 group-hover:text-[var(--gold)] transition-colors">
                   {item.title}
                 </h3>
-                <p className="text-white/60 text-sm leading-relaxed">
+                <p className="text-white/60 text-sm leading-relaxed mb-3">
                   {item.description}
                 </p>
-              </div>
+                <span className="text-xs font-semibold text-[var(--gold)]">
+                  Learn more &rarr;
+                </span>
+              </Link>
             ))}
           </div>
 
