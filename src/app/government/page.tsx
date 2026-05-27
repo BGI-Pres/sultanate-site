@@ -108,7 +108,7 @@ export default function GovernmentPage() {
             <div className="rounded-2xl border border-[var(--gold)]/20 bg-[var(--gold)]/5 p-5 md:p-8">
               <ul className="space-y-5">
                 {[
-                  "Islam is the spiritual foundation; free exercise of conscience is guaranteed to all members",
+                  "Islamism is the spiritual foundation; free exercise of conscience is guaranteed to all members",
                   "All members hold equal dignity — discrimination is prohibited",
                   "Non-violence, lawful conduct, and peaceful resolution govern all disputes",
                   "The dignity of women and children is protected above all",
