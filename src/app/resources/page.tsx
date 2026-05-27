@@ -96,10 +96,7 @@ export default function ResourcesPage() {
               </span>
             </div>
 
-            <Link
-              href="/citizenship"
-              className="rounded-xl border border-[var(--gray-200)] bg-white p-6 transition-all duration-300 hover:border-[var(--gold)] hover:shadow-lg group"
-            >
+            <div className="rounded-xl border border-[var(--gray-200)] bg-white p-6">
               <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--dark-bg)] mb-4">
                 <svg
                   className="w-6 h-6 text-[var(--gold)]"
@@ -115,14 +112,53 @@ export default function ResourcesPage() {
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2 group-hover:text-[var(--gold)] transition-colors">
+              <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-4">
                 Membership Information
               </h3>
-              <p className="text-sm text-[var(--gray-500)] leading-relaxed">
-                Learn about membership tiers, requirements, and the process for
-                joining the Sultanate of Amexem.
+              <p className="text-sm text-[var(--gray-500)] leading-relaxed mb-4">
+                Official membership materials aligned with the mandate of the
+                Sultanate of Amexem — self-determination, heritage preservation,
+                and community advancement.
               </p>
-            </Link>
+              <ul className="space-y-2">
+                <li>
+                  <a
+                    href="/documents/constitution.pdf"
+                    download
+                    className="inline-flex items-center gap-2 text-sm font-medium text-[var(--gold)] hover:text-[var(--gold-dark)] transition-colors"
+                  >
+                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Constitution &amp; Bylaws (PDF)
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/documents/membership-handbook.pdf"
+                    download
+                    className="inline-flex items-center gap-2 text-sm font-medium text-[var(--gold)] hover:text-[var(--gold-dark)] transition-colors"
+                  >
+                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Membership Handbook (PDF)
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="/documents/rights-and-duties.pdf"
+                    download
+                    className="inline-flex items-center gap-2 text-sm font-medium text-[var(--gold)] hover:text-[var(--gold-dark)] transition-colors"
+                  >
+                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    Member Rights &amp; Duties (PDF)
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
