@@ -42,9 +42,9 @@ export default function Footer() {
               <li><Link href="/government" className="hover:text-[var(--gold)] transition-colors">Government</Link></li>
               <li><Link href="/citizenship" className="hover:text-[var(--gold)] transition-colors">Membership</Link></li>
               <li><Link href="/gifting" className="hover:text-[var(--gold)] transition-colors">Support</Link></li>
-              <li><Link href="/news" className="hover:text-[var(--gold)] transition-colors">News</Link></li>
               <li><Link href="/events" className="hover:text-[var(--gold)] transition-colors">Events</Link></li>
-              <li><Link href="/press" className="hover:text-[var(--gold)] transition-colors">Press</Link></li>
+              <li><Link href="/press" className="hover:text-[var(--gold)] transition-colors">Press &amp; Updates</Link></li>
+              <li><Link href="/resources" className="hover:text-[var(--gold)] transition-colors">Resources</Link></li>
               <li><Link href="/contact" className="hover:text-[var(--gold)] transition-colors">Contact</Link></li>
             </ul>
           </div>
