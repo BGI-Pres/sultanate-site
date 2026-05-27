@@ -9,7 +9,7 @@ const navLinks = [
   { href: "/about", label: "About" },
   { href: "/government", label: "Government" },
   { href: "/citizenship", label: "Citizenship" },
-  { href: "/gifting", label: "Gifting" },
+  { href: "/gifting", label: "Support" },
   { href: "/news", label: "News" },
   { href: "/contact", label: "Contact" },
   { href: "/portal", label: "Portal" },

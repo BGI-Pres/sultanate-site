@@ -4,7 +4,7 @@ import PaymentMethods from "@/components/PaymentMethods";
 import EmailCapture from "@/components/EmailCapture";
 
 export const metadata: Metadata = {
-  title: "Gifting",
+  title: "Support",
   description:
     "Support the Sultanate of Amexem through donations and gifts, or browse official merchandise.",
 };
@@ -15,7 +15,7 @@ export default function GiftingPage() {
       <section className="bg-[var(--gray-50)] py-16 border-b border-[var(--gray-200)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold text-[var(--gray-900)] mb-4">
-            Gifting
+            Support
           </h1>
           <p className="text-lg text-[var(--gray-500)] max-w-3xl">
             Support the mission of the Sultanate through contributions and gifts,

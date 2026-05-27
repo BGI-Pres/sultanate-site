@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = {
   title: "News",
@@ -6,39 +7,77 @@ export const metadata: Metadata = {
     "Latest news, updates, and announcements from the Sultanate of Amexem.",
 };
 
-const posts = [
+interface Post {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  created_at: string;
+}
+
+const fallbackPosts: Post[] = [
   {
+    id: "fallback-1",
     title: "Welcome to Our New Website",
-    date: "2026-05-27",
     excerpt:
       "The Sultanate of Amexem is proud to launch our redesigned official website, built to better serve our citizens and community.",
     category: "Announcement",
+    created_at: "2026-05-27T00:00:00Z",
   },
   {
+    id: "fallback-2",
     title: "Citizenship Applications Now Open",
-    date: "2026-05-27",
     excerpt:
       "We are now accepting applications for citizenship in the Sultanate of Amexem. Learn about the process and membership tiers available.",
     category: "Citizenship",
+    created_at: "2026-05-27T00:00:00Z",
   },
   {
+    id: "fallback-3",
     title: "Preserving Our Heritage for Future Generations",
-    date: "2026-05-27",
     excerpt:
       "An overview of our ongoing initiatives to document, preserve, and share the cultural heritage of the Nation of Moab.",
     category: "Heritage",
+    created_at: "2026-05-27T00:00:00Z",
   },
 ];
 
+async function getPosts(): Promise<Post[]> {
+  try {
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
+      return fallbackPosts;
+    }
+
+    const supabase = await createServerSupabaseClient();
+    const { data, error } = await supabase
+      .from("posts")
+      .select("id, title, excerpt, category, created_at")
+      .eq("published", true)
+      .order("created_at", { ascending: false });
+
+    if (error || !data || data.length === 0) {
+      return fallbackPosts;
+    }
+
+    return data as Post[];
+  } catch {
+    return fallbackPosts;
+  }
+}
+
 function formatDate(dateStr: string) {
-  return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
+  return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
 }
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const posts = await getPosts();
   return (
     <>
       <section className="bg-[var(--gray-50)] py-16 border-b border-[var(--gray-200)]">
@@ -58,7 +97,7 @@ export default function NewsPage() {
           <div className="max-w-4xl space-y-8">
             {posts.map((post) => (
               <article
-                key={post.title}
+                key={post.id}
                 className="p-8 border border-[var(--gray-200)] rounded-lg hover:shadow-sm transition-shadow"
               >
                 <div className="flex items-center gap-3 mb-3">
@@ -66,7 +105,7 @@ export default function NewsPage() {
                     {post.category}
                   </span>
                   <span className="text-sm text-[var(--gray-500)]">
-                    {formatDate(post.date)}
+                    {formatDate(post.created_at)}
                   </span>
                 </div>
                 <h2 className="text-xl font-semibold text-[var(--gray-900)] mb-3">

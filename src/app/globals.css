@@ -7,6 +7,11 @@
   --cherry-red-dark: #9B1B30;
   --forest-green: #2D5A27;
   --forest-green-dark: #1E3D1A;
+  --gold: #C5A55A;
+  --gold-light: #D4BA7A;
+  --gold-dark: #A8893E;
+  --dark-bg: #0F1A0E;
+  --dark-surface: #162214;
   --gray-50: #f9fafb;
   --gray-100: #f3f4f6;
   --gray-200: #e5e7eb;
@@ -23,6 +28,7 @@
   --color-cherry-dark: var(--cherry-red-dark);
   --color-forest: var(--forest-green);
   --color-forest-dark: var(--forest-green-dark);
+  --color-gold: var(--gold);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -35,4 +41,56 @@ body {
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(197, 165, 90, 0.4); }
+  50% { box-shadow: 0 0 20px 4px rgba(197, 165, 90, 0.15); }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease-out both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out both;
+}
+
+.animate-delay-1 { animation-delay: 0.1s; }
+.animate-delay-2 { animation-delay: 0.2s; }
+.animate-delay-3 { animation-delay: 0.3s; }
+.animate-delay-4 { animation-delay: 0.4s; }
+.animate-delay-5 { animation-delay: 0.5s; }
+
+.gold-shimmer {
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold-light), var(--gold-dark));
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gold-border {
+  border-image: linear-gradient(90deg, transparent, var(--gold), transparent) 1;
+}
+
+.gold-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
 }

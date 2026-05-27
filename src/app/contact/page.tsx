@@ -90,7 +90,7 @@ export default function ContactPage() {
                     >
                       <option value="">Select a subject...</option>
                       <option value="citizenship">Citizenship Inquiry</option>
-                      <option value="donation">Donation / Gifting</option>
+                      <option value="donation">Donation / Support</option>
                       <option value="merchandise">Merchandise Order</option>
                       <option value="government">Government / Legal</option>
                       <option value="media">Media / Press</option>
