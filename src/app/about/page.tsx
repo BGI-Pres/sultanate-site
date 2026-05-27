@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "The Sultanate of Amexem — reestablished October 2020 as the custodial governing authority for the descendants of the Nation of Moab. Nationality, economic security, and global cultural presentation are the order of the day.",
+    "The Sultanate of Amexem — reestablished October 2020 as the custodial governing authority for the descendants of the Nation of Moab, modernly identified as Moorish American. Nationality, economic security, and global cultural presentation are the order of the day.",
 };
 
 export default function AboutPage() {
@@ -21,7 +20,7 @@ export default function AboutPage() {
           <p className="text-lg text-white/70 max-w-3xl leading-relaxed">
             The Sultanate of Amexem is the custodial governing authority for
             the protection and security of the descendants of the Nation of
-            Moab. Nationality is the order of the day — and from that
+            Moab, modernly identified as Moorish American. Nationality is the order of the day — and from that
             foundation, we build economic power, institutional strength, and a
             global presence worthy of our heritage.
           </p>
@@ -111,11 +110,11 @@ export default function AboutPage() {
                 </div>
                 <ul className="space-y-3">
                   {[
-                    "Nationality Above All Else",
-                    "Economic Security and Collective Economics",
-                    "Global Cultural Presentation",
-                    "Institutional Development from Within",
-                    "Self-Determination and Executive Governance",
+                    "Love",
+                    "Truth",
+                    "Peace",
+                    "Freedom",
+                    "Justice",
                   ].map((value) => (
                     <li key={value} className="flex items-start gap-3">
                       <span className="mt-1.5 w-2 h-2 rounded-full bg-[var(--gold)] shrink-0" />
@@ -143,41 +142,68 @@ export default function AboutPage() {
             The Authority of Governance
           </h2>
 
-          <div className="max-w-3xl mx-auto space-y-10">
-            {/* Supreme Authority */}
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-28 h-28 rounded-full bg-[var(--dark-bg)] border border-[var(--gold)]/30 mb-6">
-                <Image
-                  src="/images/emblem.svg"
-                  alt="Sultanate of Amexem Emblem"
-                  width={96}
-                  height={96}
-                />
-              </div>
-              <h3 className="text-xl font-semibold text-[var(--gold)] mb-2">
-                Allah — Supreme Head &amp; Sultan
-              </h3>
-              <p className="text-white/60 leading-relaxed max-w-xl mx-auto">
-                All authority within the Sultanate of Amexem derives from
-                Allah, the Supreme Head and Sultan. Every act of governance,
-                every institution, and every decision operates under this
-                supreme authority.
-              </p>
-            </div>
+          <div className="max-w-3xl mx-auto">
+            {/* Hierarchy */}
+            {[
+              {
+                level: "I",
+                title: "Allah, the Most High",
+                description:
+                  "In reverence to Allah, the Most High. All governance of the Sultanate operates under this supreme guidance.",
+                gold: true,
+              },
+              {
+                level: "II",
+                title: "Supreme Grand Council",
+                description:
+                  "The senior governing authority of the Sultanate. Composed of the senior Sheiks and principal officers, the Council holds final authority over the Constitution, offices, and policies of the Sultanate.",
+                gold: false,
+              },
+              {
+                level: "III",
+                title: "Executive Director",
+                description:
+                  "The chief administrative officer, carrying out the policies of the Supreme Grand Council, chairing the Ministerial Board and Executive Board, and overseeing the day-to-day operations of the Sultanate.",
+                gold: false,
+              },
+              {
+                level: "IV",
+                title: "The Sheiks",
+                description:
+                  "The recognized leaders and elders of the Sultanate, providing guidance in matters of faith, heritage, and community.",
+                gold: false,
+              },
+            ].map((item, idx) => (
+              <div key={item.level} className="flex flex-col items-center">
+                {/* Connecting line (skip for first item) */}
+                {idx > 0 && (
+                  <div className="w-px h-8 bg-[var(--gold)]/30" />
+                )}
 
-            {/* Executive Leadership */}
-            <div className="border-t border-[var(--gold)]/10 pt-10 text-center">
-              <h3 className="text-lg font-semibold text-white mb-2">
-                Executive Director &amp; Supreme Grand Counsel
-              </h3>
-              <p className="text-white/60 leading-relaxed max-w-xl mx-auto">
-                The Executive Director serves as the head of state and
-                custodial authority alongside the Supreme Grand Counsel.
-                Together, they administer the affairs of the descendants of
-                the Nation of Moab — directing the economic, cultural, and
-                diplomatic agenda of the nation under the authority of Allah.
-              </p>
-            </div>
+                {/* Level card */}
+                <div
+                  className={`w-full text-center rounded-xl border p-6 ${
+                    item.gold
+                      ? "border-[var(--gold)]/40 bg-[var(--gold)]/5"
+                      : "border-[var(--gold)]/15 bg-white/[0.02]"
+                  }`}
+                >
+                  <span className="inline-block text-xs uppercase tracking-[0.2em] text-[var(--gold)]/60 font-semibold mb-2">
+                    Level {item.level}
+                  </span>
+                  <h3
+                    className={`text-lg font-semibold mb-2 ${
+                      item.gold ? "text-[var(--gold)]" : "text-white"
+                    }`}
+                  >
+                    {item.title}
+                  </h3>
+                  <p className="text-white/60 leading-relaxed max-w-xl mx-auto text-sm">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

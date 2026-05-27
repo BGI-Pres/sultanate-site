@@ -2,14 +2,16 @@
 
 const documents = [
   {
-    name: "Membership Certificate",
-    description: "Your official membership certificate for the Sultanate of Amexem.",
+    name: "Constitution & Bylaws",
+    description:
+      "The supreme governing instrument of the Sultanate of Amexem, adopted May 27, 2026.",
     type: "PDF",
     status: "Available",
+    href: "/documents/constitution.pdf",
   },
   {
-    name: "Constitution of the Sultanate",
-    description: "The full text of the Constitution and foundational articles.",
+    name: "Membership Certificate",
+    description: "Your official membership certificate for the Sultanate of Amexem.",
     type: "PDF",
     status: "Available",
   },
@@ -68,9 +70,19 @@ export default function DocumentsPage() {
               <span className="text-xs text-[var(--gray-500)] bg-[var(--gray-100)] px-2 py-1 rounded">
                 {doc.type}
               </span>
-              <button className="text-sm text-[var(--forest-green)] hover:underline font-medium">
-                Download
-              </button>
+              {"href" in doc && doc.href ? (
+                <a
+                  href={doc.href}
+                  download
+                  className="text-sm text-[var(--forest-green)] hover:underline font-medium"
+                >
+                  Download
+                </a>
+              ) : (
+                <button className="text-sm text-[var(--forest-green)] hover:underline font-medium">
+                  Download
+                </button>
+              )}
             </div>
           </div>
         ))}

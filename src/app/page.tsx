@@ -82,6 +82,37 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Preamble */}
+      <section className="relative bg-[var(--dark-bg)] py-16 md:py-24 overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-xl md:text-2xl lg:text-3xl text-white/90 italic leading-relaxed font-serif">
+            &ldquo;We, the Moorish American people of the Sultanate of Amexem
+            &mdash; descendants and successors in interest to the ancient Nation
+            of Moab &mdash; gather in fidelity to the principles of Love, Truth,
+            Peace, Freedom, and Justice, and in reverence to Allah, the Most
+            High.&rdquo;
+          </p>
+
+          {/* Gold divider */}
+          <div className="mx-auto mt-10 mb-6 w-16 h-px bg-[var(--gold)]" />
+
+          <p className="text-sm text-[var(--gold)]/80 tracking-wide">
+            From the Constitution of the Sultanate of Amexem &mdash; Adopted May
+            27, 2026, Chicago, Illinois
+          </p>
+
+          <Link
+            href="/documents/constitution.pdf"
+            className="inline-flex items-center gap-2 mt-8 text-sm font-semibold text-[var(--gold)] border border-[var(--gold)]/30 px-6 py-2.5 rounded-lg hover:bg-[var(--gold)]/10 transition-colors duration-300"
+          >
+            Read the Constitution
+            <span aria-hidden="true">&rarr;</span>
+          </Link>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
+      </section>
+
       {/* Three Pillars */}
       <section className="py-12 md:py-20 bg-[var(--gray-50)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
