@@ -398,9 +398,11 @@ export default function MembershipCardPage() {
                       onChange={(e) => setMembershipTier(e.target.value)}
                     >
                       <option value="">Select tier</option>
-                      <option value="Community">Community</option>
-                      <option value="General">General</option>
-                      <option value="Lead">Lead</option>
+                      <option value="Associate Member">Associate Member</option>
+                      <option value="Full Member">Full Member</option>
+                      <option value="Elder / Council Member">
+                        Elder / Council Member
+                      </option>
                     </select>
                   </div>
                 </div>
