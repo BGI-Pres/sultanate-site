@@ -155,10 +155,13 @@ export default function AboutPage() {
               The Sultan
             </h3>
             <p className="text-white/60 leading-relaxed">
-              As head of state and Custodian of the Nation of Moab, the Sultan
-              provides leadership and direction for the Sultanate of Amexem,
-              ensuring the preservation of our heritage and the advancement of
-              our sovereign mission.
+              The Sultan serves as head of state and custodial authority over
+              the affairs of the descendants of the Nation of Moab. This office
+              is not ceremonial — it is the executive seat from which the
+              economic, cultural, and diplomatic agenda of the nation is set and
+              enforced. Under this authority, the Sultanate directs the
+              institutions, initiatives, and strategic vision that secure the
+              future of our people.
             </p>
           </div>
         </div>
@@ -169,12 +172,13 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-12">
             <h2 className="text-2xl font-bold text-white mb-4">
-              Join the Nation of Moab
+              Claim Your Nationality
             </h2>
             <p className="text-white/60 mb-8 leading-relaxed">
-              Become a citizen of the Sultanate of Amexem and take your place in
-              a community dedicated to sovereignty, heritage, and collective
-              advancement.
+              Nationality is the order of the day. Take your rightful place
+              among the descendants of the Nation of Moab and stand within a
+              governing body dedicated to economic security, cultural authority,
+              and the sovereign advancement of our people.
             </p>
             <Link
               href="/citizenship"
