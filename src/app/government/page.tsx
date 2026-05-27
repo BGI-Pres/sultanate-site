@@ -7,31 +7,6 @@ export const metadata: Metadata = {
     "The Constitution of the Sultanate of Amexem — the supreme governing document for the Moorish American people, descendants and successors in interest to the ancient Nation of Moab.",
 };
 
-
-const ministerialDepartments = [
-  "Community",
-  "Civics",
-  "Religion",
-  "Education",
-  "Housing and Welfare",
-];
-
-const executiveDepartments = [
-  "Trade and Commerce",
-  "Reserves",
-  "Security",
-  "Organization-to-Organization Relations",
-];
-
-const purposes = [
-  "Preserve the history, culture, and spiritual traditions of the Moorish American people",
-  "Advance education, mutual aid, and community development",
-  "Advocate for the civil and human rights of members",
-  "Organize commerce, trade, and economic cooperation",
-  "Build constructive relations with other organizations and governments",
-];
-
-
 export default function GovernmentPage() {
   return (
     <>
@@ -43,10 +18,7 @@ export default function GovernmentPage() {
             Government &amp; Constitution
           </h1>
           <p className="text-lg text-white/70 max-w-3xl leading-relaxed">
-            The supreme governing document of the Sultanate of Amexem —
-            established to serve and protect the Moorish American people,
-            descendants and successors in interest to the ancient Nation of
-            Moab.
+            The supreme governing document of the Sultanate of Amexem.
           </p>
         </div>
       </section>
@@ -89,21 +61,21 @@ export default function GovernmentPage() {
             <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-4">
               Name, Nature, and Purpose
             </h2>
-            <div className="space-y-4 text-[var(--gray-700)] leading-relaxed text-[15px] mb-10">
-              <p>
-                The Sultanate of Amexem, established under the House of Simmons
-                Bey and organized in the State of Illinois, serves as Custodian
-                of the descendants of the Nation of Moab who modernly identify
-                as Moorish American. The Sultanate operates as a self-governing
-                membership body.
-              </p>
-            </div>
+            <p className="text-[var(--gray-700)] leading-relaxed text-[15px] mb-10">
+              The Sultanate of Amexem, established under the House of Simmons
+              Bey and organized in the State of Illinois, is the custodial
+              governing authority for the descendants of the Nation of Moab,
+              modernly identified as Moorish American.
+            </p>
 
-            <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-4">
-              Purposes of the Sultanate
-            </h3>
             <ol className="space-y-3">
-              {purposes.map((purpose, i) => (
+              {[
+                "Operate schools, study programs, and orientation courses that educate members in their history, rights, and heritage",
+                "Fund and certify cooperative businesses, maintain a trade network, and circulate wealth within the membership",
+                "Administer a mutual aid fund for emergency relief, community infrastructure, and direct support of members",
+                "Preserve sacred texts, sponsor cultural events, and maintain the spiritual and historical traditions of the Moorish American people",
+                "Establish and maintain formal relations with other organizations and governing bodies",
+              ].map((purpose, i) => (
                 <li key={i} className="flex gap-4">
                   <span className="text-sm font-bold text-[var(--gold)] mt-0.5 w-6 shrink-0">
                     ({String.fromCharCode(97 + i)})
@@ -129,21 +101,17 @@ export default function GovernmentPage() {
               </span>
               <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-4">
+            <h2 className="text-2xl font-bold text-white mb-8">
               Declaration of Principles
             </h2>
-            <p className="text-white/60 leading-relaxed mb-10 text-[15px]">
-              The Sultanate of Amexem is guided by the foundational values of
-              Love, Truth, Peace, Freedom, and Justice in all its affairs.
-            </p>
 
             <div className="rounded-2xl border border-[var(--gold)]/20 bg-[var(--gold)]/5 p-5 md:p-8">
               <ul className="space-y-5">
                 {[
-                  "Honors Islam as its spiritual foundation while guaranteeing the free exercise of conscience for all members",
-                  "Upholds the equal dignity of all members — no discrimination shall be tolerated",
-                  "Committed to non-violence, peaceful resolution of disputes, and lawful conduct",
-                  "Extends particular care for the most vulnerable members, including the dignity of women and children",
+                  "Islam is the spiritual foundation; free exercise of conscience is guaranteed to all members",
+                  "All members hold equal dignity — discrimination is prohibited",
+                  "Non-violence, lawful conduct, and peaceful resolution govern all disputes",
+                  "The dignity of women and children is protected above all",
                 ].map((principle, i) => (
                   <li key={i} className="flex gap-4 items-start">
                     <span className="w-2 h-2 rounded-full bg-[var(--gold)] mt-2 shrink-0" />
@@ -159,106 +127,75 @@ export default function GovernmentPage() {
       </section>
 
       {/* ── Article III — Governing Structure ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
+      <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center gap-3 mb-4 justify-center">
+          <div className="max-w-4xl">
+            <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
                 Article III
               </span>
               <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
-            <h2 className="text-2xl font-bold text-white mb-10 text-center">
+            <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-8">
               Governing Structure
             </h2>
 
-            <div className="rounded-xl border border-[var(--gold)]/20 bg-[var(--gold)]/5 p-6 md:p-8">
+            <div className="rounded-xl border border-[var(--gray-200)] p-6 md:p-8">
               <ol className="space-y-0">
                 {[
-                  { name: "Allah", role: "Supreme authority from which all governing power derives" },
-                  { name: "Executive Director", role: "Carries out the will of the body and directs all operations" },
-                  { name: "Supreme Grand Council", role: "Enforces and delegates constitutional authority across all offices" },
-                  { name: "Grand Body", role: "The general assembly — ratifies amendments and expresses the collective will" },
-                  { name: "The Sheiks", role: "Elders providing guidance in faith, heritage, and community" },
+                  { name: "Allah", authority: "All governing power derives from and operates in submission to the Most High" },
+                  { name: "Executive Director", authority: "Holds operational authority over the Sultanate and chairs both Boards" },
+                  { name: "Supreme Grand Council", authority: "Holds constitutional authority over all offices and policies" },
+                  { name: "Grand Body", authority: "Ratifies amendments and expresses the collective will of the membership" },
+                  { name: "The Sheiks", authority: "Hold authority in matters of faith, heritage, and spiritual continuity" },
                 ].map((item, i) => (
-                  <li key={item.name} className="flex items-start gap-4 py-4 border-b border-[var(--gold)]/10 last:border-0">
-                    <span className="w-8 h-8 rounded-full bg-[var(--dark-bg)] border border-[var(--gold)]/30 text-[var(--gold)] flex items-center justify-center text-xs font-bold shrink-0">
+                  <li key={item.name} className="flex items-start gap-4 py-4 border-b border-[var(--gray-200)] last:border-0">
+                    <span className="w-7 h-7 rounded-full bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                       {i + 1}
                     </span>
                     <div>
-                      <h3 className={`font-semibold mb-0.5 ${i === 0 ? "text-[var(--gold)]" : "text-white"}`}>
+                      <h3 className={`font-semibold text-[15px] ${i === 0 ? "text-[var(--gold)]" : "text-[var(--gray-900)]"}`}>
                         {item.name}
                       </h3>
-                      <p className="text-white/50 text-sm leading-relaxed">
-                        {item.role}
+                      <p className="text-[var(--gray-500)] text-sm">
+                        {item.authority}
                       </p>
                     </div>
                   </li>
                 ))}
               </ol>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ── Articles IV & V — The Boards ── */}
-      <section className="py-12 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Ministerial Board */}
-              <div className="p-5 md:p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-px w-8 bg-[var(--gold)]" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                    Article IV
-                  </span>
+              {/* Boards */}
+              <div className="mt-6 pt-6 border-t border-[var(--gray-200)]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold mb-3">
+                      Ministerial Board
+                    </h4>
+                    <ul className="space-y-2">
+                      {["Community", "Civics", "Religion", "Education", "Housing and Welfare"].map((dept) => (
+                        <li key={dept} className="flex gap-2 items-center">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] shrink-0" />
+                          <span className="text-[var(--gray-700)] text-sm">{dept}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold mb-3">
+                      Executive Board
+                    </h4>
+                    <ul className="space-y-2">
+                      {["Trade and Commerce", "Reserves", "Security", "Organization-to-Organization Relations"].map((dept) => (
+                        <li key={dept} className="flex gap-2 items-center">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] shrink-0" />
+                          <span className="text-[var(--gray-700)] text-sm">{dept}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2">
-                  The Ministerial Board
-                </h3>
-                <p className="text-[var(--gray-500)] text-sm mb-5 leading-relaxed">
-                  Domestic affairs — serving the internal needs of the membership
-                  and community.
-                </p>
-                <ul className="space-y-3">
-                  {ministerialDepartments.map((dept) => (
-                    <li key={dept} className="flex gap-3 items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] shrink-0" />
-                      <span className="text-[var(--gray-700)] text-[15px]">
-                        {dept}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Executive Board */}
-              <div className="p-5 md:p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-px w-8 bg-[var(--gold)]" />
-                  <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                    Article V
-                  </span>
-                </div>
-                <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2">
-                  The Executive Board
-                </h3>
-                <p className="text-[var(--gray-500)] text-sm mb-5 leading-relaxed">
-                  External affairs — managing trade, security, and relations
-                  beyond the Sultanate.
-                </p>
-                <ul className="space-y-3">
-                  {executiveDepartments.map((dept) => (
-                    <li key={dept} className="flex gap-3 items-center">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold)] shrink-0" />
-                      <span className="text-[var(--gray-700)] text-[15px]">
-                        {dept}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
               </div>
             </div>
           </div>
@@ -270,12 +207,10 @@ export default function GovernmentPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-4">
-              Download the Full Constitution
+              The Full Constitution
             </h2>
             <p className="text-white/60 mb-8 leading-relaxed">
-              Access the complete Constitution of the Sultanate of Amexem.
-              Review the founding document that governs and guides our
-              Moorish American body.
+              The complete governing document of the Sultanate of Amexem.
             </p>
             <Link
               href="/documents/constitution.pdf"
@@ -284,30 +219,7 @@ export default function GovernmentPage() {
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
               </svg>
-              Download the Constitution
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Bottom CTA ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] border-t border-[var(--gold)]/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Participate in Our Nation
-            </h2>
-            <p className="text-white/60 mb-8 leading-relaxed">
-              Learn more about membership and how you can contribute to the
-              governance and growth of the Sultanate of Amexem as a
-              Moorish American.
-            </p>
-            <Link
-              href="/apply"
-              className="inline-flex items-center gap-2 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold px-8 py-3 rounded-lg hover:bg-[var(--gold)]/90 transition-colors duration-300"
-            >
-              Explore Membership
-              <span aria-hidden="true">&rarr;</span>
+              Download
             </Link>
           </div>
         </div>
