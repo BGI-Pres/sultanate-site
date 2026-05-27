@@ -14,36 +14,42 @@ const enterprises = [
     description:
       "Cooperative commercial ventures that circulate wealth within the community and establish trade networks under Sultanate custodianship.",
     icon: "M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z",
+    href: "/economics/commerce",
   },
   {
     title: "Institutional Ventures",
     description:
       "Enterprises born from the membership itself — institutions of real power that serve the collective and build lasting economic infrastructure.",
     icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
+    href: "/economics/ventures",
   },
   {
     title: "Professional Services",
     description:
       "Skilled professionals within the membership offering services that strengthen the community and generate cooperative economic returns.",
     icon: "M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
+    href: "/economics/services",
   },
 ];
 
 const frameworks = [
   {
-    title: "Community Fund",
+    title: "Uplifting Fund",
     description:
-      "A collective pool of resources directed toward community priorities — infrastructure, emergency relief, and opportunities that benefit all members.",
+      "A collective pool of resources directed toward community priorities — infrastructure, education, and business grants that benefit all members.",
+    href: "/economics/community-fund",
   },
   {
     title: "Cooperative Ventures",
     description:
       "Joint economic enterprises owned and operated by the membership. Shared risk, shared reward, shared purpose.",
+    href: "/economics/cooperative-ventures",
   },
   {
     title: "Asset Development",
     description:
       "Strategic acquisition and development of assets — real estate, intellectual property, and commercial holdings — that build generational wealth.",
+    href: "/economics/asset-development",
   },
 ];
 
@@ -110,8 +116,9 @@ export default function EconomicsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {enterprises.map((item) => (
-              <div
+              <Link
                 key={item.title}
+                href={item.href}
                 className="group p-6 rounded-xl bg-white border border-[var(--gray-200)] hover:border-[var(--gold)] transition-all duration-300 hover:shadow-lg hover:shadow-[var(--gold)]/5"
               >
                 <div className="w-14 h-14 rounded-xl bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
@@ -129,13 +136,16 @@ export default function EconomicsPage() {
                     />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold text-[var(--gray-900)] mb-2">
+                <h3 className="text-lg font-bold text-[var(--gray-900)] mb-2 group-hover:text-[var(--gold)] transition-colors">
                   {item.title}
                 </h3>
-                <p className="text-sm text-[var(--gray-500)] leading-relaxed">
+                <p className="text-sm text-[var(--gray-500)] leading-relaxed mb-3">
                   {item.description}
                 </p>
-              </div>
+                <span className="text-xs font-semibold text-[var(--gold)]">
+                  Learn more &amp; apply &rarr;
+                </span>
+              </Link>
             ))}
           </div>
         </div>
@@ -163,17 +173,21 @@ export default function EconomicsPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
             {frameworks.map((item) => (
-              <div
+              <Link
                 key={item.title}
-                className="rounded-xl border border-[var(--gold)]/15 bg-white/[0.02] p-6 hover:border-[var(--gold)]/40 transition-all duration-300"
+                href={item.href}
+                className="group rounded-xl border border-[var(--gold)]/15 bg-white/[0.02] p-6 hover:border-[var(--gold)]/40 transition-all duration-300"
               >
-                <h3 className="text-lg font-semibold text-white mb-3">
+                <h3 className="text-lg font-semibold text-white mb-3 group-hover:text-[var(--gold)] transition-colors">
                   {item.title}
                 </h3>
-                <p className="text-white/60 text-sm leading-relaxed">
+                <p className="text-white/60 text-sm leading-relaxed mb-3">
                   {item.description}
                 </p>
-              </div>
+                <span className="text-xs font-semibold text-[var(--gold)]">
+                  Learn more &rarr;
+                </span>
+              </Link>
             ))}
           </div>
 
