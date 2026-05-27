@@ -12,6 +12,7 @@ const navLinks = [
   { href: "/gifting", label: "Gifting" },
   { href: "/news", label: "News" },
   { href: "/contact", label: "Contact" },
+  { href: "/portal", label: "Portal" },
 ];
 
 export default function Header() {
