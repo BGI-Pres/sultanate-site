@@ -56,7 +56,7 @@ export default function WelcomePage() {
                 administered by our governing body.
               </p>
               <Link
-                href="/portal/status"
+                href="/portal/apply"
                 className="inline-block px-4 py-2 text-sm bg-[var(--gold)] text-[var(--dark-bg)] rounded-md hover:bg-[var(--gold-light)] transition-colors"
               >
                 Start Application
