@@ -51,9 +51,9 @@ export default function EventsPage() {
             Events
           </h1>
           <p className="text-lg text-white/70 max-w-3xl leading-relaxed">
-            The Sultanate convenes its membership through regular virtual
-            gatherings — where governance is conducted, knowledge is
-            transmitted, and economic infrastructure is built.
+            The Sultanate holds regular public virtual gatherings — where
+            governance is conducted, knowledge is transmitted, and economic
+            infrastructure is built. All meetings are open. RSVP required.
           </p>
         </div>
       </section>
@@ -144,15 +144,10 @@ export default function EventsPage() {
           {/* Access note */}
           <div className="mt-8 p-4 rounded-lg bg-[var(--gray-50)] border border-[var(--gray-200)]">
             <p className="text-sm text-[var(--gray-500)] text-center">
-              Meeting links are provided to registered members after sign-in.{" "}
-              <Link href="/auth/login" className="text-[var(--gold)] font-medium hover:text-[var(--gold-dark)] transition-colors">
-                Sign in
-              </Link>{" "}
-              or{" "}
-              <Link href="/apply" className="text-[var(--gold)] font-medium hover:text-[var(--gold-dark)] transition-colors">
-                apply for membership
-              </Link>{" "}
-              to receive access.
+              All meetings are open to the public. RSVP is required to receive the meeting link.{" "}
+              <Link href="/contact" className="text-[var(--gold)] font-medium hover:text-[var(--gold-dark)] transition-colors">
+                RSVP here
+              </Link>
             </p>
           </div>
         </div>
