@@ -41,9 +41,9 @@ export default function WelcomePage() {
       </div>
 
       <div className="space-y-4 mb-10">
-        <div className="bg-white p-6 rounded-lg border border-[var(--gray-200)]">
+        <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)]">
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 rounded-full bg-[var(--forest-green)] text-white flex items-center justify-center text-sm font-bold shrink-0">
+            <div className="w-8 h-8 rounded-full bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center text-sm font-bold shrink-0">
               1
             </div>
             <div>
@@ -57,7 +57,7 @@ export default function WelcomePage() {
               </p>
               <Link
                 href="/portal/status"
-                className="inline-block px-4 py-2 text-sm bg-[var(--forest-green)] text-white rounded-md hover:bg-[var(--forest-green-dark)] transition-colors"
+                className="inline-block px-4 py-2 text-sm bg-[var(--gold)] text-[var(--dark-bg)] rounded-md hover:bg-[var(--gold-light)] transition-colors"
               >
                 Start Application
               </Link>
@@ -65,9 +65,9 @@ export default function WelcomePage() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg border border-[var(--gray-200)]">
+        <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)]">
           <div className="flex items-start gap-4">
-            <div className="w-8 h-8 rounded-full bg-[var(--cherry-red)] text-white flex items-center justify-center text-sm font-bold shrink-0">
+            <div className="w-8 h-8 rounded-full bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center text-sm font-bold shrink-0">
               2
             </div>
             <div>
@@ -89,7 +89,7 @@ export default function WelcomePage() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg border border-[var(--gray-200)]">
+        <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)]">
           <div className="flex items-start gap-4">
             <div className="w-8 h-8 rounded-full border-2 border-[var(--gray-300)] text-[var(--gray-300)] flex items-center justify-center text-sm font-bold shrink-0">
               3

@@ -28,13 +28,13 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-[80vh] bg-[var(--gray-50)]">
-      <div className="bg-[var(--gray-900)] text-white py-3">
+      <div className="bg-[var(--dark-bg)] text-white py-3 border-b border-[var(--gold)]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono bg-[var(--cherry-red)] px-2 py-0.5 rounded">
               ADMIN
             </span>
-            <p className="text-sm font-medium">Sultanate Administration</p>
+            <p className="text-sm font-medium hidden sm:block">Sultanate Administration</p>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/portal" className="text-sm text-gray-400 hover:text-white transition-colors">
@@ -53,19 +53,19 @@ export default function AdminLayout({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <nav className="lg:w-52 shrink-0">
-            <ul className="space-y-1">
+            <ul className="flex lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 -mx-1 lg:mx-0">
               {adminNav.map((item) => {
                 const isActive =
                   item.href === "/admin"
                     ? pathname === "/admin"
                     : pathname.startsWith(item.href);
                 return (
-                  <li key={item.href}>
+                  <li key={item.href} className="shrink-0">
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${
+                      className={`flex items-center gap-2 lg:gap-3 px-3 py-2.5 rounded-md text-sm whitespace-nowrap transition-colors ${
                         isActive
-                          ? "bg-[var(--gray-900)] text-white"
+                          ? "bg-[var(--dark-bg)] text-[var(--gold)]"
                           : "text-[var(--gray-700)] hover:bg-white hover:shadow-sm"
                       }`}
                     >

@@ -77,10 +77,10 @@ export default function GovernmentPage() {
   return (
     <>
       {/* ── Hero header ── */}
-      <section className="bg-[var(--dark-bg)] py-20 border-b-2 border-[var(--gold)]">
+      <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-px w-16 bg-[var(--gold)] mb-6" />
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
             Government &amp; Constitution
           </h1>
           <p className="text-lg text-white/70 max-w-3xl leading-relaxed">
@@ -91,7 +91,7 @@ export default function GovernmentPage() {
       </section>
 
       {/* ── Governance Structure ── */}
-      <section className="py-20">
+      <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-4">
@@ -134,7 +134,7 @@ export default function GovernmentPage() {
       </section>
 
       {/* ── Constitutional Principles ── */}
-      <section className="py-20 bg-[var(--dark-bg)]">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-4">
@@ -154,7 +154,7 @@ export default function GovernmentPage() {
               the sovereign status of the Nation of Moab.
             </p>
 
-            <div className="rounded-2xl border border-[var(--gold)]/20 bg-[var(--gold)]/5 p-8 md:p-10">
+            <div className="rounded-2xl border border-[var(--gold)]/20 bg-[var(--gold)]/5 p-5 md:p-10">
               <h3 className="text-lg font-semibold text-white mb-6">
                 Foundational Articles
               </h3>
@@ -181,9 +181,9 @@ export default function GovernmentPage() {
       </section>
 
       {/* ── Bottom CTA ── */}
-      <section className="py-20 bg-[var(--dark-bg)] border-t border-[var(--gold)]/20">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)] border-t border-[var(--gold)]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-12">
+          <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-4">
               Participate in Our Nation
             </h2>

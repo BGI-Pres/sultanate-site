@@ -152,7 +152,7 @@ export default function SignupPage() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="As it will appear on official documents"
-              className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--forest-green)] focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
             />
           </div>
 
@@ -167,7 +167,7 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--forest-green)] focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
             />
           </div>
 
@@ -183,14 +183,14 @@ export default function SignupPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Minimum 8 characters"
-              className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--forest-green)] focus:border-transparent"
+              className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-[var(--forest-green)] text-white font-semibold rounded-md hover:bg-[var(--forest-green-dark)] transition-colors disabled:opacity-50"
+            className="w-full py-3 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-md hover:bg-[var(--gold-light)] transition-colors disabled:opacity-50"
           >
             {loading ? "Processing registration..." : "Submit Registration"}
           </button>
