@@ -4,7 +4,7 @@ const documents = [
   {
     name: "Constitution & Bylaws",
     description:
-      "The supreme governing instrument of the Sultanate of Amexem, adopted May 27, 2026.",
+      "The supreme governing document of the Sultanate of Amexem.",
     type: "PDF",
     status: "Available",
     href: "/documents/constitution.pdf",
@@ -52,7 +52,7 @@ export default function DocumentsPage() {
             className="bg-white p-5 rounded-lg border border-[var(--gray-200)] flex items-center justify-between gap-4"
           >
             <div className="flex items-center gap-4 min-w-0">
-              <div className="w-10 h-10 rounded-lg bg-red-50 text-[var(--cherry-red)] flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-[var(--gold)]/10 text-[var(--gold)] flex items-center justify-center shrink-0">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                 </svg>
@@ -74,12 +74,12 @@ export default function DocumentsPage() {
                 <a
                   href={doc.href}
                   download
-                  className="text-sm text-[var(--forest-green)] hover:underline font-medium"
+                  className="text-sm text-[var(--gold)] hover:underline font-medium"
                 >
                   Download
                 </a>
               ) : (
-                <button className="text-sm text-[var(--forest-green)] hover:underline font-medium">
+                <button className="text-sm text-[var(--gold)] hover:underline font-medium">
                   Download
                 </button>
               )}
