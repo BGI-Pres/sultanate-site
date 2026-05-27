@@ -1,11 +1,8 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Events",
-  description:
-    "Recurring events of the Sultanate of Amexem — weekly Holy Day meetings, new member orientation, and business mastermind sessions.",
-};
+import { useState } from "react";
+import Link from "next/link";
+import { createClient } from "@/lib/supabase-client";
 
 const recurring = [
   {
@@ -39,6 +36,211 @@ const recurring = [
     highlight: false,
   },
 ];
+
+function EventCard({
+  event,
+}: {
+  event: (typeof recurring)[number];
+}) {
+  const [showForm, setShowForm] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
+  const [error, setError] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      const supabase = createClient();
+      const { error: dbError } = await supabase
+        .from("event_rsvps")
+        .insert({
+          event_name: event.title,
+          name,
+          email,
+          phone: phone || null,
+        });
+
+      if (dbError) throw dbError;
+
+      await fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email }),
+      });
+
+      setSubmittedEmail(email);
+      setSubmitted(true);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div
+      className={`rounded-xl border bg-white p-6 md:p-8 transition-all duration-300 hover:shadow-lg ${
+        event.highlight
+          ? "border-[var(--gold)] ring-2 ring-[var(--gold)]/10"
+          : "border-[var(--gray-200)] hover:border-[var(--gold)]"
+      }`}
+    >
+      <div className="flex flex-col md:flex-row md:items-start gap-5">
+        <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--dark-bg)] shrink-0">
+          <svg
+            className="w-6 h-6 text-[var(--gold)]"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d={event.icon}
+            />
+          </svg>
+        </div>
+
+        <div className="flex-1">
+          <div className="flex flex-wrap items-center gap-3 mb-2">
+            <h3 className="text-lg font-semibold text-[var(--gray-900)]">
+              {event.title}
+            </h3>
+            {event.highlight && (
+              <span className="text-[10px] uppercase tracking-wider bg-[var(--gold)]/10 text-[var(--gold)] px-2 py-0.5 rounded-full font-semibold">
+                Weekly
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-wrap gap-4 mb-4 text-sm">
+            <span className="flex items-center gap-1.5 text-[var(--gold)] font-medium">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+              </svg>
+              {event.schedule}
+            </span>
+            <span className="flex items-center gap-1.5 text-[var(--gray-500)]">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+              {event.time}
+            </span>
+            <span className="flex items-center gap-1.5 text-[var(--gray-500)]">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+              </svg>
+              {event.format}
+            </span>
+          </div>
+
+          <p className="text-[var(--gray-700)] leading-relaxed text-[15px]">
+            {event.description}
+          </p>
+
+          {/* RSVP section */}
+          <div className="mt-5">
+            {submitted ? (
+              <div className="p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
+                You&apos;re registered! Meeting link will be sent to {submittedEmail}.
+              </div>
+            ) : !showForm ? (
+              <button
+                type="button"
+                onClick={() => setShowForm(true)}
+                className="px-5 py-2 bg-[var(--gold)] text-[var(--dark-bg)] text-sm font-semibold rounded-lg hover:bg-[var(--gold-light)] transition-colors"
+              >
+                RSVP
+              </button>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label htmlFor={`name-${event.title}`} className="block text-sm font-medium text-[var(--gray-700)] mb-1.5">
+                    Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id={`name-${event.title}`}
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
+                    placeholder="Your full name"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor={`email-${event.title}`} className="block text-sm font-medium text-[var(--gray-700)] mb-1.5">
+                    Email <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    id={`email-${event.title}`}
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
+                    placeholder="you@example.com"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor={`phone-${event.title}`} className="block text-sm font-medium text-[var(--gray-700)] mb-1.5">
+                    Phone <span className="text-[var(--gray-400)]">(optional)</span>
+                  </label>
+                  <input
+                    id={`phone-${event.title}`}
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
+                    placeholder="(555) 555-5555"
+                  />
+                </div>
+
+                {error && (
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+                    {error}
+                  </div>
+                )}
+
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-5 py-2 bg-[var(--gold)] text-[var(--dark-bg)] text-sm font-semibold rounded-lg hover:bg-[var(--gold-light)] transition-colors disabled:opacity-50"
+                  >
+                    {loading ? "Submitting..." : "Submit RSVP"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowForm(false);
+                      setError("");
+                    }}
+                    className="px-5 py-2 text-sm text-[var(--gray-500)] hover:text-[var(--gray-700)] transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function EventsPage() {
   return (
@@ -74,80 +276,14 @@ export default function EventsPage() {
 
           <div className="space-y-6">
             {recurring.map((event) => (
-              <div
-                key={event.title}
-                className={`rounded-xl border bg-white p-6 md:p-8 transition-all duration-300 hover:shadow-lg ${
-                  event.highlight
-                    ? "border-[var(--gold)] ring-2 ring-[var(--gold)]/10"
-                    : "border-[var(--gray-200)] hover:border-[var(--gold)]"
-                }`}
-              >
-                <div className="flex flex-col md:flex-row md:items-start gap-5">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--dark-bg)] shrink-0">
-                    <svg
-                      className="w-6 h-6 text-[var(--gold)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d={event.icon}
-                      />
-                    </svg>
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex flex-wrap items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-[var(--gray-900)]">
-                        {event.title}
-                      </h3>
-                      {event.highlight && (
-                        <span className="text-[10px] uppercase tracking-wider bg-[var(--gold)]/10 text-[var(--gold)] px-2 py-0.5 rounded-full font-semibold">
-                          Weekly
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex flex-wrap gap-4 mb-4 text-sm">
-                      <span className="flex items-center gap-1.5 text-[var(--gold)] font-medium">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                        </svg>
-                        {event.schedule}
-                      </span>
-                      <span className="flex items-center gap-1.5 text-[var(--gray-500)]">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                        </svg>
-                        {event.time}
-                      </span>
-                      <span className="flex items-center gap-1.5 text-[var(--gray-500)]">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
-                        </svg>
-                        {event.format}
-                      </span>
-                    </div>
-
-                    <p className="text-[var(--gray-700)] leading-relaxed text-[15px]">
-                      {event.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <EventCard key={event.title} event={event} />
             ))}
           </div>
 
           {/* Access note */}
           <div className="mt-8 p-4 rounded-lg bg-[var(--gray-50)] border border-[var(--gray-200)]">
             <p className="text-sm text-[var(--gray-500)] text-center">
-              All meetings are open to the public. RSVP is required to receive the meeting link.{" "}
-              <Link href="/contact" className="text-[var(--gold)] font-medium hover:text-[var(--gold-dark)] transition-colors">
-                RSVP here
-              </Link>
+              All meetings are open to the public. RSVP below to receive the meeting link.
             </p>
           </div>
         </div>
