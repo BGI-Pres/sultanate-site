@@ -119,41 +119,16 @@ export default function GiftingPage() {
           <div className="flex items-center gap-4 mb-4">
             <div className="w-8 h-px bg-[var(--gold)]" />
             <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
-              Official Materials &amp; Documents
+              Official Items &amp; Credentials
             </h2>
             <div className="flex-1 h-px bg-[var(--gold)]/20" />
           </div>
           <p className="text-[var(--gray-500)] max-w-3xl mb-8 leading-relaxed">
-            Official materials, literature, and items from the Sultanate of
-            Amexem. Proceeds support the Sultanate&apos;s operations and programs.
+            Official credentials and items from the Sultanate of Amexem.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              {
-                name: "Document Folio",
-                price: "$75",
-                description: "Sealed copies of the Holy Koran, Divine Constitution and Bylaws, Moorish Questionnaire, and Pin.",
-                href: "https://square.link/u/EEtwpqbd",
-              },
-              {
-                name: "Holy Koran",
-                price: "$30",
-                description: "The sacred text — foundational to our spiritual heritage and practice.",
-                href: "https://square.link/u/ehzD4oSH",
-              },
-              {
-                name: "Divine Constitution and Bylaws",
-                price: "$10",
-                description: "The governing principles and bylaws of the Moorish American people.",
-                href: "https://square.link/u/ItybNxU0",
-              },
-              {
-                name: "Moorish Questionnaire",
-                price: "$15",
-                description: "Essential study material for prospective and current members.",
-                href: "https://square.link/u/aPsLCmvk",
-              },
               {
                 name: "Moorish Pin",
                 price: "$15",
@@ -241,6 +216,30 @@ export default function GiftingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
+              {
+                title: "Document Folio",
+                price: "$75",
+                description: "Sealed copies of the Holy Koran, Divine Constitution and Bylaws, Moorish Questionnaire, and Pin.",
+                href: "https://square.link/u/EEtwpqbd",
+              },
+              {
+                title: "Holy Koran",
+                price: "$30",
+                description: "The sacred text — foundational to our spiritual heritage and practice.",
+                href: "https://square.link/u/ehzD4oSH",
+              },
+              {
+                title: "Divine Constitution and Bylaws",
+                price: "$10",
+                description: "The governing principles and bylaws of the Moorish American people.",
+                href: "https://square.link/u/ItybNxU0",
+              },
+              {
+                title: "Moorish Questionnaire",
+                price: "$15",
+                description: "Essential study material for prospective and current members.",
+                href: "https://square.link/u/aPsLCmvk",
+              },
               {
                 title: "The Last Crown Prince: The Hidden Truth",
                 price: "$50",
