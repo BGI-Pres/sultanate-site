@@ -152,16 +152,17 @@ export default function AboutPage() {
               />
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">
-              The Sultan
+              Executive Director &amp; Supreme Grand Counsel
             </h3>
             <p className="text-white/60 leading-relaxed">
-              The Sultan serves as head of state and custodial authority over
-              the affairs of the descendants of the Nation of Moab. This office
-              is not ceremonial — it is the executive seat from which the
-              economic, cultural, and diplomatic agenda of the nation is set and
-              enforced. Under this authority, the Sultanate directs the
-              institutions, initiatives, and strategic vision that secure the
-              future of our people.
+              The Executive Director serves as the head of state and custodial
+              authority alongside the Supreme Grand Counsel. Together, they
+              govern the affairs of the descendants of the Nation of Moab. This
+              is not a ceremonial structure — it is the executive body from
+              which the economic, cultural, and diplomatic agenda of the nation
+              is set and enforced. Under this authority, the Sultanate directs
+              the institutions, initiatives, and strategic vision that secure
+              the future of our people.
             </p>
           </div>
         </div>

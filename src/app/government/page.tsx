@@ -16,7 +16,7 @@ const branches = [
       </svg>
     ),
     description:
-      "The Sultan serves as head of state and chief custodian, providing executive leadership and representing the nation in all official matters.",
+      "The Executive Director serves as head of state and custodial authority alongside the Supreme Grand Counsel, providing executive leadership and representing the nation in all official matters.",
   },
   {
     title: "Legislative Body",
