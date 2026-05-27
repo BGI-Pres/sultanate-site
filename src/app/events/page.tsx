@@ -176,7 +176,7 @@ export default function EventsPage() {
               your place in the assemblies that shape our collective future.
             </p>
             <Link
-              href="/citizenship"
+              href="/apply"
               className="inline-flex items-center gap-2 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold px-8 py-3 rounded-lg hover:bg-[var(--gold)]/90 transition-colors duration-300"
             >
               Explore Membership

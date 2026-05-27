@@ -160,7 +160,7 @@ export default async function NewsPostPage({
               share our vision of sovereignty and heritage.
             </p>
             <Link
-              href="/citizenship"
+              href="/apply"
               className="inline-flex items-center gap-2 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold px-8 py-3 rounded-lg hover:bg-[var(--gold)]/90 transition-colors duration-300"
             >
               Become a Member

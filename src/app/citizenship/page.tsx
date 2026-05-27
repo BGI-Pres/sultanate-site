@@ -119,7 +119,7 @@ export default function CitizenshipPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/contact"
+                  href="/apply"
                   className={`block text-center py-2.5 rounded-md text-sm font-semibold transition-colors ${
                     tier.featured
                       ? "bg-[var(--gold)] text-[var(--dark-bg)] hover:bg-[var(--gold-light)]"
@@ -196,7 +196,7 @@ export default function CitizenshipPage() {
             your path.
           </p>
           <Link
-            href="/contact"
+            href="/apply"
             className="inline-block px-8 py-3 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-md hover:bg-[var(--gold-light)] transition-colors"
           >
             Contact Us to Apply

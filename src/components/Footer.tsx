@@ -81,7 +81,7 @@ export default function Footer() {
             </p>
             <div className="flex flex-col gap-2">
               <Link
-                href="/citizenship"
+                href="/apply"
                 className="inline-block text-center px-4 py-2.5 text-sm bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-md hover:bg-[var(--gold-light)] transition-colors"
               >
                 Apply for Membership
