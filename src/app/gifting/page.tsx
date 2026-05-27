@@ -119,36 +119,46 @@ export default function GiftingPage() {
           <div className="flex items-center gap-4 mb-4">
             <div className="w-8 h-px bg-[var(--gold)]" />
             <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
-              Official Merchandise
+              Official Materials &amp; Documents
             </h2>
             <div className="flex-1 h-px bg-[var(--gold)]/20" />
           </div>
           <p className="text-[var(--gray-500)] max-w-3xl mb-8 leading-relaxed">
-            Show your pride and support with official Sultanate of Amexem
-            merchandise. Proceeds support the Sultanate's operations and programs.
+            Official materials, literature, and items from the Sultanate of
+            Amexem. Proceeds support the Sultanate&apos;s operations and programs.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                name: "Official Flag",
-                price: "$35",
-                description: "High-quality printed flag of the Sultanate of Amexem.",
-              },
-              {
-                name: "Heritage T-Shirt",
-                price: "$28",
-                description: "Premium cotton tee with the Sultanate emblem.",
-              },
-              {
-                name: "Heritage Pin",
-                price: "$12",
-                description: "Enamel lapel pin featuring the official insignia.",
-              },
-              {
                 name: "Document Folio",
-                price: "$45",
-                description: "Leather-bound folio for official membership documents.",
+                price: "$75",
+                description: "Sealed copies of the Holy Koran, Divine Constitution and Bylaws, Moorish Questionnaire, and Pin.",
+                href: "https://square.link/u/EEtwpqbd",
+              },
+              {
+                name: "Holy Koran",
+                price: "$30",
+                description: "The sacred text — foundational to our spiritual heritage and practice.",
+                href: "https://square.link/u/ehzD4oSH",
+              },
+              {
+                name: "Divine Constitution and Bylaws",
+                price: "$10",
+                description: "The governing principles and bylaws of the Moorish American people.",
+                href: "https://square.link/u/ItybNxU0",
+              },
+              {
+                name: "Moorish Questionnaire",
+                price: "$15",
+                description: "Essential study material for prospective and current members.",
+                href: "https://square.link/u/aPsLCmvk",
+              },
+              {
+                name: "Moorish Pin",
+                price: "$15",
+                description: "Official pin representing your standing and identity.",
+                href: "https://square.link/u/rPfSwh6U",
               },
               {
                 name: "Membership Card",
@@ -210,6 +220,67 @@ export default function GiftingPage() {
                   </div>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Literature */}
+      <section className="py-16 bg-[var(--dark-bg)]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-8 h-px bg-[var(--gold)]" />
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
+              Literature
+            </h2>
+            <div className="flex-1 h-px bg-[var(--gold)]/20" />
+          </div>
+          <p className="text-white/60 max-w-3xl mb-8 leading-relaxed">
+            Essential reading from the leadership of the Sultanate of Amexem.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[
+              {
+                title: "The Last Crown Prince: The Hidden Truth",
+                price: "$50",
+                description: "A comprehensive work uncovering the hidden history and legacy of our people.",
+                href: "https://square.link/u/I6lsh47m",
+              },
+              {
+                title: "The Fulfillment of Prophecy: Volume 1",
+                price: "$20",
+                description: "The first volume examining the prophetic foundations and their fulfillment in our time.",
+                href: "https://square.link/u/3t9SgyQp",
+              },
+            ].map((book) => (
+              <a
+                key={book.title}
+                href={book.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex gap-5 p-5 md:p-6 rounded-xl border border-[var(--gold)]/20 hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
+              >
+                <div className="w-20 h-28 rounded-lg bg-[var(--dark-surface)] border border-[var(--gold)]/10 flex items-center justify-center shrink-0">
+                  <svg className="w-8 h-8 text-[var(--gold)]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white mb-1 group-hover:text-[var(--gold)] transition-colors">
+                    {book.title}
+                  </h3>
+                  <p className="text-sm text-white/50 mb-3 leading-relaxed">
+                    {book.description}
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-[var(--gold)]">{book.price}</span>
+                    <span className="text-xs text-[var(--cherry-red)] font-medium">
+                      Purchase &rarr;
+                    </span>
+                  </div>
+                </div>
+              </a>
             ))}
           </div>
         </div>
