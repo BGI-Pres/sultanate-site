@@ -123,7 +123,7 @@ export default function GiftingPage() {
             merchandise. Proceeds support the Sultanate's operations and programs.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 name: "Official Flag",
@@ -144,6 +144,16 @@ export default function GiftingPage() {
                 name: "Document Folio",
                 price: "$45",
                 description: "Leather-bound folio for official membership documents.",
+              },
+              {
+                name: "Membership Card",
+                price: "$20",
+                description: "Official laminated membership identification card with your name and tier.",
+              },
+              {
+                name: "Business Certification",
+                price: "$75",
+                description: "Official Sultanate business certification for enterprises operating under the custodianship.",
               },
             ].map((item) => (
               <div
