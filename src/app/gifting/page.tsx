@@ -49,16 +49,19 @@ export default function GiftingPage() {
                 amount: "$25",
                 label: "Supporter",
                 description: "Help fund community programs and educational resources.",
+                href: "https://checkout.square.site/merchant/MLY7VX3JN2XVT/checkout/H5HGNBPL2C3VCSRA5WJ42LZ6",
               },
               {
                 amount: "$50",
                 label: "Patron",
                 description: "Support cultural preservation projects and events.",
+                href: "https://checkout.square.site/merchant/MLY7VX3JN2XVT/checkout/FJ6ZWSY7G5AYDTOXTT3IRJHZ",
               },
               {
                 amount: "$100",
                 label: "Benefactor",
                 description: "Fund governance operations and institutional development initiatives.",
+                href: "https://checkout.square.site/merchant/MLY7VX3JN2XVT/checkout/IPOOO4SCKENFLM362F73WPVJ",
               },
             ].map((tier) => (
               <div
@@ -74,12 +77,14 @@ export default function GiftingPage() {
                 <p className="text-sm text-[var(--gray-500)] mb-4">
                   {tier.description}
                 </p>
-                <Link
-                  href="/contact"
+                <a
+                  href={tier.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-block px-6 py-2 text-sm bg-[var(--cherry-red)] text-white rounded-md hover:bg-[var(--cherry-red-dark)] transition-colors"
                 >
                   Give Now
-                </Link>
+                </a>
               </div>
             ))}
           </div>
@@ -149,11 +154,15 @@ export default function GiftingPage() {
                 name: "Membership Card",
                 price: "$20",
                 description: "Official laminated membership identification card with your name and tier.",
+                href: "https://checkout.square.site/merchant/MLY7VX3JN2XVT/checkout/ZSBH2MH4VRP7OB3NQ5LQHMPZ",
+                restriction: "Available to approved members only",
               },
               {
                 name: "Business Certification",
                 price: "$75",
                 description: "Official Sultanate business certification for enterprises operating under the custodianship.",
+                href: "https://checkout.square.site/merchant/MLY7VX3JN2XVT/checkout/KAFT73NFETT66RBDDKLQFJWG",
+                restriction: "Available to current members only",
               },
             ].map((item) => (
               <div
@@ -172,16 +181,32 @@ export default function GiftingPage() {
                   <p className="text-sm text-[var(--gray-500)] mb-2">
                     {item.description}
                   </p>
+                  {"restriction" in item && item.restriction && (
+                    <p className="text-xs text-[var(--cherry-red)] mb-2 font-medium">
+                      {item.restriction}
+                    </p>
+                  )}
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-[var(--gold)]">
                       {item.price}
                     </span>
-                    <Link
-                      href="/contact"
-                      className="text-sm text-[var(--cherry-red)] hover:underline"
-                    >
-                      Inquire
-                    </Link>
+                    {"href" in item && item.href ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-[var(--cherry-red)] hover:underline font-medium"
+                      >
+                        Purchase
+                      </a>
+                    ) : (
+                      <Link
+                        href="/contact"
+                        className="text-sm text-[var(--cherry-red)] hover:underline"
+                      >
+                        Inquire
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
