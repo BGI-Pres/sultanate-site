@@ -267,6 +267,23 @@ export default function ApplyPage() {
               {surnamePref && <div className="flex justify-between"><span className="text-[var(--gray-500)]">Surname</span><span className="font-medium text-[var(--gray-900)]">{surnamePref}</span></div>}
             </div>
 
+            {/* Terms & Privacy */}
+            <div className="border border-[var(--gray-200)] rounded-xl p-5">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={termsAccepted}
+                  onChange={(e) => setTermsAccepted(e.target.checked)}
+                  className="mt-1 w-4 h-4 rounded border-[var(--gray-300)] text-[var(--gold)] focus:ring-[var(--gold)]"
+                />
+                <span className="text-sm text-[var(--gray-700)]">
+                  I agree to the terms of membership and understand that my
+                  information will be used for membership processing purposes
+                  only.
+                </span>
+              </label>
+            </div>
+
             {/* Constitutional Acknowledgment */}
             <div className="bg-[var(--dark-bg)] rounded-xl p-5 md:p-6">
               <h3 className="text-sm font-semibold text-white mb-3">Constitutional Acknowledgment</h3>
@@ -298,7 +315,7 @@ export default function ApplyPage() {
               </button>
               <button
                 type="submit"
-                disabled={loading || !acknowledged}
+                disabled={loading || !acknowledged || !termsAccepted}
                 className="px-8 py-2.5 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-lg text-sm hover:bg-[var(--gold-light)] transition-colors disabled:opacity-50"
               >
                 {loading ? "Submitting..." : "Submit Application"}
