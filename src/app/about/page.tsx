@@ -140,30 +140,44 @@ export default function AboutPage() {
             <div className="h-px w-12 bg-[var(--gold)]" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-10 text-center">
-            The Authority of the Office
+            The Authority of Governance
           </h2>
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="inline-flex items-center justify-center w-28 h-28 rounded-full bg-[var(--dark-bg)] border border-[var(--gold)]/30 mb-6">
-              <Image
-                src="/images/emblem.svg"
-                alt="Sultanate of Amexem Emblem"
-                width={96}
-                height={96}
-              />
+
+          <div className="max-w-3xl mx-auto space-y-10">
+            {/* Supreme Authority */}
+            <div className="text-center">
+              <div className="inline-flex items-center justify-center w-28 h-28 rounded-full bg-[var(--dark-bg)] border border-[var(--gold)]/30 mb-6">
+                <Image
+                  src="/images/emblem.svg"
+                  alt="Sultanate of Amexem Emblem"
+                  width={96}
+                  height={96}
+                />
+              </div>
+              <h3 className="text-xl font-semibold text-[var(--gold)] mb-2">
+                Allah — Supreme Head &amp; Sultan
+              </h3>
+              <p className="text-white/60 leading-relaxed max-w-xl mx-auto">
+                All authority within the Sultanate of Amexem derives from
+                Allah, the Supreme Head and Sultan. Every act of governance,
+                every institution, and every decision operates under this
+                supreme authority.
+              </p>
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Executive Director &amp; Supreme Grand Counsel
-            </h3>
-            <p className="text-white/60 leading-relaxed">
-              The Executive Director serves as the head of state and custodial
-              authority alongside the Supreme Grand Counsel. Together, they
-              govern the affairs of the descendants of the Nation of Moab. This
-              is not a ceremonial structure — it is the executive body from
-              which the economic, cultural, and diplomatic agenda of the nation
-              is set and enforced. Under this authority, the Sultanate directs
-              the institutions, initiatives, and strategic vision that secure
-              the future of our people.
-            </p>
+
+            {/* Executive Leadership */}
+            <div className="border-t border-[var(--gold)]/10 pt-10 text-center">
+              <h3 className="text-lg font-semibold text-white mb-2">
+                Executive Director &amp; Supreme Grand Counsel
+              </h3>
+              <p className="text-white/60 leading-relaxed max-w-xl mx-auto">
+                The Executive Director serves as the head of state and
+                custodial authority alongside the Supreme Grand Counsel.
+                Together, they administer the affairs of the descendants of
+                the Nation of Moab — directing the economic, cultural, and
+                diplomatic agenda of the nation under the authority of Allah.
+              </p>
+            </div>
           </div>
         </div>
       </section>

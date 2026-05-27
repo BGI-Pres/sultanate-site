@@ -16,7 +16,7 @@ const branches = [
       </svg>
     ),
     description:
-      "The Executive Director serves as head of state and custodial authority alongside the Supreme Grand Counsel, providing executive leadership and representing the nation in all official matters.",
+      "Allah is the Supreme Head and Sultan. The Executive Director serves as head of state and custodial authority alongside the Supreme Grand Counsel, providing executive leadership and representing the nation in all official matters under this supreme authority.",
   },
   {
     title: "Legislative Body",
