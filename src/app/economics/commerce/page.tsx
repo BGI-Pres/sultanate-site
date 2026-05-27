@@ -35,8 +35,7 @@ export default function CommercePage() {
   const [contactEmail, setContactEmail] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [tradeInterest, setTradeInterest] = useState("");
-  const [ventureProposal, setVentureProposal] = useState("");
-  const [estimatedFunding, setEstimatedFunding] = useState("");
+  const [businessWebsite, setBusinessWebsite] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
 
   /* ── Validation ── */
@@ -88,14 +87,7 @@ export default function CommercePage() {
           applicationType === "Trade Network Registration"
             ? tradeInterest || null
             : null,
-        venture_proposal:
-          applicationType === "Cooperative Venture Proposal"
-            ? ventureProposal || null
-            : null,
-        estimated_funding:
-          applicationType === "Cooperative Venture Proposal"
-            ? estimatedFunding || null
-            : null,
+        business_website: businessWebsite || null,
         additional_notes: additionalNotes || null,
       });
 
@@ -254,7 +246,7 @@ export default function CommercePage() {
               </p>
             </div>
 
-            {/* Cooperative Venture Proposal */}
+            {/* Business Directory Listing */}
             <div className="group rounded-xl border border-[var(--gray-200)] bg-white p-6 hover:border-[var(--gold)] transition-all duration-300 hover:shadow-lg hover:shadow-[var(--gold)]/5">
               <div className="w-14 h-14 rounded-xl bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
                 <svg
@@ -272,12 +264,12 @@ export default function CommercePage() {
                 </svg>
               </div>
               <h3 className="text-lg font-bold text-[var(--gray-900)] mb-2">
-                Cooperative Venture Proposal
+                Business Directory Listing
               </h3>
               <p className="text-sm text-[var(--gray-500)] leading-relaxed">
-                Propose a cooperative venture to be backed by the Sultanate.
-                Present your business plan, outline the community benefit, and
-                request institutional support for your enterprise.
+                Register your existing business in the Sultanate community
+                directory. Make your enterprise visible to fellow members and
+                strengthen the internal commercial network.
               </p>
             </div>
           </div>
@@ -298,9 +290,9 @@ export default function CommercePage() {
             Commerce Application
           </h2>
           <p className="text-[var(--gray-500)] text-sm mb-8">
-            Complete the form below to register your business or propose a
-            cooperative venture. All applications are reviewed by the Sultanate
-            administration.
+            Complete the form below to register for the trade network or list
+            your business in the community directory. All applications are
+            reviewed and approved by the Sultanate administration.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -325,8 +317,8 @@ export default function CommercePage() {
                 <option value="Trade Network Registration">
                   Trade Network Registration
                 </option>
-                <option value="Cooperative Venture Proposal">
-                  Cooperative Venture Proposal
+                <option value="Business Directory Listing">
+                  Business Directory Listing
                 </option>
               </select>
             </div>
@@ -446,36 +438,21 @@ export default function CommercePage() {
               </div>
             )}
 
-            {/* ── Conditional: Cooperative Venture Proposal ── */}
-            {applicationType === "Cooperative Venture Proposal" && (
-              <>
-                <div>
-                  <label htmlFor="ventureProposal" className={labelClass}>
-                    Venture Proposal Description
-                  </label>
-                  <textarea
-                    id="ventureProposal"
-                    rows={4}
-                    value={ventureProposal}
-                    onChange={(e) => setVentureProposal(e.target.value)}
-                    placeholder="Describe your proposed cooperative venture, its goals, and how it benefits the community"
-                    className={`${inputClass} resize-y`}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="estimatedFunding" className={labelClass}>
-                    Estimated Funding Needed
-                  </label>
-                  <input
-                    type="text"
-                    id="estimatedFunding"
-                    value={estimatedFunding}
-                    onChange={(e) => setEstimatedFunding(e.target.value)}
-                    placeholder="e.g. $5,000 - $10,000"
-                    className={inputClass}
-                  />
-                </div>
-              </>
+            {/* ── Conditional: Business Directory Listing ── */}
+            {applicationType === "Business Directory Listing" && (
+              <div>
+                <label htmlFor="businessWebsite" className={labelClass}>
+                  Business Website or Social Media
+                </label>
+                <input
+                  type="text"
+                  id="businessWebsite"
+                  value={businessWebsite}
+                  onChange={(e) => setBusinessWebsite(e.target.value)}
+                  placeholder="https://yourbusiness.com or @handle"
+                  className={inputClass}
+                />
+              </div>
             )}
 
             {/* Additional Notes */}

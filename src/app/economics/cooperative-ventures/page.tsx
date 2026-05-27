@@ -422,8 +422,9 @@ export default function CooperativeVenturesPage() {
           <p className="text-[var(--gray-700)] leading-relaxed mb-10 text-[15px]">
             Use the form below to propose a new cooperative venture, express
             investment interest, or apply to join an existing venture. All
-            submissions are reviewed by the Supreme Grand Council. No membership
-            or authentication is required.
+            submissions are reviewed and must be approved by the Supreme Grand
+            Council before any action is taken. No venture, investment, or
+            membership proceeds without formal approval.
           </p>
 
           <form
