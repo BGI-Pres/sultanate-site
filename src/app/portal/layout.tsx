@@ -30,7 +30,7 @@ export default function PortalLayout({
     <div className="min-h-[80vh] bg-[var(--gray-50)]">
       <div className="bg-[var(--dark-bg)] text-white py-3 border-b border-[var(--gold)]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <p className="text-sm font-medium text-[var(--gold)]">Citizen Portal</p>
+          <p className="text-sm font-medium text-[var(--gold)]">Member Portal</p>
           <button
             onClick={handleSignOut}
             className="text-sm text-gray-400 hover:text-white transition-colors"

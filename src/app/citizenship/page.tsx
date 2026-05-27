@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Citizenship",
+  title: "Membership",
   description:
-    "Apply for citizenship in the Sultanate of Amexem. Learn about membership tiers, benefits, and the application process.",
+    "Apply for membership in the Sultanate of Amexem. Learn about membership tiers, benefits, and the application process.",
 };
 
 export default function CitizenshipPage() {
@@ -15,10 +15,10 @@ export default function CitizenshipPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="w-16 h-1 bg-[var(--gold)] mb-6" />
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Citizenship
+            Membership
           </h1>
           <p className="text-lg text-white/70 max-w-3xl">
-            Become a citizen of the Sultanate of Amexem and join a community
+            Become a member of the Sultanate of Amexem and join a community
             dedicated to self-determination, heritage, and mutual advancement.
           </p>
         </div>
@@ -50,11 +50,11 @@ export default function CitizenshipPage() {
                 featured: false,
               },
               {
-                name: "Full Citizen",
+                name: "Full Member",
                 description:
-                  "Full citizenship in the Sultanate of Amexem with all rights, privileges, and responsibilities of nationhood.",
+                  "Full membership in the Sultanate of Amexem with all rights, privileges, and responsibilities of nationhood.",
                 features: [
-                  "Official citizenship documents",
+                  "Official membership documents",
                   "Voting rights",
                   "Full event access",
                   "Community support network",
@@ -67,7 +67,7 @@ export default function CitizenshipPage() {
                 description:
                   "For representatives, ambassadors, and those serving the Sultanate in official or diplomatic capacities.",
                 features: [
-                  "All citizen benefits",
+                  "All member benefits",
                   "Diplomatic credentials",
                   "International representation",
                   "Advisory council access",
@@ -146,7 +146,7 @@ export default function CitizenshipPage() {
                 {
                   step: "Submit Application",
                   description:
-                    "Contact us to request a citizenship application form. Provide your basic information and statement of intent.",
+                    "Contact us to request a membership application form. Provide your basic information and statement of intent.",
                 },
                 {
                   step: "Review Period",
@@ -156,12 +156,12 @@ export default function CitizenshipPage() {
                 {
                   step: "Orientation",
                   description:
-                    "Approved applicants participate in an orientation session to learn about the rights, responsibilities, and traditions of citizenship.",
+                    "Approved applicants participate in an orientation session to learn about the rights, responsibilities, and traditions of membership.",
                 },
                 {
-                  step: "Citizenship Granted",
+                  step: "Membership Granted",
                   description:
-                    "Upon completion, you receive your official citizenship documents and membership credentials.",
+                    "Upon completion, you receive your official membership documents and membership credentials.",
                 },
               ].map((item, i) => (
                 <li key={item.step} className="flex gap-4">
@@ -191,7 +191,7 @@ export default function CitizenshipPage() {
             Ready to Begin Your Journey?
           </h2>
           <p className="text-white/70 max-w-2xl mx-auto mb-8">
-            Take the first step toward citizenship in the Sultanate of Amexem.
+            Take the first step toward membership in the Sultanate of Amexem.
             Reach out to learn more about the process and find the tier that fits
             your path.
           </p>

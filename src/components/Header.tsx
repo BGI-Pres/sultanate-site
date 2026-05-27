@@ -7,7 +7,7 @@ import { useState } from "react";
 const navLinks = [
   { href: "/about", label: "About" },
   { href: "/government", label: "Government" },
-  { href: "/citizenship", label: "Citizenship" },
+  { href: "/citizenship", label: "Membership" },
   { href: "/gifting", label: "Support" },
   { href: "/news", label: "News" },
   { href: "/contact", label: "Contact" },
@@ -28,7 +28,7 @@ export default function Header() {
           </p>
           <div className="hidden sm:flex items-center gap-4 text-[11px] text-gray-400">
             <Link href="/portal" className="hover:text-[var(--gold)] transition-colors">
-              Citizen Portal
+              Member Portal
             </Link>
             <span className="text-gray-600">|</span>
             <Link href="/auth/login" className="hover:text-[var(--gold)] transition-colors">
@@ -149,7 +149,7 @@ export default function Header() {
                 onClick={() => setMobileOpen(false)}
                 className="block px-3 py-3 text-sm text-[var(--gold)] font-medium"
               >
-                Citizen Portal
+                Member Portal
               </Link>
               <Link
                 href="/auth/login"

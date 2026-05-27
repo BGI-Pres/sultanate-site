@@ -21,7 +21,7 @@ export default function ContactForm() {
           </h1>
           <p className="text-lg text-white/70 max-w-3xl">
             Reach out to the Sultanate of Amexem with questions, inquiries,
-            or to begin your citizenship journey.
+            or to begin your membership journey.
           </p>
         </div>
       </section>
@@ -95,7 +95,7 @@ export default function ContactForm() {
                       className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent bg-white"
                     >
                       <option value="">Select a subject...</option>
-                      <option value="citizenship">Citizenship Inquiry</option>
+                      <option value="citizenship">Membership Inquiry</option>
                       <option value="donation">Donation / Support</option>
                       <option value="merchandise">Merchandise Order</option>
                       <option value="government">Government / Legal</option>
@@ -188,17 +188,17 @@ export default function ContactForm() {
 
               <div className="mt-10 p-6 bg-[var(--gray-50)] rounded-xl border border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
                 <h3 className="font-semibold text-[var(--gray-900)] mb-2">
-                  Citizenship Applications
+                  Membership Applications
                 </h3>
                 <p className="text-sm text-[var(--gray-500)] mb-3">
-                  Ready to apply? Select &quot;Citizenship Inquiry&quot; in the contact
-                  form, or visit our citizenship page for more details.
+                  Ready to apply? Select &quot;Membership Inquiry&quot; in the contact
+                  form, or visit our membership page for more details.
                 </p>
                 <a
                   href="/citizenship"
                   className="text-sm text-[var(--gold)] font-medium hover:underline"
                 >
-                  View Citizenship Details &rarr;
+                  View Membership Details &rarr;
                 </a>
               </div>
             </div>

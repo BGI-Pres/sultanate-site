@@ -36,7 +36,7 @@ const branches = [
       </svg>
     ),
     description:
-      "Justice is administered according to our constitutional principles, ensuring fair and equitable treatment for all citizens.",
+      "Justice is administered according to our constitutional principles, ensuring fair and equitable treatment for all members.",
   },
   {
     title: "Administrative Offices",
@@ -56,8 +56,8 @@ const articles = [
     text: "The Sultanate of Amexem is an established governing authority, serving as Custodian of the Nation of Moab.",
   },
   {
-    title: "Rights of Citizens",
-    text: "All citizens are entitled to the protections, services, and recognition afforded by the Sultanate.",
+    title: "Rights of Members",
+    text: "All members are entitled to the protections, services, and recognition afforded by the Sultanate.",
   },
   {
     title: "Cultural Preservation",
@@ -69,7 +69,7 @@ const articles = [
   },
   {
     title: "Community",
-    text: "The Sultanate shall foster unity, mutual support, and collective advancement among its citizens.",
+    text: "The Sultanate shall foster unity, mutual support, and collective advancement among its members.",
   },
 ];
 
@@ -150,7 +150,7 @@ export default function GovernmentPage() {
             <p className="text-white/60 leading-relaxed mb-10 text-[15px]">
               The Constitution of the Sultanate of Amexem serves as the supreme
               law of the nation. It establishes the framework for governance,
-              defines the rights and responsibilities of citizens, and enshrines
+              defines the rights and responsibilities of members, and enshrines
               the established standing of the Nation of Moab.
             </p>
 
@@ -188,14 +188,14 @@ export default function GovernmentPage() {
               Participate in Our Nation
             </h2>
             <p className="text-white/60 mb-8 leading-relaxed">
-              Learn more about citizenship and how you can contribute to the
+              Learn more about membership and how you can contribute to the
               governance and growth of the Sultanate of Amexem.
             </p>
             <Link
               href="/citizenship"
               className="inline-flex items-center gap-2 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold px-8 py-3 rounded-lg hover:bg-[var(--gold)]/90 transition-colors duration-300"
             >
-              Explore Citizenship
+              Explore Membership
               <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>

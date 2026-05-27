@@ -67,7 +67,7 @@ export default function SignupPage() {
           </p>
           <p className="text-sm text-[var(--gray-500)] mb-6">
             Please verify your email to complete your registration and gain
-            access to the Official Citizen Portal of the Sultanate of Amexem.
+            access to the Official Member Portal of the Sultanate of Amexem.
           </p>
           <Link
             href="/auth/login"
@@ -92,7 +92,7 @@ export default function SignupPage() {
             className="mx-auto mb-4"
           />
           <h1 className="text-2xl font-bold text-[var(--gray-900)]">
-            Citizenship Registration
+            Membership Registration
           </h1>
           <p className="text-sm text-[var(--gray-500)] mt-1">
             Register to begin your journey with the Sultanate of Amexem,

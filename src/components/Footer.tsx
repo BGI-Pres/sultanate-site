@@ -40,7 +40,7 @@ export default function Footer() {
             <ul className="space-y-2.5 text-sm text-gray-400">
               <li><Link href="/about" className="hover:text-[var(--gold)] transition-colors">About</Link></li>
               <li><Link href="/government" className="hover:text-[var(--gold)] transition-colors">Government</Link></li>
-              <li><Link href="/citizenship" className="hover:text-[var(--gold)] transition-colors">Citizenship</Link></li>
+              <li><Link href="/citizenship" className="hover:text-[var(--gold)] transition-colors">Membership</Link></li>
               <li><Link href="/gifting" className="hover:text-[var(--gold)] transition-colors">Support</Link></li>
               <li><Link href="/news" className="hover:text-[var(--gold)] transition-colors">News</Link></li>
               <li><Link href="/contact" className="hover:text-[var(--gold)] transition-colors">Contact</Link></li>
@@ -80,14 +80,14 @@ export default function Footer() {
               Take Action
             </h3>
             <p className="text-sm text-gray-400 leading-relaxed mb-4">
-              Your nation awaits. Claim your citizenship or support the mission.
+              Your nation awaits. Claim your membership or support the mission.
             </p>
             <div className="flex flex-col gap-2">
               <Link
                 href="/citizenship"
                 className="inline-block text-center px-4 py-2.5 text-sm bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-md hover:bg-[var(--gold-light)] transition-colors"
               >
-                Apply for Citizenship
+                Apply for Membership
               </Link>
               <Link
                 href="/gifting"

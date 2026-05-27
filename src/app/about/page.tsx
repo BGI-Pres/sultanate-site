@@ -184,7 +184,7 @@ export default function AboutPage() {
               href="/citizenship"
               className="inline-flex items-center gap-2 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold px-8 py-3 rounded-lg hover:bg-[var(--gold)]/90 transition-colors duration-300"
             >
-              Explore Citizenship
+              Explore Membership
               <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>

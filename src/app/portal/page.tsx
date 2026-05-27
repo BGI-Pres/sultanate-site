@@ -14,7 +14,7 @@ export default function PortalDashboard() {
   }, []);
 
   const displayName =
-    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Citizen";
+    user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Member";
 
   return (
     <div>
@@ -23,7 +23,7 @@ export default function PortalDashboard() {
           Welcome, {displayName}
         </h1>
         <p className="text-[var(--gray-500)] mt-1">
-          Your Citizen Portal dashboard
+          Your Member Portal dashboard
         </p>
       </div>
 
@@ -38,7 +38,7 @@ export default function PortalDashboard() {
 
         <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
           <p className="text-sm text-[var(--gray-500)] mb-2">Membership Tier</p>
-          <p className="text-xl font-bold text-[var(--gray-900)]">Full Citizen</p>
+          <p className="text-xl font-bold text-[var(--gray-900)]">Full Member</p>
         </div>
 
         <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
@@ -63,7 +63,7 @@ export default function PortalDashboard() {
             Documents &rarr;
           </h3>
           <p className="text-sm text-[var(--gray-500)]">
-            View and download your citizenship documents, certificates, and official papers.
+            View and download your membership documents, certificates, and official papers.
           </p>
         </Link>
 
@@ -75,7 +75,7 @@ export default function PortalDashboard() {
             Application Status &rarr;
           </h3>
           <p className="text-sm text-[var(--gray-500)]">
-            Track the progress of your citizenship application and any pending requests.
+            Track the progress of your membership application and any pending requests.
           </p>
         </Link>
 

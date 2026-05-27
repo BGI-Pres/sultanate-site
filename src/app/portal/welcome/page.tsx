@@ -14,7 +14,7 @@ export default function WelcomePage() {
       setName(
         data.user?.user_metadata?.full_name ||
           data.user?.email?.split("@")[0] ||
-          "Citizen"
+          "Member"
       );
     });
   }, []);
@@ -36,7 +36,7 @@ export default function WelcomePage() {
           Your registration with the Sultanate of Amexem has been received.
           As Custodian of the Nation of Moab, we are honored to welcome you
           to our community. Below are your next steps to complete your
-          citizenship process.
+          membership process.
         </p>
       </div>
 
@@ -48,10 +48,10 @@ export default function WelcomePage() {
             </div>
             <div>
               <h3 className="font-semibold text-[var(--gray-900)] mb-1">
-                Begin Your Citizenship Application
+                Begin Your Membership Application
               </h3>
               <p className="text-sm text-[var(--gray-500)] mb-3">
-                Submit your formal application for citizenship in the
+                Submit your formal application for membership in the
                 Sultanate of Amexem. This initiates the official review process
                 administered by our governing body.
               </p>
@@ -77,7 +77,7 @@ export default function WelcomePage() {
               <p className="text-sm text-[var(--gray-500)] mb-3">
                 Access the Constitution, founding proclamations, and
                 governance documents of the Sultanate. Understanding our
-                framework is essential to citizenship.
+                framework is essential to membership.
               </p>
               <Link
                 href="/portal/documents"

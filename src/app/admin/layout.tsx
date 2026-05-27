@@ -38,7 +38,7 @@ export default function AdminLayout({
           </div>
           <div className="flex items-center gap-4">
             <Link href="/portal" className="text-sm text-gray-400 hover:text-white transition-colors">
-              Citizen Portal
+              Member Portal
             </Link>
             <button
               onClick={handleSignOut}

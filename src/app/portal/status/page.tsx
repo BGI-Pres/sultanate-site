@@ -4,7 +4,7 @@ const steps = [
   { label: "Application Submitted", completed: true, date: "Pending" },
   { label: "Under Review", completed: false, date: null },
   { label: "Orientation Scheduled", completed: false, date: null },
-  { label: "Citizenship Granted", completed: false, date: null },
+  { label: "Membership Granted", completed: false, date: null },
 ];
 
 export default function StatusPage() {
@@ -15,7 +15,7 @@ export default function StatusPage() {
           Application Status
         </h1>
         <p className="text-[var(--gray-500)] mt-1">
-          Track the progress of your citizenship application
+          Track the progress of your membership application
         </p>
       </div>
 

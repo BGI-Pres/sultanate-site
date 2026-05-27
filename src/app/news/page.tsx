@@ -20,16 +20,16 @@ const fallbackPosts: Post[] = [
     id: "fallback-1",
     title: "Welcome to Our New Website",
     excerpt:
-      "The Sultanate of Amexem is proud to launch our redesigned official website, built to better serve our citizens and community.",
+      "The Sultanate of Amexem is proud to launch our redesigned official website, built to better serve our members and community.",
     category: "Announcement",
     created_at: "2026-05-27T00:00:00Z",
   },
   {
     id: "fallback-2",
-    title: "Citizenship Applications Now Open",
+    title: "Membership Applications Now Open",
     excerpt:
-      "We are now accepting applications for citizenship in the Sultanate of Amexem. Learn about the process and membership tiers available.",
-    category: "Citizenship",
+      "We are now accepting applications for membership in the Sultanate of Amexem. Learn about the process and membership tiers available.",
+    category: "Membership",
     created_at: "2026-05-27T00:00:00Z",
   },
   {

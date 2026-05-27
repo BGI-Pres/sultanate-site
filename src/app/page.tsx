@@ -4,7 +4,7 @@ import EmailCapture from "@/components/EmailCapture";
 
 const services = [
   {
-    title: "Citizenship",
+    title: "Membership",
     description: "Apply for membership — three tiers of standing",
     href: "/citizenship",
     icon: "M3 21V7l9-4 9 4v14M3 21h18M9 21V11h6v10",
@@ -35,7 +35,7 @@ const services = [
   },
   {
     title: "Portal",
-    description: "Access your citizen dashboard, documents, and resources",
+    description: "Access your member dashboard, documents, and resources",
     href: "/portal",
     icon: "M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z",
   },
@@ -164,7 +164,7 @@ export default function HomePage() {
               <ul className="space-y-3 mb-8">
                 {[
                   "What nationality means and why it precedes everything",
-                  "Etiquette and conduct befitting a citizen",
+                  "Etiquette and conduct befitting a member",
                   "Commercial acumen and economic participation",
                   "Rights, responsibilities, and the collective compact",
                 ].map((item) => (
@@ -258,7 +258,7 @@ export default function HomePage() {
               href="/citizenship"
               className="px-8 py-3.5 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-md hover:bg-[var(--gold-light)] transition-colors gold-glow"
             >
-              Apply for Citizenship
+              Apply for Membership
             </Link>
             <Link
               href="/gifting"

@@ -85,7 +85,7 @@ function LoginForm() {
           Official Portal
         </h1>
         <p className="text-sm text-[var(--gray-500)] mt-1">
-          Sign in to access the Sultanate of Amexem Citizen Portal
+          Sign in to access the Sultanate of Amexem Member Portal
         </p>
       </div>
 
@@ -174,7 +174,7 @@ function LoginForm() {
       <p className="text-center text-sm text-[var(--gray-500)] mt-6">
         Not yet registered?{" "}
         <Link href="/auth/signup" className="text-[var(--cherry-red)] hover:underline font-medium">
-          Apply for Citizenship
+          Apply for Membership
         </Link>
       </p>
 

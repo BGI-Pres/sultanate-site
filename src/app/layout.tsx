@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "Nation of Moab",
     "authority",
     "heritage",
-    "citizenship",
+    "membership",
     "Moorish",
   ],
   openGraph: {

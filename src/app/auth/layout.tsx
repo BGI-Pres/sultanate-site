@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Authentication",
   description:
-    "Sign in or register for the Sultanate of Amexem Citizen Portal.",
+    "Sign in or register for the Sultanate of Amexem Member Portal.",
 };
 
 export default function AuthLayout({

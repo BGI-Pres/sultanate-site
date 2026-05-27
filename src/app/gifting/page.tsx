@@ -39,7 +39,7 @@ export default function GiftingPage() {
           <p className="text-[var(--gray-500)] max-w-3xl mb-8 leading-relaxed">
             Your gifts and donations directly support the operations,
             programs, and mission of the Sultanate of Amexem. Every
-            contribution helps us preserve heritage, serve citizens, and
+            contribution helps us preserve heritage, serve members, and
             advance our governing objectives.
           </p>
 
@@ -143,7 +143,7 @@ export default function GiftingPage() {
               {
                 name: "Document Folio",
                 price: "$45",
-                description: "Leather-bound folio for official citizenship documents.",
+                description: "Leather-bound folio for official membership documents.",
               },
             ].map((item) => (
               <div

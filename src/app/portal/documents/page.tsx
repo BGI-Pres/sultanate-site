@@ -2,8 +2,8 @@
 
 const documents = [
   {
-    name: "Citizenship Certificate",
-    description: "Your official citizenship certificate for the Sultanate of Amexem.",
+    name: "Membership Certificate",
+    description: "Your official membership certificate for the Sultanate of Amexem.",
     type: "PDF",
     status: "Available",
   },
@@ -39,7 +39,7 @@ export default function DocumentsPage() {
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-[var(--gray-900)]">Documents</h1>
         <p className="text-[var(--gray-500)] mt-1">
-          View and download your official citizenship documents
+          View and download your official membership documents
         </p>
       </div>
 
