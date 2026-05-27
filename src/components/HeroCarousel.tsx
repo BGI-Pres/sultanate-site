@@ -56,7 +56,7 @@ export default function HeroCarousel() {
       </div>
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-28">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 mb-4 animate-fade-in">
             <div className="h-px w-8" style={{ backgroundColor: slide.accent }} />
@@ -70,7 +70,7 @@ export default function HeroCarousel() {
 
           <h1
             key={`headline-${current}`}
-            className="text-4xl md:text-6xl font-bold leading-[1.1] mb-5 animate-fade-in-up"
+            className="text-3xl sm:text-4xl md:text-6xl font-bold leading-[1.1] mb-5 animate-fade-in-up"
           >
             {slide.headline}
           </h1>

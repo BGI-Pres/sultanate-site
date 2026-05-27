@@ -80,18 +80,17 @@ export default async function NewsPage() {
   const posts = await getPosts();
   return (
     <>
-      <section className="relative bg-[var(--dark-bg)] py-20">
+      <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="w-12 h-1 bg-[var(--gold)] mb-6" />
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <div className="w-16 h-1 bg-[var(--gold)] mb-6" />
+          <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
             News &amp; Updates
           </h1>
-          <p className="text-lg text-gray-300 max-w-3xl">
+          <p className="text-lg text-white/70 max-w-3xl">
             Stay informed with the latest announcements, events, and
             developments from the Sultanate of Amexem.
           </p>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--gold)] via-[var(--forest-green)] to-[var(--gold)]" />
       </section>
 
       <section className="py-16">
@@ -109,7 +108,7 @@ export default async function NewsPage() {
             {posts.map((post) => (
               <article
                 key={post.id}
-                className="p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
+                className="p-5 md:p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
               >
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-xs font-semibold text-[var(--cherry-red)] bg-red-50 px-2.5 py-1 rounded-full">

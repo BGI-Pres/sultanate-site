@@ -39,7 +39,7 @@ export default function SocialLinks({
           target="_blank"
           rel="noopener noreferrer"
           aria-label={social.name}
-          className="text-gray-400 hover:text-white transition-colors"
+          className="text-gray-400 hover:text-[var(--gold)] transition-colors"
         >
           <span className={size}>{social.icon}</span>
         </a>

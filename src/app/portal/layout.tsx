@@ -28,12 +28,12 @@ export default function PortalLayout({
 
   return (
     <div className="min-h-[80vh] bg-[var(--gray-50)]">
-      <div className="bg-[var(--forest-green)] text-white py-3">
+      <div className="bg-[var(--dark-bg)] text-white py-3 border-b border-[var(--gold)]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <p className="text-sm font-medium">Citizen Portal</p>
+          <p className="text-sm font-medium text-[var(--gold)]">Citizen Portal</p>
           <button
             onClick={handleSignOut}
-            className="text-sm text-green-200 hover:text-white transition-colors"
+            className="text-sm text-gray-400 hover:text-white transition-colors"
           >
             Sign Out
           </button>
@@ -43,16 +43,16 @@ export default function PortalLayout({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <nav className="lg:w-56 shrink-0">
-            <ul className="space-y-1">
+            <ul className="flex lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 -mx-1 lg:mx-0">
               {portalNav.map((item) => {
                 const isActive = pathname === item.href;
                 return (
-                  <li key={item.href}>
+                  <li key={item.href} className="shrink-0">
                     <Link
                       href={item.href}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${
+                      className={`flex items-center gap-2 lg:gap-3 px-3 py-2.5 rounded-md text-sm whitespace-nowrap transition-colors ${
                         isActive
-                          ? "bg-[var(--forest-green)] text-white"
+                          ? "bg-[var(--dark-bg)] text-[var(--gold)]"
                           : "text-[var(--gray-700)] hover:bg-white hover:shadow-sm"
                       }`}
                     >

@@ -13,10 +13,10 @@ export default function GiftingPage() {
   return (
     <>
       {/* Dark Hero Header */}
-      <section className="bg-[var(--dark-bg)] py-20 border-b-2 border-[var(--gold)]">
+      <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="w-16 h-1 bg-[var(--gold)] mb-6" />
-          <h1 className="text-4xl font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Support
           </h1>
           <p className="text-lg text-white/70 max-w-3xl">

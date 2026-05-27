@@ -138,7 +138,7 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="block px-3 py-2.5 text-sm text-gray-300 hover:text-[var(--gold)] rounded-md"
+                className="block px-3 py-3 text-sm text-gray-300 hover:text-[var(--gold)] rounded-md"
               >
                 {link.label}
               </Link>
@@ -147,14 +147,14 @@ export default function Header() {
               <Link
                 href="/portal"
                 onClick={() => setMobileOpen(false)}
-                className="block px-3 py-2.5 text-sm text-[var(--gold)] font-medium"
+                className="block px-3 py-3 text-sm text-[var(--gold)] font-medium"
               >
                 Citizen Portal
               </Link>
               <Link
                 href="/auth/login"
                 onClick={() => setMobileOpen(false)}
-                className="block px-3 py-2.5 text-sm text-gray-400"
+                className="block px-3 py-3 text-sm text-gray-400"
               >
                 Sign In
               </Link>

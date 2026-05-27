@@ -83,7 +83,7 @@ export default function HomePage() {
       </section>
 
       {/* Three Pillars */}
-      <section className="py-20 bg-[var(--gray-50)]">
+      <section className="py-12 md:py-20 bg-[var(--gray-50)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -121,7 +121,7 @@ export default function HomePage() {
                 icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
               },
             ].map((pillar) => (
-              <div key={pillar.title} className="group p-8 rounded-xl bg-white border border-[var(--gray-200)] hover:border-[var(--gold)] transition-all duration-300 hover:shadow-lg hover:shadow-[var(--gold)]/5">
+              <div key={pillar.title} className="group p-5 md:p-8 rounded-xl bg-white border border-[var(--gray-200)] hover:border-[var(--gold)] transition-all duration-300 hover:shadow-lg hover:shadow-[var(--gold)]/5">
                 <div className="w-14 h-14 rounded-xl bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={pillar.icon} />
@@ -144,7 +144,7 @@ export default function HomePage() {
       </section>
 
       {/* Lead Magnet */}
-      <section id="guide" className="relative bg-[var(--dark-bg)] text-white py-20 overflow-hidden">
+      <section id="guide" className="relative bg-[var(--dark-bg)] text-white py-12 md:py-20 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -177,7 +177,7 @@ export default function HomePage() {
                 ))}
               </ul>
             </div>
-            <div className="bg-[var(--dark-surface)] border border-[var(--gold)]/20 rounded-xl p-8">
+            <div className="bg-[var(--dark-surface)] border border-[var(--gold)]/20 rounded-xl p-5 md:p-8">
               <h3 className="text-xl font-bold mb-2">Get Your Free Copy</h3>
               <p className="text-sm text-gray-400 mb-6">
                 Enter your email to receive the guide and join official communications.
@@ -212,7 +212,7 @@ export default function HomePage() {
       </section>
 
       {/* Economics Newsletter */}
-      <section className="py-20 bg-[var(--gray-50)]">
+      <section className="py-12 md:py-20 bg-[var(--gray-50)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -243,7 +243,7 @@ export default function HomePage() {
       </section>
 
       {/* Dark CTA */}
-      <section className="relative bg-[var(--dark-bg)] text-white py-20 overflow-hidden">
+      <section className="relative bg-[var(--dark-bg)] text-white py-12 md:py-20 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">

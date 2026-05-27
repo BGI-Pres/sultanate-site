@@ -28,20 +28,20 @@ export default function PortalDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white p-6 rounded-lg border border-[var(--gray-200)]">
+        <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm text-[var(--gray-500)]">Membership Status</p>
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[var(--gold)]" />
           </div>
-          <p className="text-xl font-bold text-[var(--forest-green)]">Active</p>
+          <p className="text-xl font-bold text-[var(--gold)]">Active</p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg border border-[var(--gray-200)]">
+        <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
           <p className="text-sm text-[var(--gray-500)] mb-2">Membership Tier</p>
           <p className="text-xl font-bold text-[var(--gray-900)]">Full Citizen</p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg border border-[var(--gray-200)]">
+        <div className="bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
           <p className="text-sm text-[var(--gray-500)] mb-2">Member Since</p>
           <p className="text-xl font-bold text-[var(--gray-900)]">
             {user?.created_at
@@ -57,9 +57,9 @@ export default function PortalDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Link
           href="/portal/documents"
-          className="group bg-white p-6 rounded-lg border border-[var(--gray-200)] hover:shadow-md transition-all"
+          className="group bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
         >
-          <h3 className="font-semibold text-[var(--gray-900)] group-hover:text-[var(--forest-green)] transition-colors mb-1">
+          <h3 className="font-semibold text-[var(--gray-900)] group-hover:text-[var(--gold)] transition-colors mb-1">
             Documents &rarr;
           </h3>
           <p className="text-sm text-[var(--gray-500)]">
@@ -69,9 +69,9 @@ export default function PortalDashboard() {
 
         <Link
           href="/portal/status"
-          className="group bg-white p-6 rounded-lg border border-[var(--gray-200)] hover:shadow-md transition-all"
+          className="group bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
         >
-          <h3 className="font-semibold text-[var(--gray-900)] group-hover:text-[var(--forest-green)] transition-colors mb-1">
+          <h3 className="font-semibold text-[var(--gray-900)] group-hover:text-[var(--gold)] transition-colors mb-1">
             Application Status &rarr;
           </h3>
           <p className="text-sm text-[var(--gray-500)]">
@@ -81,9 +81,9 @@ export default function PortalDashboard() {
 
         <Link
           href="/portal/resources"
-          className="group bg-white p-6 rounded-lg border border-[var(--gray-200)] hover:shadow-md transition-all"
+          className="group bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
         >
-          <h3 className="font-semibold text-[var(--gray-900)] group-hover:text-[var(--forest-green)] transition-colors mb-1">
+          <h3 className="font-semibold text-[var(--gray-900)] group-hover:text-[var(--gold)] transition-colors mb-1">
             Exclusive Resources &rarr;
           </h3>
           <p className="text-sm text-[var(--gray-500)]">
@@ -93,9 +93,9 @@ export default function PortalDashboard() {
 
         <Link
           href="/contact"
-          className="group bg-white p-6 rounded-lg border border-[var(--gray-200)] hover:shadow-md transition-all"
+          className="group bg-white p-6 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
         >
-          <h3 className="font-semibold text-[var(--gray-900)] group-hover:text-[var(--cherry-red)] transition-colors mb-1">
+          <h3 className="font-semibold text-[var(--gray-900)] group-hover:text-[var(--gold)] transition-colors mb-1">
             Get Support &rarr;
           </h3>
           <p className="text-sm text-[var(--gray-500)]">
