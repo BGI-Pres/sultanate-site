@@ -13,28 +13,35 @@ export default function ContactPage() {
 
   return (
     <>
-      <section className="bg-[var(--gray-50)] py-16 border-b border-[var(--gray-200)]">
+      <section className="relative bg-[var(--dark-bg)] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold text-[var(--gray-900)] mb-4">
+          <div className="w-12 h-1 bg-[var(--gold)] mb-6" />
+          <h1 className="text-4xl font-bold text-white mb-4">
             Contact Us
           </h1>
-          <p className="text-lg text-[var(--gray-500)] max-w-3xl">
+          <p className="text-lg text-gray-300 max-w-3xl">
             Reach out to the Sultanate of Amexem with questions, inquiries,
             or to begin your citizenship journey.
           </p>
         </div>
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--gold)] via-[var(--forest-green)] to-[var(--gold)]" />
       </section>
 
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div>
-              <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-6">
-                Send a Message
-              </h2>
+              {/* Section label */}
+              <div className="flex items-center gap-4 mb-8">
+                <div className="h-px w-8 bg-[var(--gold)]" />
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
+                  Send a Message
+                </span>
+                <div className="h-px flex-1 bg-[var(--gold)]/20" />
+              </div>
 
               {submitted ? (
-                <div className="p-8 bg-green-50 border border-green-200 rounded-lg">
+                <div className="p-8 bg-green-50 border border-green-200 rounded-xl">
                   <h3 className="text-lg font-semibold text-[var(--forest-green)] mb-2">
                     Message Received
                   </h3>
@@ -57,7 +64,7 @@ export default function ContactPage() {
                       id="name"
                       name="name"
                       required
-                      className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--forest-green)] focus:border-transparent"
+                      className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -72,7 +79,7 @@ export default function ContactPage() {
                       id="email"
                       name="email"
                       required
-                      className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--forest-green)] focus:border-transparent"
+                      className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -86,7 +93,7 @@ export default function ContactPage() {
                       id="subject"
                       name="subject"
                       required
-                      className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--forest-green)] focus:border-transparent bg-white"
+                      className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent bg-white"
                     >
                       <option value="">Select a subject...</option>
                       <option value="citizenship">Citizenship Inquiry</option>
@@ -109,12 +116,12 @@ export default function ContactPage() {
                       name="message"
                       rows={5}
                       required
-                      className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--forest-green)] focus:border-transparent resize-y"
+                      className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--gold)] focus:border-transparent resize-y"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="px-8 py-3 bg-[var(--forest-green)] text-white font-semibold rounded-md hover:bg-[var(--forest-green-dark)] transition-colors"
+                    className="px-8 py-3 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-xl hover:brightness-110 transition-all duration-300"
                   >
                     Send Message
                   </button>
@@ -123,12 +130,18 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-6">
-                Other Ways to Reach Us
-              </h2>
+              {/* Section label */}
+              <div className="flex items-center gap-4 mb-8">
+                <div className="h-px w-8 bg-[var(--gold)]" />
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
+                  Other Ways to Reach Us
+                </span>
+                <div className="h-px flex-1 bg-[var(--gold)]/20" />
+              </div>
+
               <div className="space-y-6">
                 <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-[var(--forest-green)]/10 text-[var(--forest-green)] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
@@ -143,7 +156,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-[var(--forest-green)]/10 text-[var(--forest-green)] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -159,7 +172,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-[var(--forest-green)]/10 text-[var(--forest-green)] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -174,7 +187,7 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div className="mt-10 p-6 bg-[var(--gray-50)] rounded-lg border border-[var(--gray-200)]">
+              <div className="mt-10 p-6 bg-[var(--gray-50)] rounded-xl border border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
                 <h3 className="font-semibold text-[var(--gray-900)] mb-2">
                   Citizenship Applications
                 </h3>
@@ -184,7 +197,7 @@ export default function ContactPage() {
                 </p>
                 <a
                   href="/citizenship"
-                  className="text-sm text-[var(--cherry-red)] font-medium hover:underline"
+                  className="text-sm text-[var(--gold)] font-medium hover:underline"
                 >
                   View Citizenship Details &rarr;
                 </a>

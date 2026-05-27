@@ -12,12 +12,14 @@ export const metadata: Metadata = {
 export default function GiftingPage() {
   return (
     <>
-      <section className="bg-[var(--gray-50)] py-16 border-b border-[var(--gray-200)]">
+      {/* Dark Hero Header */}
+      <section className="bg-[var(--dark-bg)] py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold text-[var(--gray-900)] mb-4">
+          <div className="w-16 h-1 bg-[var(--gold)] mb-6" />
+          <h1 className="text-4xl font-bold text-white mb-4">
             Support
           </h1>
-          <p className="text-lg text-[var(--gray-500)] max-w-3xl">
+          <p className="text-lg text-white/70 max-w-3xl">
             Support the mission of the Sultanate through contributions and gifts,
             or browse our official merchandise collection.
           </p>
@@ -27,9 +29,13 @@ export default function GiftingPage() {
       {/* Donations Section */}
       <section className="py-16 border-b border-[var(--gray-200)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-4">
-            Donations &amp; Contributions
-          </h2>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-8 h-px bg-[var(--gold)]" />
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
+              Donations &amp; Contributions
+            </h2>
+            <div className="flex-1 h-px bg-[var(--gold)]/20" />
+          </div>
           <p className="text-[var(--gray-500)] max-w-3xl mb-8 leading-relaxed">
             Your gifts and donations directly support the operations,
             programs, and mission of the Sultanate of Amexem. Every
@@ -57,9 +63,9 @@ export default function GiftingPage() {
             ].map((tier) => (
               <div
                 key={tier.label}
-                className="p-6 border border-[var(--gray-200)] rounded-lg text-center hover:border-[var(--cherry-red)] transition-colors"
+                className="p-6 border border-[var(--gray-200)] rounded-xl text-center hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
               >
-                <p className="text-3xl font-bold text-[var(--cherry-red)] mb-1">
+                <p className="text-3xl font-bold text-[var(--gold)] mb-1">
                   {tier.amount}
                 </p>
                 <p className="font-semibold text-[var(--gray-900)] mb-2">
@@ -78,14 +84,19 @@ export default function GiftingPage() {
             ))}
           </div>
 
-          <h3 className="text-xl font-bold text-[var(--gray-900)] mb-4 mt-10">
-            Send Your Gift
-          </h3>
+          {/* Payment Methods */}
+          <div className="flex items-center gap-4 mb-4 mt-10">
+            <div className="w-8 h-px bg-[var(--gold)]" />
+            <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
+              Send Your Gift
+            </h3>
+            <div className="flex-1 h-px bg-[var(--gold)]/20" />
+          </div>
           <PaymentMethods />
 
-          <div className="bg-[var(--gray-50)] border border-[var(--gray-200)] rounded-lg p-6 mt-8">
-            <p className="text-sm text-[var(--gray-500)]">
-              <strong className="text-[var(--gray-700)]">Custom Amount:</strong>{" "}
+          <div className="bg-[var(--dark-surface)] border border-[var(--gold)]/20 rounded-xl p-6 mt-8">
+            <p className="text-sm text-white/70">
+              <strong className="text-[var(--gold)]">Custom Amount:</strong>{" "}
               To make a custom gift or discuss larger contributions, please{" "}
               <Link href="/contact" className="text-[var(--cherry-red)] hover:underline">
                 contact us directly
@@ -100,9 +111,13 @@ export default function GiftingPage() {
       {/* Merchandise Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-4">
-            Official Merchandise
-          </h2>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-8 h-px bg-[var(--gold)]" />
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
+              Official Merchandise
+            </h2>
+            <div className="flex-1 h-px bg-[var(--gold)]/20" />
+          </div>
           <p className="text-[var(--gray-500)] max-w-3xl mb-8 leading-relaxed">
             Show your pride and support with official Sultanate of Amexem
             merchandise. Proceeds support national operations and programs.
@@ -133,10 +148,10 @@ export default function GiftingPage() {
             ].map((item) => (
               <div
                 key={item.name}
-                className="border border-[var(--gray-200)] rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+                className="border border-[var(--gray-200)] rounded-xl overflow-hidden hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
               >
-                <div className="aspect-square bg-[var(--gray-100)] flex items-center justify-center">
-                  <span className="text-[var(--gray-300)] text-sm">
+                <div className="aspect-square bg-[var(--dark-surface)] flex items-center justify-center">
+                  <span className="text-white/30 text-sm">
                     Image Coming Soon
                   </span>
                 </div>
@@ -148,7 +163,7 @@ export default function GiftingPage() {
                     {item.description}
                   </p>
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-[var(--forest-green)]">
+                    <span className="font-bold text-[var(--gold)]">
                       {item.price}
                     </span>
                     <Link

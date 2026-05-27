@@ -10,23 +10,30 @@ export const metadata: Metadata = {
 export default function CitizenshipPage() {
   return (
     <>
-      <section className="bg-[var(--gray-50)] py-16 border-b border-[var(--gray-200)]">
+      {/* Dark Hero Header */}
+      <section className="bg-[var(--dark-bg)] py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold text-[var(--gray-900)] mb-4">
+          <div className="w-16 h-1 bg-[var(--gold)] mb-6" />
+          <h1 className="text-4xl font-bold text-white mb-4">
             Citizenship
           </h1>
-          <p className="text-lg text-[var(--gray-500)] max-w-3xl">
+          <p className="text-lg text-white/70 max-w-3xl">
             Become a citizen of the Sultanate of Amexem and join a community
             dedicated to sovereignty, heritage, and mutual advancement.
           </p>
         </div>
       </section>
 
+      {/* Membership Tiers */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-8">
-            Membership Tiers
-          </h2>
+          <div className="flex items-center gap-4 mb-10">
+            <div className="w-8 h-px bg-[var(--gold)]" />
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
+              Membership Tiers
+            </h2>
+            <div className="flex-1 h-px bg-[var(--gold)]/20" />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             {[
@@ -40,7 +47,7 @@ export default function CitizenshipPage() {
                   "Educational resources",
                   "Digital membership card",
                 ],
-                accent: "var(--gray-700)",
+                featured: false,
               },
               {
                 name: "Full Citizen",
@@ -53,7 +60,6 @@ export default function CitizenshipPage() {
                   "Community support network",
                   "Governance participation",
                 ],
-                accent: "var(--forest-green)",
                 featured: true,
               },
               {
@@ -67,26 +73,23 @@ export default function CitizenshipPage() {
                   "Advisory council access",
                   "Priority communications",
                 ],
-                accent: "var(--cherry-red)",
+                featured: false,
               },
             ].map((tier) => (
               <div
                 key={tier.name}
-                className={`p-8 rounded-lg border ${
+                className={`p-8 rounded-xl border transition-all duration-300 relative ${
                   tier.featured
-                    ? "border-[var(--forest-green)] ring-2 ring-[var(--forest-green)]/20"
-                    : "border-[var(--gray-200)]"
-                } relative`}
+                    ? "border-[var(--gold)] ring-2 ring-[var(--gold)]/20 hover:shadow-lg hover:shadow-[var(--gold)]/5"
+                    : "border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5"
+                }`}
               >
                 {tier.featured && (
-                  <span className="absolute -top-3 left-6 bg-[var(--forest-green)] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                  <span className="absolute -top-3 left-6 bg-[var(--gold)] text-[var(--dark-bg)] text-xs font-semibold px-3 py-1 rounded-full">
                     Most Popular
                   </span>
                 )}
-                <h3
-                  className="text-xl font-semibold mb-2"
-                  style={{ color: tier.accent }}
-                >
+                <h3 className="text-xl font-semibold mb-2 text-[var(--gray-900)]">
                   {tier.name}
                 </h3>
                 <p className="text-sm text-[var(--gray-500)] mb-6 leading-relaxed">
@@ -99,8 +102,7 @@ export default function CitizenshipPage() {
                       className="flex items-center gap-2 text-sm text-[var(--gray-700)]"
                     >
                       <svg
-                        className="w-4 h-4 shrink-0"
-                        style={{ color: tier.accent }}
+                        className="w-4 h-4 shrink-0 text-[var(--gold)]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -120,7 +122,7 @@ export default function CitizenshipPage() {
                   href="/contact"
                   className={`block text-center py-2.5 rounded-md text-sm font-semibold transition-colors ${
                     tier.featured
-                      ? "bg-[var(--forest-green)] text-white hover:bg-[var(--forest-green-dark)]"
+                      ? "bg-[var(--gold)] text-[var(--dark-bg)] hover:bg-[var(--gold-light)]"
                       : "border border-[var(--gray-300)] text-[var(--gray-700)] hover:bg-[var(--gray-50)]"
                   }`}
                 >
@@ -130,9 +132,14 @@ export default function CitizenshipPage() {
             ))}
           </div>
 
-          <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-6">
-            Application Process
-          </h2>
+          {/* Application Process */}
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-8 h-px bg-[var(--gold)]" />
+            <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
+              Application Process
+            </h2>
+            <div className="flex-1 h-px bg-[var(--gold)]/20" />
+          </div>
           <div className="max-w-3xl">
             <ol className="space-y-6">
               {[
@@ -158,7 +165,7 @@ export default function CitizenshipPage() {
                 },
               ].map((item, i) => (
                 <li key={item.step} className="flex gap-4">
-                  <div className="w-8 h-8 rounded-full bg-[var(--cherry-red)] text-white flex items-center justify-center text-sm font-bold shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center text-sm font-bold shrink-0">
                     {i + 1}
                   </div>
                   <div>
@@ -173,6 +180,27 @@ export default function CitizenshipPage() {
               ))}
             </ol>
           </div>
+        </div>
+      </section>
+
+      {/* Dark CTA Section */}
+      <section className="bg-[var(--dark-bg)] py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="w-16 h-1 bg-[var(--gold)] mx-auto mb-6" />
+          <h2 className="text-2xl font-bold text-white mb-4">
+            Ready to Begin Your Journey?
+          </h2>
+          <p className="text-white/70 max-w-2xl mx-auto mb-8">
+            Take the first step toward citizenship in the Sultanate of Amexem.
+            Reach out to learn more about the process and find the tier that fits
+            your path.
+          </p>
+          <Link
+            href="/contact"
+            className="inline-block px-8 py-3 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-md hover:bg-[var(--gold-light)] transition-colors"
+          >
+            Contact Us to Apply
+          </Link>
         </div>
       </section>
     </>

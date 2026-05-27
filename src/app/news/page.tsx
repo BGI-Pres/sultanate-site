@@ -80,25 +80,36 @@ export default async function NewsPage() {
   const posts = await getPosts();
   return (
     <>
-      <section className="bg-[var(--gray-50)] py-16 border-b border-[var(--gray-200)]">
+      <section className="relative bg-[var(--dark-bg)] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold text-[var(--gray-900)] mb-4">
+          <div className="w-12 h-1 bg-[var(--gold)] mb-6" />
+          <h1 className="text-4xl font-bold text-white mb-4">
             News &amp; Updates
           </h1>
-          <p className="text-lg text-[var(--gray-500)] max-w-3xl">
+          <p className="text-lg text-gray-300 max-w-3xl">
             Stay informed with the latest announcements, events, and
             developments from the Sultanate of Amexem.
           </p>
         </div>
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--gold)] via-[var(--forest-green)] to-[var(--gold)]" />
       </section>
 
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section label */}
+          <div className="flex items-center gap-4 mb-10">
+            <div className="h-px w-8 bg-[var(--gold)]" />
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
+              Latest Articles
+            </span>
+            <div className="h-px flex-1 bg-[var(--gold)]/20" />
+          </div>
+
           <div className="max-w-4xl space-y-8">
             {posts.map((post) => (
               <article
                 key={post.id}
-                className="p-8 border border-[var(--gray-200)] rounded-lg hover:shadow-sm transition-shadow"
+                className="p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
               >
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-xs font-semibold text-[var(--cherry-red)] bg-red-50 px-2.5 py-1 rounded-full">
@@ -118,7 +129,12 @@ export default async function NewsPage() {
             ))}
           </div>
 
-          <div className="mt-12 text-center">
+          <div className="mt-16 text-center">
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="h-px w-12 bg-[var(--gold)]" />
+              <div className="w-2 h-2 rounded-full bg-[var(--gold)]" />
+              <div className="h-px w-12 bg-[var(--gold)]" />
+            </div>
             <p className="text-[var(--gray-500)]">
               More updates coming soon. Check back regularly for the latest
               news from the Sultanate.
