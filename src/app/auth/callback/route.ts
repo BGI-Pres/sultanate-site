@@ -28,6 +28,13 @@ export async function GET(request: Request) {
 
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
+      const { data: { user } } = await supabase.auth.getUser();
+      const role = user?.user_metadata?.role;
+
+      if (role === "admin" && next === "/portal") {
+        return NextResponse.redirect(`${origin}/admin`);
+      }
+
       return NextResponse.redirect(`${origin}${next}`);
     }
   }
