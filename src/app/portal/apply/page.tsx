@@ -28,11 +28,16 @@ export default function ApplyPage() {
   const [statement, setStatement] = useState("");
   const [howHeard, setHowHeard] = useState("");
   const [acknowledged, setAcknowledged] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!acknowledged) {
       setError("You must acknowledge the Constitution and Bylaws to proceed.");
+      return;
+    }
+    if (!termsAccepted) {
+      setError("You must agree to the terms of membership to proceed.");
       return;
     }
     setError("");
@@ -66,6 +71,13 @@ export default function ApplyPage() {
       return;
     }
 
+    // Fire-and-forget notification to admin emails
+    fetch("/api/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: fullName, email: email || user?.email, surnamePref }),
+    });
+
     setSubmitted(true);
     setLoading(false);
   }
@@ -79,12 +91,20 @@ export default function ApplyPage() {
           Your membership application has been submitted to the Supreme Grand
           Council for review. You will be notified of your application status.
         </p>
-        <p className="text-sm text-[var(--gray-500)] mb-8">
-          Review typically takes 2–4 weeks.
+        <p className="text-sm text-[var(--gray-500)] mb-2">
+          Estimated review time: 2–4 weeks
         </p>
-        <Link href="/portal" className="text-sm text-[var(--gold)] font-medium hover:underline">
-          Return to Dashboard &rarr;
-        </Link>
+        <p className="text-sm text-[var(--gray-500)] mb-8">
+          You will receive confirmation at <span className="font-medium text-[var(--gray-700)]">{email}</span> when a decision is made.
+        </p>
+        <div className="flex flex-col items-center gap-3">
+          <Link href="/auth/signup" className="px-6 py-2.5 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-lg text-sm hover:bg-[var(--gold-light)] transition-colors">
+            Create a portal account
+          </Link>
+          <Link href="/portal" className="text-sm text-[var(--gold)] font-medium hover:underline">
+            Return to Dashboard &rarr;
+          </Link>
+        </div>
       </div>
     );
   }
