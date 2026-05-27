@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = {
@@ -108,22 +109,24 @@ export default async function NewsPage() {
             {posts.map((post) => (
               <article
                 key={post.id}
-                className="p-5 md:p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
+                className="border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
               >
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-xs font-semibold text-[var(--cherry-red)] bg-red-50 px-2.5 py-1 rounded-full">
-                    {post.category}
-                  </span>
-                  <span className="text-sm text-[var(--gray-500)]">
-                    {formatDate(post.created_at)}
-                  </span>
-                </div>
-                <h2 className="text-xl font-semibold text-[var(--gray-900)] mb-3">
-                  {post.title}
-                </h2>
-                <p className="text-[var(--gray-500)] leading-relaxed">
-                  {post.excerpt}
-                </p>
+                <Link href={`/news/${post.id}`} className="block p-5 md:p-8">
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-xs font-semibold text-[var(--cherry-red)] bg-red-50 px-2.5 py-1 rounded-full">
+                      {post.category}
+                    </span>
+                    <span className="text-sm text-[var(--gray-500)]">
+                      {formatDate(post.created_at)}
+                    </span>
+                  </div>
+                  <h2 className="text-xl font-semibold text-[var(--gray-900)] mb-3">
+                    {post.title}
+                  </h2>
+                  <p className="text-[var(--gray-500)] leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                </Link>
               </article>
             ))}
           </div>
