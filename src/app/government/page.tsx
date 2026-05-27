@@ -31,19 +31,6 @@ const purposes = [
   "Build constructive relations with other organizations and governments",
 ];
 
-const memberRights = [
-  "Participate in assemblies",
-  "Access programs and services",
-  "Seek advocacy on their behalf",
-  "Hold office within the Sultanate",
-];
-
-const memberDuties = [
-  "Uphold the Constitution",
-  "Conduct themselves lawfully",
-  "Contribute support to the body",
-  "Act in good faith toward fellow members",
-];
 
 export default function GovernmentPage() {
   return (
@@ -171,75 +158,14 @@ export default function GovernmentPage() {
         </div>
       </section>
 
-      {/* ── Article III — Membership ── */}
-      <section className="py-12 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-px w-12 bg-[var(--gold)]" />
-              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                Article III
-              </span>
-              <div className="h-px w-12 bg-[var(--gold)]" />
-            </div>
-            <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-4">
-              Membership
-            </h2>
-            <p className="text-[var(--gray-700)] leading-relaxed mb-10 text-[15px]">
-              Membership in the Sultanate of Amexem is open to birthright
-              members and applicants who meet the criteria established by the
-              Supreme Grand Council.
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-5 md:p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
-                <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-4">
-                  Rights of Members
-                </h3>
-                <ul className="space-y-3">
-                  {memberRights.map((right, i) => (
-                    <li key={i} className="flex gap-3 items-start">
-                      <svg className="w-5 h-5 text-[var(--gold)] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                      </svg>
-                      <span className="text-[var(--gray-700)] text-[15px] leading-relaxed">
-                        {right}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="p-5 md:p-8 border border-[var(--gray-200)] rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300">
-                <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-4">
-                  Duties of Members
-                </h3>
-                <ul className="space-y-3">
-                  {memberDuties.map((duty, i) => (
-                    <li key={i} className="flex gap-3 items-start">
-                      <svg className="w-5 h-5 text-[var(--gold)] mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-                      </svg>
-                      <span className="text-[var(--gray-700)] text-[15px] leading-relaxed">
-                        {duty}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Article IV — Governing Structure ── */}
+      {/* ── Article III — Governing Structure ── */}
       <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4 justify-center">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                Article IV
+                Article III
               </span>
               <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
@@ -247,126 +173,36 @@ export default function GovernmentPage() {
               Governing Structure
             </h2>
 
-            {/* ── Tier 1: Allah — Supreme Reality ── */}
-            <div className="mb-4">
-              <div className="rounded-2xl border-2 border-[var(--gold)] bg-gradient-to-b from-[var(--gold)]/10 to-transparent p-6 md:p-10 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--gold)]/10 border-2 border-[var(--gold)] flex items-center justify-center">
-                  <svg className="w-8 h-8 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-[var(--gold)] mb-2">
-                  Allah
-                </h3>
-                <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-3">
-                  The Sultan in Reality
-                </p>
-                <p className="text-white/70 text-sm leading-relaxed max-w-lg mx-auto">
-                  The Most High — the supreme and absolute authority from which
-                  all governing power derives. Every office, institution, and
-                  decision within the Sultanate operates in submission to this
-                  authority.
-                </p>
-              </div>
-            </div>
-
-            {/* Connector */}
-            <div className="flex justify-center mb-4">
-              <div className="w-px h-8 bg-[var(--gold)]/40" />
-            </div>
-
-            {/* ── Tier 2: Executive Director — Authority & Operations ── */}
-            <div className="mb-4">
-              <div className="rounded-xl border border-[var(--gold)]/40 bg-[var(--gold)]/5 p-6 md:p-8 text-center">
-                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[var(--dark-bg)] border border-[var(--gold)]/40 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Executive Director
-                </h3>
-                <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-3">
-                  The Sultan in Authority &amp; Operation
-                </p>
-                <p className="text-white/70 text-sm leading-relaxed max-w-lg mx-auto">
-                  The living authority of the Sultanate. Carries out the will of
-                  the body, chairs the Ministerial and Executive Boards, directs
-                  all operations, and is accountable to the Supreme Grand Council.
-                </p>
-              </div>
-            </div>
-
-            {/* Connector */}
-            <div className="flex justify-center mb-4">
-              <div className="w-px h-8 bg-[var(--gold)]/40" />
-            </div>
-
-            {/* ── Tier 3: Supreme Grand Council — The System ── */}
-            <div className="mb-4">
-              <div className="rounded-xl border border-[var(--gold)]/20 bg-white/[0.02] p-6 md:p-8 text-center">
-                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[var(--dark-bg)] border border-[var(--gold)]/20 flex items-center justify-center">
-                  <svg className="w-6 h-6 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">
-                  Supreme Grand Council
-                </h3>
-                <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-3">
-                  The System of Enforcement &amp; Delegation
-                </p>
-                <p className="text-white/70 text-sm leading-relaxed max-w-lg mx-auto">
-                  The governing system through which authority is enforced and
-                  delegated. Composed of senior Sheiks and principal officers,
-                  the Council holds constitutional authority over all offices,
-                  policies, and operations of the Sultanate.
-                </p>
-              </div>
-            </div>
-
-            {/* Connector branching to sub-institutions */}
-            <div className="flex justify-center mb-4">
-              <div className="w-px h-8 bg-[var(--gold)]/20" />
-            </div>
-
-            {/* ── Tier 4: Grand Body & Sheiks ── */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="rounded-xl border border-[var(--gold)]/10 bg-white/[0.01] p-5 md:p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 rounded-lg bg-[var(--dark-bg)] border border-[var(--gold)]/15 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
-                    </svg>
-                  </div>
-                  <h4 className="font-semibold text-white">Grand Body</h4>
-                </div>
-                <p className="text-white/50 text-sm leading-relaxed">
-                  The general assembly of all members. Ratifies amendments to the
-                  Constitution and expresses the collective will of the people.
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-[var(--gold)]/10 bg-white/[0.01] p-5 md:p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-9 h-9 rounded-lg bg-[var(--dark-bg)] border border-[var(--gold)]/15 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-[var(--gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-                    </svg>
-                  </div>
-                  <h4 className="font-semibold text-white">The Sheiks</h4>
-                </div>
-                <p className="text-white/50 text-sm leading-relaxed">
-                  Leaders and elders who provide guidance in matters of faith,
-                  heritage, and community — pillars of wisdom and continuity.
-                </p>
-              </div>
+            <div className="rounded-xl border border-[var(--gold)]/20 bg-[var(--gold)]/5 p-6 md:p-8">
+              <ol className="space-y-0">
+                {[
+                  { name: "Allah", role: "Supreme authority from which all governing power derives" },
+                  { name: "Executive Director", role: "Carries out the will of the body and directs all operations" },
+                  { name: "Supreme Grand Council", role: "Enforces and delegates constitutional authority across all offices" },
+                  { name: "Grand Body", role: "The general assembly — ratifies amendments and expresses the collective will" },
+                  { name: "The Sheiks", role: "Elders providing guidance in faith, heritage, and community" },
+                ].map((item, i) => (
+                  <li key={item.name} className="flex items-start gap-4 py-4 border-b border-[var(--gold)]/10 last:border-0">
+                    <span className="w-8 h-8 rounded-full bg-[var(--dark-bg)] border border-[var(--gold)]/30 text-[var(--gold)] flex items-center justify-center text-xs font-bold shrink-0">
+                      {i + 1}
+                    </span>
+                    <div>
+                      <h3 className={`font-semibold mb-0.5 ${i === 0 ? "text-[var(--gold)]" : "text-white"}`}>
+                        {item.name}
+                      </h3>
+                      <p className="text-white/50 text-sm leading-relaxed">
+                        {item.role}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Articles V & VI — The Boards ── */}
+      {/* ── Articles IV & V — The Boards ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
@@ -376,7 +212,7 @@ export default function GovernmentPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-8 bg-[var(--gold)]" />
                   <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                    Article V
+                    Article IV
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2">
@@ -403,7 +239,7 @@ export default function GovernmentPage() {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-px w-8 bg-[var(--gold)]" />
                   <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-                    Article VI
+                    Article V
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2">
