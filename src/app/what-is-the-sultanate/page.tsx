@@ -6,6 +6,7 @@ export const metadata: Metadata = {
     "What is the Sultanate of Amexem? — A Governing Authority for the Moorish American People",
   description:
     "The Sultanate of Amexem is the custodial governing authority for the Moorish American descendants of the Nation of Moab — reconstituted 2020, Chicago.",
+  alternates: { canonical: "/what-is-the-sultanate" },
 };
 
 const faqs = [

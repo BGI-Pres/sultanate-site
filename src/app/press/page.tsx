@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Press & Updates — Official Statements from the Sultanate of Amexem",
   description:
     "Read official proclamations, news, and Moorish American community updates from the Sultanate of Amexem — announcements for the Nation of Moab descendants.",
+  alternates: { canonical: "/press" },
 };
 
 interface Post {

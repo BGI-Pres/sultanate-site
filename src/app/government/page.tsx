@@ -6,6 +6,7 @@ export const metadata: Metadata = {
     "Government & Constitution — Sultanate of Amexem Governing Framework",
   description:
     "Explore the constitutional framework and Declaration of Principles guiding Moorish American self-governance within the Sultanate of Amexem, Nation of Moab descendants.",
+  alternates: { canonical: "/government" },
 };
 
 export default function GovernmentPage() {

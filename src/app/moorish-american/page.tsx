@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Moorish American Nationality — Who We Are, Where We Come From",
   description:
     "Moorish American nationality: descendants of the Nation of Moab, ancestry and heritage restored by Noble Drew Ali, custodianship of the Sultanate of Amexem.",
+  alternates: { canonical: "/moorish-american" },
 };
 
 export default function MoorishAmericanPage() {

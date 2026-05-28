@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Frequently Asked Questions — Sultanate of Amexem",
   description:
     "Sultanate of Amexem FAQ: Moorish American questions, Nation of Moab, Noble Drew Ali, membership, dues, meetings, cooperative economics answered here.",
+  alternates: { canonical: "/faq" },
 };
 
 type QA = { q: string; a: string };
