@@ -56,7 +56,7 @@ const tiers = [
         "Demonstrated involvement in community affairs",
         "Complete leadership training",
         "Organize a local chapter/temple body",
-        "Pay $100 body registration fee",
+        "Pay $100 charter registration fee",
       ],
     },
     cta: "Apply Now",
@@ -65,7 +65,7 @@ const tiers = [
   {
     name: "General",
     price: "$50",
-    priceNote: "per month + $100 body registration",
+    priceNote: "per month + $100 charter registration",
     description:
       "Part of the Grand Body. Organize and lead a local chapter or temple under the Sultanate.",
     benefits: [
@@ -80,7 +80,7 @@ const tiers = [
       "Active Community member with demonstrated involvement",
       "Leadership training completed",
       "Organized a local chapter/temple body",
-      "$50/month dues + $100 body registration",
+      "$50/month dues + $100 charter registration",
     ],
     rankUp: {
       target: "Lead",
@@ -88,7 +88,7 @@ const tiers = [
         "Maintain an active chapter with regular attendance",
         "Secure a physical location for your body",
         "Receive leadership approval",
-        "Pay $100 registration fee",
+        "Pay $100 charter registration fee",
       ],
     },
     cta: "Apply Now",
@@ -97,7 +97,7 @@ const tiers = [
   {
     name: "Lead",
     price: "$50",
-    priceNote: "per month + $100 registration",
+    priceNote: "per month + $100 charter registration",
     description:
       "Operational leadership. An established body with a physical location, leading meetings and mentoring members.",
     benefits: [
@@ -111,7 +111,7 @@ const tiers = [
       "Active chapter as General member",
       "Physical location established for your body",
       "Leadership approval",
-      "$50/month dues + $100 registration",
+      "$50/month dues + $100 charter registration",
     ],
     rankUp: null,
     cta: "Apply Now",
