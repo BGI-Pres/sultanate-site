@@ -90,6 +90,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.classList.add('js');`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">
         <script
           type="application/ld+json"
@@ -153,29 +160,14 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: [
-                {
-                  "@type": "Question",
-                  name: "What is the Sultanate of Amexem?",
-                  acceptedAnswer: { "@type": "Answer", text: "The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab, modernly identified as Moorish American. Reconstituted in October 2020 under the House of Simmons Bey in Chicago, Illinois." },
-                },
-                {
-                  "@type": "Question",
-                  name: "How do I become a member of the Sultanate of Amexem?",
-                  acceptedAnswer: { "@type": "Answer", text: "Membership starts at the Affiliate tier, which is free and open to all. Attend meetings consistently for 3 months, complete the orientation study covering sacred texts and the Constitution, then apply for Community membership." },
-                },
-                {
-                  "@type": "Question",
-                  name: "What is the connection to Noble Drew Ali and the Moorish Science Temple of America?",
-                  acceptedAnswer: { "@type": "Answer", text: "Noble Drew Ali rekindled the light of truth for Moorish Americans in the early twentieth century. The Moorish Science Temple of America established the framework for developmental growth. The Sultanate of Amexem stands on this foundation and governs by the same principles." },
-                },
-                {
-                  "@type": "Question",
-                  name: "How does the Sultanate's cooperative economics work?",
-                  acceptedAnswer: { "@type": "Answer", text: "The Sultanate builds economic infrastructure from within its membership through cooperative commerce, business certification, a trade network, the Uplifting Fund for community investment, and institutional ventures like Bey Group International." },
-                },
-              ],
+              "@type": "WebSite",
+              name: "Sultanate of Amexem",
+              url: "https://www.sultanateofamexem.info",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: "https://www.sultanateofamexem.info/?q={search_term_string}",
+                "query-input": "required name=search_term_string",
+              },
             }),
           }}
         />
