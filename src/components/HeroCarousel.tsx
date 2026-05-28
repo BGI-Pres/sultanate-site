@@ -58,7 +58,7 @@ export default function HeroCarousel() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-28">
         <div className="max-w-3xl">
-          <div className="flex items-center gap-2 mb-4 animate-fade-in">
+          <div className="flex items-center gap-2 mb-4">
             <div className="h-px w-8" style={{ backgroundColor: slide.accent }} />
             <p
               className="text-xs uppercase tracking-[0.2em] font-semibold transition-colors duration-500"
@@ -70,19 +70,19 @@ export default function HeroCarousel() {
 
           <h1
             key={`headline-${current}`}
-            className="text-3xl sm:text-4xl md:text-6xl font-bold leading-[1.1] mb-5 animate-fade-in-up"
+            className="text-3xl sm:text-4xl md:text-6xl font-bold leading-[1.1] mb-5"
           >
             {slide.headline}
           </h1>
 
           <p
             key={`desc-${current}`}
-            className="text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl animate-fade-in-up animate-delay-1"
+            className="text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl"
           >
             {slide.description}
           </p>
 
-          <div className="animate-fade-in-up animate-delay-2">
+          <div className="">
             <Link
               href={slide.cta.href}
               className="inline-block px-7 py-3.5 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-md hover:bg-[var(--gold-light)] transition-colors"

@@ -44,7 +44,7 @@ export default function WhatIsTheSultanatePage() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial py-12 md:py-20 border-b-2 border-[var(--gold)]">
+      <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="h-px w-16 bg-[var(--gold)] mb-6" />
@@ -62,7 +62,6 @@ export default function WhatIsTheSultanatePage() {
           </div>
         </div>
       </section>
-      <div className="gold-divider" />
 
       {/* ── A Custodial Governing Authority ── */}
       <section className="py-12 md:py-20">
@@ -118,7 +117,7 @@ export default function WhatIsTheSultanatePage() {
       </section>
 
       {/* ── The Lineage ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
@@ -258,7 +257,7 @@ export default function WhatIsTheSultanatePage() {
       </section>
 
       {/* ── What the Sultanate Does ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
@@ -426,7 +425,7 @@ export default function WhatIsTheSultanatePage() {
       </section>
 
       {/* ── Why "Moorish American" ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
@@ -606,7 +605,7 @@ export default function WhatIsTheSultanatePage() {
       </section>
 
       {/* ── Bottom CTA ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial border-t border-[var(--gold)]/20">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)] border-t border-[var(--gold)]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12">
             <div className="h-px w-16 bg-[var(--gold)] mb-6 mx-auto" />

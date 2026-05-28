@@ -12,7 +12,7 @@ export default function AboutPage() {
   return (
     <>
       {/* ── Hero header ── */}
-      <section className="bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial py-12 md:py-20 border-b-0">
+      <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-px w-16 bg-[var(--gold)] mb-6" />
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
@@ -26,12 +26,11 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
-      <div className="gold-divider" />
 
       {/* ── The Light Rekindled ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl reveal">
+          <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -71,9 +70,9 @@ export default function AboutPage() {
       </section>
 
       {/* ── Reconstruction & Reformation ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl reveal">
+          <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -117,7 +116,7 @@ export default function AboutPage() {
       {/* ── Vision ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl reveal">
+          <div className="max-w-4xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -150,9 +149,9 @@ export default function AboutPage() {
       </section>
 
       {/* ── Timeline ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4 justify-center">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -173,7 +172,7 @@ export default function AboutPage() {
                 { year: "2024", event: "Formal organization of the Supreme Grand Council, Ministerial Board, and Executive Board under the Constitution" },
                 { year: "2026", event: "Bey Group of Companies rebrands as Bey Group International — expanding the economic mission to the global stage" },
               ].map((milestone, i) => (
-                <div key={milestone.year} className={`flex gap-6 reveal reveal-delay-${(i % 4) + 1}`}>
+                <div key={milestone.year} className={`flex gap-6-delay-${(i % 4) + 1}`}>
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/30 flex items-center justify-center shrink-0">
                       <span className="text-xs font-bold text-[var(--gold)]">
@@ -199,7 +198,7 @@ export default function AboutPage() {
       {/* ── Core Values ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4 justify-center">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -221,7 +220,7 @@ export default function AboutPage() {
               ].map((item, i) => (
                 <div
                   key={item.value}
-                  className={`text-center p-5 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300 card-hover reveal reveal-delay-${i + 1}`}
+                  className={`text-center p-5 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300-delay-${i + 1}`}
                 >
                   <h3 className="text-lg font-bold text-[var(--gold)] mb-2">
                     {item.value}
@@ -237,9 +236,9 @@ export default function AboutPage() {
       </section>
 
       {/* ── Bottom CTA ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial border-t border-[var(--gold)]/20">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)] border-t border-[var(--gold)]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12 reveal">
+          <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-4">
               Proclaim Your Nationality
             </h2>

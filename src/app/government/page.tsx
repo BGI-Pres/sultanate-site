@@ -13,7 +13,7 @@ export default function GovernmentPage() {
   return (
     <>
       {/* ── Hero header ── */}
-      <section className="bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial py-12 md:py-20 border-b-0">
+      <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-px w-16 bg-[var(--gold)] mb-6" />
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
@@ -23,11 +23,10 @@ export default function GovernmentPage() {
             The supreme governing document of the Sultanate of Amexem.
           </p>
         </div>
-        <div className="gold-divider" />
       </section>
 
       {/* ── Preamble ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-8 justify-center">
@@ -37,7 +36,7 @@ export default function GovernmentPage() {
               </span>
               <div className="h-px w-12 bg-[var(--gold)]" />
             </div>
-            <div className="reveal rounded-2xl border-2 border-[var(--gold)]/40 bg-[var(--gold)]/5 p-5 md:p-10">
+            <div className=" rounded-2xl border-2 border-[var(--gold)]/40 bg-[var(--gold)]/5 p-5 md:p-10">
               <p className="text-white/90 text-lg md:text-xl leading-relaxed text-center italic">
                 &ldquo;We, the Moorish American people of the Sultanate of
                 Amexem — descendants and successors in interest to the ancient
@@ -53,7 +52,7 @@ export default function GovernmentPage() {
       {/* ── Article I — Name, Nature, and Purpose ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="reveal max-w-4xl">
+          <div className=" max-w-4xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -94,9 +93,9 @@ export default function GovernmentPage() {
       </section>
 
       {/* ── Article II — Declaration of Principles ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="reveal max-w-4xl">
+          <div className=" max-w-4xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -108,7 +107,7 @@ export default function GovernmentPage() {
               Declaration of Principles
             </h2>
 
-            <div className="reveal rounded-2xl border border-[var(--gold)]/20 bg-[var(--gold)]/5 p-5 md:p-8">
+            <div className=" rounded-2xl border border-[var(--gold)]/20 bg-[var(--gold)]/5 p-5 md:p-8">
               <ul className="space-y-5">
                 {[
                   "Islamism is the spiritual foundation; free exercise of conscience is guaranteed to all members",
@@ -132,7 +131,7 @@ export default function GovernmentPage() {
       {/* ── Article III — Governing Structure ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="reveal max-w-4xl">
+          <div className=" max-w-4xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -144,7 +143,7 @@ export default function GovernmentPage() {
               Governing Structure
             </h2>
 
-            <div className="reveal rounded-xl border border-[var(--gray-200)] p-6 md:p-8">
+            <div className=" rounded-xl border border-[var(--gray-200)] p-6 md:p-8">
               <ol className="space-y-0">
                 {[
                   { name: "Allah", authority: "All governing power derives from and operates in submission to the Most High" },
@@ -173,7 +172,7 @@ export default function GovernmentPage() {
               {/* Boards */}
               <div className="mt-6 pt-6 border-t border-[var(--gray-200)]">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="card-hover">
+                  <div className="">
                     <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold mb-3">
                       Ministerial Board
                     </h4>
@@ -186,7 +185,7 @@ export default function GovernmentPage() {
                       ))}
                     </ul>
                   </div>
-                  <div className="card-hover">
+                  <div className="">
                     <h4 className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold mb-3">
                       Executive Board
                     </h4>
@@ -207,9 +206,9 @@ export default function GovernmentPage() {
       </section>
 
       {/* ── Download CTA ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="card-hover max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12">
+          <div className=" max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/20 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12">
             <h2 className="text-2xl font-bold text-white mb-4">
               The Full Constitution
             </h2>
