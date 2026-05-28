@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     "Resources — Official Documents, Sacred Texts & Membership Materials",
   description:
     "Access the Sultanate of Amexem constitution, Holy Koran, Divine Constitution & Bylaws, membership card details, and business certification documents.",
+  alternates: { canonical: "/resources" },
 };
 
 export default function ResourcesPage() {

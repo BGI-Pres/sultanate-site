@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Noble Drew Ali — The Prophet Who Rekindled the Light of Truth",
   description:
     "Noble Drew Ali, prophet of the Moorish Science Temple of America (MSTA), restored Moorish American nationality, the Nation of Moab lineage, and the foundation of the Sultanate of Amexem.",
+  alternates: { canonical: "/noble-drew-ali" },
 };
 
 export default function NobleDrewAliPage() {

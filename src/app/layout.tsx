@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   creator: "Sultanate of Amexem",
   publisher: "Sultanate of Amexem",
   alternates: {
-    canonical: "https://www.sultanateofamexem.info",
+    canonical: "/",
   },
   openGraph: {
     title: "Sultanate of Amexem — Moorish American Governing Authority",

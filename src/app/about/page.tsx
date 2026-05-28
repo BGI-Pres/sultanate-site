@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "About the Sultanate of Amexem — Moorish American Heritage & History",
   description:
     "Discover the Sultanate of Amexem, reconstituted in 2020 to preserve Moorish American heritage rooted in Noble Drew Ali and the MSTA. Learn about the Nation of Moab legacy.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
