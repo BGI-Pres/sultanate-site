@@ -3,9 +3,9 @@ import Link from "next/link";
 import EmailCapture from "@/components/EmailCapture";
 
 export const metadata: Metadata = {
-  title: "Economics",
+  title: "Economics — Cooperative Commerce & Institutional Development",
   description:
-    "The economic infrastructure of the Sultanate of Amexem — collective commerce, institutional development, and cooperative ventures built from within the membership.",
+    "Learn about cooperative economics at the Sultanate of Amexem — trade networks, business certification, the Uplifting Fund, and Bey Group International ventures.",
 };
 
 const enterprises = [

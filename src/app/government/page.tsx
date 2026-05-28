@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Government & Constitution",
+  title:
+    "Government & Constitution — Sultanate of Amexem Governing Framework",
   description:
-    "The Constitution of the Sultanate of Amexem — the supreme governing document for the Moorish American people, descendants and successors in interest to the ancient Nation of Moab.",
+    "Explore the constitutional framework and Declaration of Principles guiding Moorish American self-governance within the Sultanate of Amexem, Nation of Moab descendants.",
 };
 
 export default function GovernmentPage() {

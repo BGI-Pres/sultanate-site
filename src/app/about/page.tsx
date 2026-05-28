@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About the Sultanate of Amexem — Moorish American Heritage & History",
   description:
-    "The Sultanate of Amexem — reconstituted October 2020 as the custodial governing authority for the descendants of the Nation of Moab, modernly identified as Moorish American. Nationality, economic security, and global cultural presentation are the order of the day.",
+    "Discover the Sultanate of Amexem, reconstituted in 2020 to preserve Moorish American heritage rooted in Noble Drew Ali and the MSTA. Learn about the Nation of Moab legacy.",
 };
 
 export default function AboutPage() {

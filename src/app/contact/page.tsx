@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact the Sultanate of Amexem — Chicago, Illinois",
   description:
-    "Contact the Sultanate of Amexem with questions, inquiries, or to begin your membership journey.",
+    "Reach the Sultanate of Amexem in Chicago, IL for membership inquiries, general questions, or to connect with the Moorish American community.",
 };
 
 export default function ContactPage() {
