@@ -94,3 +94,69 @@ html {
 .gold-glow {
   animation: pulse-glow 3s ease-in-out infinite;
 }
+
+/* ── Scroll-triggered reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── Arabesque pattern overlay ── */
+.arabesque-pattern {
+  position: relative;
+  overflow: hidden;
+}
+.arabesque-pattern::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30Z' fill='none' stroke='%23C5A55A' stroke-width='0.5'/%3E%3Ccircle cx='30' cy='30' r='10' fill='none' stroke='%23C5A55A' stroke-width='0.5'/%3E%3Cpath d='M30 20a10 10 0 010 20a10 10 0 010-20' fill='none' stroke='%23C5A55A' stroke-width='0.3'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+/* ── Gold gradient overlays for dark sections ── */
+.dark-gradient-top {
+  background: linear-gradient(180deg, rgba(197,165,90,0.04) 0%, transparent 40%);
+}
+.dark-gradient-bottom {
+  background: linear-gradient(0deg, rgba(197,165,90,0.04) 0%, transparent 40%);
+}
+.dark-gradient-radial {
+  background: radial-gradient(ellipse at center top, rgba(197,165,90,0.06) 0%, transparent 60%);
+}
+
+/* ── Card hover lift ── */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(197,165,90,0.12);
+}
+
+/* ── Gold divider with glow ── */
+.gold-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.4;
+}
+
+/* ── Smooth section transitions ── */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
