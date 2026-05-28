@@ -12,7 +12,7 @@ export default function MoorishAmericanPage() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial py-12 md:py-20 border-b-2 border-[var(--gold)]">
+      <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="h-px w-16 bg-[var(--gold)] mb-6" />
@@ -28,12 +28,11 @@ export default function MoorishAmericanPage() {
           </div>
         </div>
       </section>
-      <div className="gold-divider" />
 
       {/* ── Who Are Moorish Americans? ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -77,9 +76,9 @@ export default function MoorishAmericanPage() {
       </section>
 
       {/* ── The Ancient Lineage ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -124,7 +123,7 @@ export default function MoorishAmericanPage() {
       {/* ── From Slavery to Restoration ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -169,9 +168,9 @@ export default function MoorishAmericanPage() {
       </section>
 
       {/* ── What "Nationality" Means ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -235,7 +234,7 @@ export default function MoorishAmericanPage() {
       {/* ── The Divine Creed ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -274,9 +273,9 @@ export default function MoorishAmericanPage() {
       </section>
 
       {/* ── How to Proclaim Your Nationality ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -368,7 +367,7 @@ export default function MoorishAmericanPage() {
       {/* ── The Sultanate as Custodian ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -418,9 +417,9 @@ export default function MoorishAmericanPage() {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial">
+      <section className="py-12 md:py-20 bg-[var(--dark-bg)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto reveal">
+          <div className="max-w-4xl mx-auto">
             <div className="flex items-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
@@ -484,7 +483,7 @@ export default function MoorishAmericanPage() {
       {/* ── Bottom CTA ── */}
       <section className="py-12 md:py-20 border-t border-[var(--gold)]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/30 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12 reveal">
+          <div className="max-w-3xl mx-auto text-center rounded-2xl border border-[var(--gold)]/30 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-6 md:p-12">
             <div className="h-px w-16 bg-[var(--gold)] mx-auto mb-6" />
             <h2 className="text-2xl md:text-3xl font-bold text-[var(--gray-900)] mb-4">
               Take Your Standing

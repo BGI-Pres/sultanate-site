@@ -24,7 +24,7 @@ export default function EmailCapture({
     try {
       const supabase = createClient();
       await supabase.from("subscribers").insert({ email, source: "website" });
-      // Always show success — don't reveal if email already exists
+      // Always show success — don't if email already exists
       setSubmitted(true);
       setEmail("");
     } catch {

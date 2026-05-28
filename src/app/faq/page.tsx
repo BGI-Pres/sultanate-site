@@ -147,7 +147,7 @@ function CategorySection({
       id={id}
       className={
         dark
-          ? "py-12 md:py-20 bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial scroll-mt-24"
+          ? "py-12 md:py-20 bg-[var(--dark-bg)] scroll-mt-24"
           : "py-12 md:py-20 scroll-mt-24"
       }
     >
@@ -216,7 +216,7 @@ export default function FAQPage() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial py-12 md:py-20 border-b-0">
+      <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="h-px w-16 bg-[var(--gold)] mb-6" />
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
@@ -236,7 +236,6 @@ export default function FAQPage() {
           </p>
         </div>
       </section>
-      <div className="gold-divider" />
 
       {/* ── Quick links ── */}
       <section className="py-10 md:py-12 bg-[var(--gray-50)] border-b border-[var(--gray-200)]">
@@ -355,7 +354,7 @@ export default function FAQPage() {
       </section>
 
       {/* ── Bottom CTA ── */}
-      <section className="bg-[var(--dark-bg)] arabesque-pattern dark-gradient-radial py-16 md:py-20">
+      <section className="bg-[var(--dark-bg)] py-16 md:py-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="h-px w-16 bg-[var(--gold)] mb-6 mx-auto" />
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
