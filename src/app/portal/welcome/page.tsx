@@ -56,7 +56,7 @@ export default function WelcomePage() {
                 administered by our governing body.
               </p>
               <Link
-                href="/portal/apply"
+                href="/apply"
                 className="inline-block px-4 py-2 text-sm bg-[var(--gold)] text-[var(--dark-bg)] rounded-md hover:bg-[var(--gold-light)] transition-colors"
               >
                 Start Application
@@ -110,7 +110,7 @@ export default function WelcomePage() {
       <div className="text-center">
         <Link
           href="/portal"
-          className="text-sm text-[var(--cherry-red)] hover:underline font-medium"
+          className="text-sm text-[var(--gold)] hover:underline font-medium"
         >
           Skip to Dashboard &rarr;
         </Link>

@@ -21,7 +21,7 @@ export default function StatusPage() {
 
       <div className="bg-white rounded-lg border border-[var(--gray-200)] p-6 mb-8">
         <div className="flex items-center gap-3 mb-6">
-          <span className="w-3 h-3 rounded-full bg-yellow-400" />
+          <span className="w-3 h-3 rounded-full bg-[var(--gold)]" />
           <p className="font-semibold text-[var(--gray-900)]">
             Application In Progress
           </p>
@@ -34,7 +34,7 @@ export default function StatusPage() {
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
                     step.completed
-                      ? "bg-[var(--forest-green)] text-white"
+                      ? "bg-[var(--gold)] text-[var(--dark-bg)]"
                       : "border-2 border-[var(--gray-300)] text-[var(--gray-300)]"
                   }`}
                 >
@@ -49,7 +49,7 @@ export default function StatusPage() {
                 {i < steps.length - 1 && (
                   <div
                     className={`w-0.5 h-12 ${
-                      step.completed ? "bg-[var(--forest-green)]" : "bg-[var(--gray-200)]"
+                      step.completed ? "bg-[var(--gold)]" : "bg-[var(--gray-200)]"
                     }`}
                   />
                 )}
@@ -77,7 +77,7 @@ export default function StatusPage() {
         <p className="text-sm text-[var(--gray-500)]">
           Your application status is updated by our administrative office. If you
           have questions about your application, please{" "}
-          <a href="/contact" className="text-[var(--cherry-red)] hover:underline">
+          <a href="/contact" className="text-[var(--gold)] hover:underline">
             contact us
           </a>
           .
