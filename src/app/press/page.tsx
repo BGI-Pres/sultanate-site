@@ -3,9 +3,10 @@ import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
 export const metadata: Metadata = {
-  title: "Press & Updates",
+  title:
+    "Press & Updates — Official Statements from the Sultanate of Amexem",
   description:
-    "Official statements, press releases, news, and media resources from the Sultanate of Amexem — the custodial governing authority for the descendants of the Nation of Moab.",
+    "Read official proclamations, news, and Moorish American community updates from the Sultanate of Amexem — announcements for the Nation of Moab descendants.",
 };
 
 interface Post {

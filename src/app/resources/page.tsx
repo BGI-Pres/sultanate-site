@@ -3,9 +3,10 @@ import Link from "next/link";
 import CredentialsSection from "@/components/CredentialsSection";
 
 export const metadata: Metadata = {
-  title: "Resources",
+  title:
+    "Resources — Official Documents, Sacred Texts & Membership Materials",
   description:
-    "Guides, documents, and resources from the Sultanate of Amexem — everything members and prospective members need to engage with the nation.",
+    "Access the Sultanate of Amexem constitution, Holy Koran, Divine Constitution & Bylaws, membership card details, and business certification documents.",
 };
 
 export default function ResourcesPage() {
