@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { createClient } from "@supabase/supabase-js";
 
 export const revalidate = 60;
 
@@ -55,7 +55,10 @@ async function getPublishedPosts(): Promise<Post[]> {
       return [];
     }
 
-    const supabase = await createServerSupabaseClient();
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
     const { data, error } = await supabase
       .from("posts")
       .select(
