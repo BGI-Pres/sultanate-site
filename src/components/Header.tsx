@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase-client";
 
 const navLinks = [
   { href: "/about", label: "About" },
@@ -22,6 +23,28 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAuthed, setIsAuthed] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getSession().then(({ data }) => {
+      setIsAuthed(!!data.session);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthed(!!session);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setMobileOpen(false);
+    router.push("/");
+    router.refresh();
+  }
 
   function handleSearchKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" && searchQuery.trim()) {
@@ -44,9 +67,19 @@ export default function Header() {
               Member Portal
             </Link>
             <span className="text-gray-600">|</span>
-            <Link href="/auth/login" className="hover:text-[var(--gold)] transition-colors">
-              Sign In
-            </Link>
+            {isAuthed ? (
+              <button
+                onClick={handleSignOut}
+                disabled={signingOut}
+                className="hover:text-[var(--gold)] transition-colors disabled:opacity-50"
+              >
+                {signingOut ? "Signing out..." : "Sign Out"}
+              </button>
+            ) : (
+              <Link href="/auth/login" className="hover:text-[var(--gold)] transition-colors">
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -165,13 +198,23 @@ export default function Header() {
               >
                 Member Portal
               </Link>
-              <Link
-                href="/auth/login"
-                onClick={() => setMobileOpen(false)}
-                className="block px-3 py-3 text-sm text-gray-400"
-              >
-                Sign In
-              </Link>
+              {isAuthed ? (
+                <button
+                  onClick={handleSignOut}
+                  disabled={signingOut}
+                  className="block w-full text-left px-3 py-3 text-sm text-gray-400 disabled:opacity-50"
+                >
+                  {signingOut ? "Signing out..." : "Sign Out"}
+                </button>
+              ) : (
+                <Link
+                  href="/auth/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-3 py-3 text-sm text-gray-400"
+                >
+                  Sign In
+                </Link>
+              )}
             </div>
           </div>
         </nav>
