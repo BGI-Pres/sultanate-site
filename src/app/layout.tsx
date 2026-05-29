@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.sultanateofamexem.info"),
+  metadataBase: new URL("https://www.sultanateofamexem.com"),
   title: {
     default: "Sultanate of Amexem — Moorish American Governing Authority | Chicago, IL",
     template: "%s | Sultanate of Amexem",
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
       "Custodial governing authority for the descendants of the Nation of Moab. Cooperative economics, heritage preservation, and membership — reconstituted October 2020, Chicago, IL.",
     type: "website",
     locale: "en_US",
-    url: "https://www.sultanateofamexem.info",
+    url: "https://www.sultanateofamexem.com",
     siteName: "Sultanate of Amexem",
   },
   twitter: {
@@ -106,8 +106,8 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               name: "Sultanate of Amexem",
-              url: "https://www.sultanateofamexem.info",
-              logo: "https://www.sultanateofamexem.info/images/emblem.svg",
+              url: "https://www.sultanateofamexem.com",
+              logo: "https://www.sultanateofamexem.com/images/emblem.svg",
               description: "Custodial governing authority for the descendants of the Nation of Moab, modernly identified as Moorish American. Reconstituted October 2020 in Chicago, Illinois.",
               foundingDate: "2020-10",
               areaServed: { "@type": "Place", name: "Chicago, Illinois, United States" },
@@ -130,8 +130,8 @@ export default function RootLayout({
                 description: "Weekly assembly of the Sultanate of Amexem — governance updates, spiritual grounding, and community business.",
                 eventSchedule: { "@type": "Schedule", repeatFrequency: "P1W", byDay: "Friday", startTime: "19:30:00", scheduleTimezone: "America/Chicago" },
                 eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
-                organizer: { "@type": "Organization", name: "Sultanate of Amexem", url: "https://www.sultanateofamexem.info" },
-                location: { "@type": "VirtualLocation", url: "https://www.sultanateofamexem.info/events" },
+                organizer: { "@type": "Organization", name: "Sultanate of Amexem", url: "https://www.sultanateofamexem.com" },
+                location: { "@type": "VirtualLocation", url: "https://www.sultanateofamexem.com/events" },
               },
               {
                 "@context": "https://schema.org",
@@ -140,8 +140,8 @@ export default function RootLayout({
                 description: "Monthly orientation for prospective and newly enrolled members of the Sultanate of Amexem covering sacred texts and the Constitution.",
                 eventSchedule: { "@type": "Schedule", repeatFrequency: "P1M", byDay: "Friday", startTime: "19:30:00", scheduleTimezone: "America/Chicago" },
                 eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
-                organizer: { "@type": "Organization", name: "Sultanate of Amexem", url: "https://www.sultanateofamexem.info" },
-                location: { "@type": "VirtualLocation", url: "https://www.sultanateofamexem.info/events" },
+                organizer: { "@type": "Organization", name: "Sultanate of Amexem", url: "https://www.sultanateofamexem.com" },
+                location: { "@type": "VirtualLocation", url: "https://www.sultanateofamexem.com/events" },
               },
               {
                 "@context": "https://schema.org",
@@ -150,8 +150,8 @@ export default function RootLayout({
                 description: "Monthly session on cooperative commerce, business development, and economic strategy within the Sultanate of Amexem framework.",
                 eventSchedule: { "@type": "Schedule", repeatFrequency: "P1M", byDay: "Saturday", scheduleTimezone: "America/Chicago" },
                 eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
-                organizer: { "@type": "Organization", name: "Sultanate of Amexem", url: "https://www.sultanateofamexem.info" },
-                location: { "@type": "VirtualLocation", url: "https://www.sultanateofamexem.info/events" },
+                organizer: { "@type": "Organization", name: "Sultanate of Amexem", url: "https://www.sultanateofamexem.com" },
+                location: { "@type": "VirtualLocation", url: "https://www.sultanateofamexem.com/events" },
               },
             ]),
           }}
@@ -163,10 +163,10 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "Sultanate of Amexem",
-              url: "https://www.sultanateofamexem.info",
+              url: "https://www.sultanateofamexem.com",
               potentialAction: {
                 "@type": "SearchAction",
-                target: "https://www.sultanateofamexem.info/?q={search_term_string}",
+                target: "https://www.sultanateofamexem.com/?q={search_term_string}",
                 "query-input": "required name=search_term_string",
               },
             }),

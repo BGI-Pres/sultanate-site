@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
-const baseUrl = "https://www.sultanateofamexem.info";
+const baseUrl = "https://www.sultanateofamexem.com";
 
 async function getPublishedPostEntries(): Promise<MetadataRoute.Sitemap> {
   try {

@@ -20,7 +20,7 @@ The reconstitution establishes the foundational framework for governance, includ
 The Sultanate of Amexem now stands as the institutional custodian of Moorish American nationality — protecting the rights, traditions, and economic interests of its people for this generation and every generation to come.
 
 **About the Sultanate of Amexem**
-The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. Reconstituted October 2020 in Chicago, Illinois. Learn more at sultanateofamexem.info.$$,
+The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. Reconstituted October 2020 in Chicago, Illinois. Learn more at sultanateofamexem.com.$$,
   'press_release',
   'Sultanate of Amexem',
   true,
@@ -32,7 +32,7 @@ The Sultanate of Amexem is the custodial governing authority for the descendants
   'digital-platform-launched',
   'Sultanate Launches Official Digital Platform for Member Services',
   'The official digital platform of the Sultanate of Amexem launches today, modernizing nationality services, governance access, and institutional resources for the membership.',
-$$**CHICAGO, IL — May 2026** — The Sultanate of Amexem today launched its official digital platform at sultanateofamexem.info, providing the membership with direct access to nationality services, governance proceedings, and institutional resources.
+$$**CHICAGO, IL — May 2026** — The Sultanate of Amexem today launched its official digital platform at sultanateofamexem.com, providing the membership with direct access to nationality services, governance proceedings, and institutional resources.
 
 The platform represents a critical modernization of the administrative infrastructure of the nation while preserving the authority and traditions of its governance. Members can now apply for standing, request official documentation, RSVP to weekly assemblies, contribute to the Uplifting Fund, and access exclusive resources through the unified Member Portal.
 
@@ -43,7 +43,7 @@ The platform also provides public access to the Constitution, governing structur
 The launch coincides with the broader public outreach campaign of the Sultanate, opening Holy Day Meetings and orientation sessions to all those interested in Moorish American heritage and nationality.
 
 **About the Sultanate of Amexem**
-The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. Reconstituted October 2020 in Chicago, Illinois. Learn more at sultanateofamexem.info.$$,
+The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. Reconstituted October 2020 in Chicago, Illinois. Learn more at sultanateofamexem.com.$$,
   'press_release',
   'Sultanate of Amexem',
   true,
@@ -66,7 +66,7 @@ The initiative formalizes the principle that the Sultanate does not wait for out
 The initiative is open to all Community-tier members and above, with pathways for Affiliate members to advance through study, attendance, and demonstrated involvement.
 
 **About the Sultanate of Amexem**
-The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. Reconstituted October 2020 in Chicago, Illinois. Learn more at sultanateofamexem.info.$$,
+The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. Reconstituted October 2020 in Chicago, Illinois. Learn more at sultanateofamexem.com.$$,
   'press_release',
   'Sultanate of Amexem',
   true,
@@ -136,10 +136,10 @@ Three priority areas anchor the Fund:
 
 "Economic security is the engine that powers every objective," the Sultanate stated. "The Uplifting Fund is the institutional vehicle by which the body invests in itself — building generational capacity, not seasonal aid."
 
-Contributions can be made directly at sultanateofamexem.info/economics/community-fund. The Fund is administered under the authority of the Supreme Grand Council with full transparency to the membership.
+Contributions can be made directly at sultanateofamexem.com/economics/community-fund. The Fund is administered under the authority of the Supreme Grand Council with full transparency to the membership.
 
 **About the Sultanate of Amexem**
-The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. Reconstituted October 2020 in Chicago, Illinois. Learn more at sultanateofamexem.info.$$,
+The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. Reconstituted October 2020 in Chicago, Illinois. Learn more at sultanateofamexem.com.$$,
   'press_release',
   'Sultanate of Amexem',
   true,
@@ -162,7 +162,7 @@ The recognition is issued under the authority of the Supreme Grand Council and c
 The Sultanate further reaffirms that all teachings, sacred texts, and institutional structures of the body operate in submission to the principles restored by Noble Drew Ali and in reverence to Allah, the Most High.
 
 **About the Sultanate of Amexem**
-The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. The body stands on the foundation laid by Noble Drew Ali and the Moorish Science Temple of America. Learn more at sultanateofamexem.info.$$,
+The Sultanate of Amexem is the custodial governing authority for the descendants of the Nation of Moab. The body stands on the foundation laid by Noble Drew Ali and the Moorish Science Temple of America. Learn more at sultanateofamexem.com.$$,
   'press_release',
   'Sultanate of Amexem',
   true,
