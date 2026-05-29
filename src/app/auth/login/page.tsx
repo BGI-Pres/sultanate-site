@@ -55,7 +55,7 @@ function LoginForm() {
     setLoading(true);
 
     const supabase = createClient();
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
+    const { error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -66,8 +66,7 @@ function LoginForm() {
       return;
     }
 
-    const role = data.user?.user_metadata?.role;
-    router.push(role === "admin" ? "/admin" : redirect);
+    router.push(redirect);
     router.refresh();
   }
 

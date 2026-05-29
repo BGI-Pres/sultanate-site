@@ -64,8 +64,8 @@ export default function PortalDashboard() {
         supabase
           .from("members")
           .select("status, tier")
-          .eq("id", currentUser.id)
-          .single()
+          .eq("user_id", currentUser.id)
+          .maybeSingle()
           .then(({ data: member }) => {
             if (member) setMemberData(member);
           });

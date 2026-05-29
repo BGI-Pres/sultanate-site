@@ -3,12 +3,12 @@
 import Link from "next/link";
 
 const stats = [
-  { label: "Total Members", value: "—", change: null, href: "/admin/members" },
-  { label: "Pending Applications", value: "—", change: null, href: "/admin/members" },
-  { label: "Donations (Month)", value: "—", change: null, href: "/admin/finances" },
-  { label: "Merch Orders", value: "—", change: null, href: "/admin/finances" },
-  { label: "Event RSVPs", value: "—", change: null, href: "/admin/rsvps" },
-  { label: "Blog Posts", value: "—", change: null, href: "/admin/posts" },
+  { label: "Total Members", value: "—", change: null, href: "/portal/admin/members" },
+  { label: "Pending Applications", value: "—", change: null, href: "/portal/admin/members" },
+  { label: "Donations (Month)", value: "—", change: null, href: "/portal/admin/finances" },
+  { label: "Merch Orders", value: "—", change: null, href: "/portal/admin/finances" },
+  { label: "Event RSVPs", value: "—", change: null, href: "/portal/admin/rsvps" },
+  { label: "Blog Posts", value: "—", change: null, href: "/portal/admin/posts" },
 ];
 
 export default function AdminDashboard() {
@@ -69,31 +69,31 @@ export default function AdminDashboard() {
         </h2>
         <div className="flex flex-wrap gap-3">
           <Link
-            href="/admin/members"
+            href="/portal/admin/members"
             className="px-4 py-2 text-sm bg-[var(--gold)] text-[var(--dark-bg)] rounded-md hover:bg-[var(--gold-light)] transition-colors"
           >
             Manage Members
           </Link>
           <Link
-            href="/admin/content"
+            href="/portal/admin/content"
             className="px-4 py-2 text-sm bg-[var(--dark-bg)] text-[var(--gold)] rounded-md hover:bg-[var(--dark-surface)] transition-colors"
           >
             Manage Content
           </Link>
           <Link
-            href="/admin/finances"
+            href="/portal/admin/finances"
             className="px-4 py-2 text-sm border border-[var(--gray-300)] text-[var(--gray-700)] rounded-md hover:bg-[var(--gray-50)] transition-colors"
           >
             View Finances
           </Link>
           <Link
-            href="/admin/rsvps"
+            href="/portal/admin/rsvps"
             className="px-4 py-2 text-sm border border-[var(--gray-300)] text-[var(--gray-700)] rounded-md hover:bg-[var(--gray-50)] transition-colors"
           >
             View RSVPs
           </Link>
           <Link
-            href="/admin/posts"
+            href="/portal/admin/posts"
             className="px-4 py-2 text-sm border border-[var(--gray-300)] text-[var(--gray-700)] rounded-md hover:bg-[var(--gray-50)] transition-colors"
           >
             Manage Posts

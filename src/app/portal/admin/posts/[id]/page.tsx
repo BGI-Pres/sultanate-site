@@ -202,7 +202,7 @@ export default function EditPostPage({
         setActionError(error.message);
         setSaving(false);
       } else {
-        router.push("/admin/posts");
+        router.push("/portal/admin/posts");
       }
     } catch (err) {
       setActionError(err instanceof Error ? err.message : "Failed to delete");
@@ -243,7 +243,7 @@ export default function EditPostPage({
         <p className="text-[var(--gray-700)] mb-2">Could not load post</p>
         <p className="text-sm text-[var(--gray-500)] mb-4">{loadError}</p>
         <Link
-          href="/admin/posts"
+          href="/portal/admin/posts"
           className="text-sm text-[var(--gold)] hover:underline"
         >
           ← Back to posts
@@ -278,7 +278,7 @@ export default function EditPostPage({
             </a>
           )}
           <Link
-            href="/admin/posts"
+            href="/portal/admin/posts"
             className="text-sm text-[var(--gray-500)] hover:text-[var(--gray-700)]"
           >
             ← Back to posts

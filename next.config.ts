@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/news", destination: "/press", permanent: true },
       { source: "/news/:id", destination: "/press", permanent: true },
+      { source: "/admin", destination: "/portal/admin", permanent: true },
+      { source: "/admin/:path*", destination: "/portal/admin/:path*", permanent: true },
     ];
   },
 };

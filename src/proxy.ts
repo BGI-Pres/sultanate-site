@@ -29,19 +29,23 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const isPortal = request.nextUrl.pathname.startsWith("/portal");
-  const isAdmin = request.nextUrl.pathname.startsWith("/admin");
-
-  if (!user && (isPortal || isAdmin)) {
+  if (!user) {
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     url.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }
 
-  if (isAdmin && user) {
-    const role = user.user_metadata?.role;
-    if (role !== "admin") {
+  const isAdminRoute = request.nextUrl.pathname.startsWith("/portal/admin");
+
+  if (isAdminRoute) {
+    const { data: member } = await supabase
+      .from("members")
+      .select("role")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (member?.role !== "admin") {
       const url = request.nextUrl.clone();
       url.pathname = "/portal";
       return NextResponse.redirect(url);
@@ -52,5 +56,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/portal/:path*", "/admin/:path*"],
+  matcher: ["/portal/:path*"],
 };
