@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 
 const TOTAL_STEPS = 7;
 
@@ -266,6 +267,8 @@ export default function ApplyPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: fullName, email, surnamePref }),
     });
+
+    trackEvent("membership_application_submitted", { tier: "applicant" });
 
     setSubmitted(true);
     setLoading(false);

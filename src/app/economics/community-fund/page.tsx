@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import TrackedSquareLink from "@/components/TrackedSquareLink";
 
 export const metadata: Metadata = {
   title: "Uplifting Fund",
@@ -178,10 +179,9 @@ export default function CommunityFundPage() {
           </p>
 
           <div className="max-w-md mx-auto">
-            <a
+            <TrackedSquareLink
               href={FUND_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
+              label="Uplifting Fund"
               className="group block rounded-2xl border-2 border-[var(--gold)]/30 bg-gradient-to-b from-[var(--gold)]/5 to-transparent p-8 hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/10 transition-all duration-300 text-center"
             >
               <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[var(--dark-bg)] flex items-center justify-center">
@@ -201,7 +201,7 @@ export default function CommunityFundPage() {
                 Invest Now
                 <span aria-hidden="true">&rarr;</span>
               </span>
-            </a>
+            </TrackedSquareLink>
           </div>
         </div>
       </section>

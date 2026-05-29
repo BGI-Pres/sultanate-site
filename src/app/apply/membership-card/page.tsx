@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type FormEvent, type ChangeEvent } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 import type { User } from "@supabase/supabase-js";
 
 const TOTAL_STEPS = 3;
@@ -200,6 +201,11 @@ export default function MembershipCardPage() {
         email,
         surnamePref: `Card Request: ${reason}`,
       }),
+    });
+
+    trackEvent("card_request_submitted", {
+      reason: reason,
+      tier: membershipTier,
     });
 
     setSubmitted(true);

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackSquareClick } from "@/lib/analytics";
 import type { User } from "@supabase/supabase-js";
 
 interface MemberData {
@@ -187,6 +188,7 @@ export default function PortalDashboard() {
               href={DUES_LINK}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackSquareClick("Dues Payment", DUES_LINK)}
               className="inline-flex items-center gap-1 px-4 py-1.5 bg-[var(--gold)] text-[var(--dark-bg)] text-xs font-semibold rounded-lg hover:bg-[var(--gold-light)] transition-colors"
             >
               Pay Dues &rarr;

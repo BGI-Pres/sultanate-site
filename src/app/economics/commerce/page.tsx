@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 
 /* ── Shared style constants ── */
 const inputClass =
@@ -103,6 +104,10 @@ export default function CommercePage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: contactName, email: contactEmail }),
+    });
+
+    trackEvent("commerce_application_submitted", {
+      application_type: applicationType,
     });
 
     setSubmitted(true);

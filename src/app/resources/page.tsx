@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import CredentialsSection from "@/components/CredentialsSection";
+import TrackedSquareLink from "@/components/TrackedSquareLink";
 
 export const metadata: Metadata = {
   title:
@@ -184,10 +185,9 @@ export default function ResourcesPage() {
           </p>
 
           {/* Featured: Document Folio */}
-          <a
+          <TrackedSquareLink
             href="https://square.link/u/EEtwpqbd"
-            target="_blank"
-            rel="noopener noreferrer"
+            label="Document Folio"
             className="group block mb-6 p-5 md:p-8 rounded-2xl border-2 border-[var(--gold)]/30 bg-gradient-to-r from-[var(--gold)]/5 to-transparent hover:border-[var(--gold)] transition-all duration-300"
           >
             <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
@@ -216,7 +216,7 @@ export default function ResourcesPage() {
                 </span>
               </div>
             </div>
-          </a>
+          </TrackedSquareLink>
 
           {/* Individual Items */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -227,11 +227,10 @@ export default function ResourcesPage() {
               { title: "The Last Crown Prince: The Hidden Truth", price: "$50", description: "A comprehensive work uncovering the hidden history and legacy of our people.", href: "https://square.link/u/I6lsh47m" },
               { title: "The Fulfillment of Prophecy: Volume 1", price: "$20", description: "The first volume examining the prophetic foundations and their fulfillment in our time.", href: "https://square.link/u/3t9SgyQp" },
             ].map((book) => (
-              <a
+              <TrackedSquareLink
                 key={book.title}
                 href={book.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                label={book.title}
                 className="group p-5 rounded-xl border border-[var(--gold)]/15 hover:border-[var(--gold)]/50 transition-all duration-300"
               >
                 <h3 className="font-semibold text-white text-sm mb-1 group-hover:text-[var(--gold)] transition-colors leading-snug">
@@ -246,7 +245,7 @@ export default function ResourcesPage() {
                     Purchase &rarr;
                   </span>
                 </div>
-              </a>
+              </TrackedSquareLink>
             ))}
           </div>
         </div>

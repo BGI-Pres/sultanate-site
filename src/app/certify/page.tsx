@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 
 const TOTAL_STEPS = 5;
 
@@ -233,6 +234,11 @@ export default function CertifyPage() {
         email: applicantEmail,
         surnamePref: `Business: ${businessName}`,
       }),
+    });
+
+    trackEvent("business_certification_submitted", {
+      business_name: businessName,
+      cert_type: certType,
     });
 
     setSubmitted(true);

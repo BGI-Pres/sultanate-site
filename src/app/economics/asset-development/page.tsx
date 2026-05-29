@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 
 /* ── Shared style constants ── */
 const inputClass =
@@ -121,6 +122,8 @@ export default function AssetDevelopmentPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: name.trim(), email: email.trim() }),
       });
+
+      trackEvent("asset_inquiry_submitted", { inquiry_type: inquiryType });
 
       setSubmitted(true);
     } catch {
