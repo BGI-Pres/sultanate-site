@@ -14,8 +14,8 @@ interface Member {
   status: string | null;
 }
 
-const TIERS = ["Associate", "Affiliate", "Community", "General", "Lead"] as const;
-const STATUSES = ["pending", "active", "suspended", "inactive"] as const;
+const TIERS = ["Associate", "Full Citizen", "Diplomatic"] as const;
+const STATUSES = ["pending", "active", "suspended", "denied"] as const;
 const ROLES = ["member", "admin"] as const;
 
 export default function MembersPage() {
@@ -48,7 +48,9 @@ export default function MembersPage() {
     setSaving(true);
     const supabase = createClient();
     const { error } = await supabase.from("members").update(patch).eq("id", id);
-    if (!error) {
+    if (error) {
+      alert(`Update failed: ${error.message}`);
+    } else {
       setMembers((prev) =>
         prev.map((m) => (m.id === id ? { ...m, ...patch } : m))
       );
@@ -228,7 +230,7 @@ export default function MembersPage() {
                                 ? "bg-green-50 text-green-700"
                                 : member.status === "pending"
                                 ? "bg-yellow-50 text-yellow-700"
-                                : member.status === "suspended"
+                                : member.status === "suspended" || member.status === "denied"
                                 ? "bg-red-50 text-red-700"
                                 : "bg-gray-100 text-gray-600"
                             }`}
