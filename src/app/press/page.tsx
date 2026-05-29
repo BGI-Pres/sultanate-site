@@ -92,27 +92,6 @@ function deriveExcerpt(post: Post): string {
   return stripped.length > 160 ? `${stripped.slice(0, 160).trim()}…` : stripped;
 }
 
-const pressReleases = [
-  {
-    title: "Sultanate of Amexem Reconstituted as Custodial Authority",
-    date: "October 2020",
-    summary:
-      "The Sultanate of Amexem was formally reconstituted as the custodial governing authority for the protection, security, and advancement of the descendants of the Nation of Moab. This restoration marks the continuation of governance rooted in nationality, law, and the customs of our ancestors — a governing body that had always existed in principle and in the hearts of our people.",
-  },
-  {
-    title: "Digital Platform Launched for Member Services",
-    date: "May 2026",
-    summary:
-      "The Sultanate launched its official digital platform to serve the membership with streamlined access to nationality services, governance updates, and institutional resources. The platform represents a critical step in modernizing the administrative infrastructure of the nation while maintaining the authority and traditions of our governance.",
-  },
-  {
-    title: "Collective Economics Initiative Announced",
-    date: "2026",
-    summary:
-      "The Sultanate announced a comprehensive collective economics initiative through Bey Group International, establishing cooperative commerce frameworks for the membership. This initiative focuses on wealth building, business development, and economic self-determination as the material foundation of national sovereignty.",
-  },
-];
-
 export default async function PressPage() {
   const posts = await getPublishedPosts();
 
@@ -134,62 +113,8 @@ export default async function PressPage() {
         </div>
       </section>
 
-      {/* ── Official Statements ── */}
-      <section className="py-12 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-px w-12 bg-[var(--gold)]" />
-            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
-              Official Statements
-            </span>
-            <div className="h-px w-12 bg-[var(--gold)]" />
-          </div>
-          <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-10">
-            Press Releases
-          </h2>
-
-          <div className="space-y-6">
-            {pressReleases.map((release) => (
-              <div
-                key={release.title}
-                className="rounded-xl border border-[var(--gray-200)] bg-white p-6 md:p-8 transition-all duration-300 hover:border-[var(--gold)] hover:shadow-lg"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--dark-bg)] shrink-0">
-                    <svg
-                      className="w-6 h-6 text-[var(--gold)]"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="flex-1">
-                    <span className="text-sm text-[var(--gold)] font-medium">
-                      {release.date}
-                    </span>
-                    <h3 className="text-lg font-semibold text-[var(--gray-900)] mt-1 mb-3">
-                      {release.title}
-                    </h3>
-                    <p className="text-[var(--gray-700)] leading-relaxed text-[15px]">
-                      {release.summary}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Articles & Updates (dynamic posts) ── */}
-      <section className="py-12 md:py-20 bg-gray-50">
+      <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px w-12 bg-[var(--gold)]" />
@@ -199,7 +124,7 @@ export default async function PressPage() {
             <div className="h-px w-12 bg-[var(--gold)]" />
           </div>
           <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-10">
-            Latest from the Sultanate
+            Press Releases & Updates
           </h2>
 
           {posts.length === 0 ? (
