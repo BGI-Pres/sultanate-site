@@ -13,10 +13,10 @@ export default function SignupPage() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  async function handleSocialSignup(provider: "google" | "azure") {
+  async function handleGoogleSignup() {
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
-      provider,
+      provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=/portal/welcome`,
       },
@@ -103,7 +103,7 @@ export default function SignupPage() {
         {/* Social Signup */}
         <div className="space-y-3 mb-6">
           <button
-            onClick={() => handleSocialSignup("google")}
+            onClick={handleGoogleSignup}
             className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-[var(--gray-300)] rounded-md text-sm font-medium text-[var(--gray-700)] bg-white hover:bg-[var(--gray-50)] transition-colors"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -113,18 +113,6 @@ export default function SignupPage() {
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
             Continue with Google
-          </button>
-          <button
-            onClick={() => handleSocialSignup("azure")}
-            className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-[var(--gray-300)] rounded-md text-sm font-medium text-[var(--gray-700)] bg-white hover:bg-[var(--gray-50)] transition-colors"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24">
-              <path fill="#F25022" d="M1 1h10v10H1z"/>
-              <path fill="#00A4EF" d="M1 13h10v10H1z"/>
-              <path fill="#7FBA00" d="M13 1h10v10H13z"/>
-              <path fill="#FFB900" d="M13 13h10v10H13z"/>
-            </svg>
-            Continue with Microsoft
           </button>
         </div>
 

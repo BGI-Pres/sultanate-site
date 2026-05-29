@@ -106,7 +106,7 @@ export default function NewPostPage() {
       if (data?.id) {
         router.push(`/admin/posts/${data.id}`);
       } else {
-        router.push("/admin/posts");
+        router.push("/portal/admin/posts");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save post");
@@ -126,7 +126,7 @@ export default function NewPostPage() {
           </p>
         </div>
         <Link
-          href="/admin/posts"
+          href="/portal/admin/posts"
           className="text-sm text-[var(--gray-500)] hover:text-[var(--gray-700)]"
         >
           ← Back to posts

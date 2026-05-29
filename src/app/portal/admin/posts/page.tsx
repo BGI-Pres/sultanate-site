@@ -94,7 +94,7 @@ export default function PostsPage() {
           </p>
         </div>
         <Link
-          href="/admin/posts/new"
+          href="/portal/admin/posts/new"
           className="px-6 py-2.5 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-lg text-sm hover:bg-[var(--gold-light)] transition-colors"
         >
           New Post
