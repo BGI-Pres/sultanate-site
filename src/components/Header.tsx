@@ -25,7 +25,7 @@ export default function Header() {
 
   function handleSearchKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" && searchQuery.trim()) {
-      router.push(`/news?q=${encodeURIComponent(searchQuery.trim())}`);
+      router.push(`/press?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
       setSearchQuery("");
     }
