@@ -136,12 +136,12 @@ export default async function PostPage({
       name: "Sultanate of Amexem",
       logo: {
         "@type": "ImageObject",
-        url: "https://sultanateofamexem.info/images/emblem.svg",
+        url: "https://sultanateofamexem.com/images/emblem.svg",
       },
     },
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://sultanateofamexem.info/press/${post.slug}`,
+      "@id": `https://sultanateofamexem.com/press/${post.slug}`,
     },
     ...(post.cover_image_url ? { image: [post.cover_image_url] } : {}),
     articleSection: label,

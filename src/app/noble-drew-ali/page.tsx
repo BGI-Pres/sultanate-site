@@ -8,9 +8,34 @@ export const metadata: Metadata = {
   alternates: { canonical: "/noble-drew-ali" },
 };
 
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Noble Drew Ali",
+  birthName: "Timothy Drew",
+  birthDate: "1886",
+  deathDate: "1929",
+  description:
+    "Prophet, founder of the Moorish Science Temple of America (MSTA), and restorer of Moorish American nationality. Taught that the so-called Negro was in fact Moorish American — a descendant of the ancient Nation of Moab.",
+  jobTitle: "Prophet and Founder",
+  affiliation: {
+    "@type": "Organization",
+    name: "Moorish Science Temple of America",
+  },
+  foundingDate: "1925",
+  nationality: { "@type": "Country", name: "United States" },
+  sameAs: [
+    "https://en.wikipedia.org/wiki/Noble_Drew_Ali",
+  ],
+};
+
 export default function NobleDrewAliPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       {/* ── Hero ── */}
       <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
