@@ -1,8 +1,38 @@
 import type { MetadataRoute } from "next";
+import { createServerSupabaseClient } from "@/lib/supabase-server";
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://www.sultanateofamexem.info";
-  return [
+const baseUrl = "https://www.sultanateofamexem.info";
+
+async function getPublishedPostEntries(): Promise<MetadataRoute.Sitemap> {
+  try {
+    if (
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    ) {
+      return [];
+    }
+
+    const supabase = await createServerSupabaseClient();
+    const { data, error } = await supabase
+      .from("posts")
+      .select("slug, updated_at")
+      .eq("published", true);
+
+    if (error || !data) return [];
+
+    return data.map((row: { slug: string; updated_at: string | null }) => ({
+      url: `${baseUrl}/press/${row.slug}`,
+      lastModified: row.updated_at ? new Date(row.updated_at) : new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const staticEntries: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
     { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/government`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
@@ -28,4 +58,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/moorish-american`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/faq`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
   ];
+
+  const postEntries = await getPublishedPostEntries();
+  return [...staticEntries, ...postEntries];
 }
