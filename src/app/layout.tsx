@@ -4,6 +4,10 @@ import { Analytics } from "@vercel/analytics/react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import {
+  GoogleTagManagerScript,
+  GoogleTagManagerNoscript,
+} from "@/components/GoogleTagManager";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -89,7 +93,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <GoogleTagManagerScript />
+      </head>
       <body className="min-h-full flex flex-col">
+        <GoogleTagManagerNoscript />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
