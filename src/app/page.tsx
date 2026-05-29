@@ -2,6 +2,25 @@ import Link from "next/link";
 import HeroCarousel from "@/components/HeroCarousel";
 import EmailCapture from "@/components/EmailCapture";
 
+const trustStats = [
+  {
+    value: process.env.NEXT_PUBLIC_MEMBER_COUNT || "Growing",
+    label: "Members & Affiliates",
+  },
+  {
+    value: process.env.NEXT_PUBLIC_BUSINESS_COUNT || "Expanding",
+    label: "Certified Businesses",
+  },
+  {
+    value: process.env.NEXT_PUBLIC_STATES_COUNT || "Across",
+    label: "States Represented",
+  },
+  {
+    value: "2020",
+    label: "Reconstituted October",
+  },
+];
+
 const services = [
   {
     title: "Membership",
@@ -48,9 +67,9 @@ export default function HomePage() {
       <HeroCarousel />
 
       {/* Services Grid */}
-      <section className="py-16 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-10">
+          <div className="flex items-center gap-3 mb-8 md:mb-10">
             <div className="h-px w-12 bg-[var(--gold)]" />
             <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
               Services &amp; Resources
@@ -58,12 +77,12 @@ export default function HomePage() {
             <div className="h-px flex-1 bg-[var(--gold)]/20" />
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
             {services.map((service) => (
               <Link
                 key={service.title}
                 href={service.href}
-                className="group flex flex-col items-center text-center p-5 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
+                className="group flex flex-col items-center text-center p-4 sm:p-5 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
               >
                 <div className="w-12 h-12 rounded-xl bg-[var(--dark-bg)] text-[var(--gold)] flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,11 +101,66 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Trust Signals */}
+      <section className="py-12 md:py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-12 bg-[var(--gold)]" />
+              <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
+                Trust &amp; Standing
+              </span>
+              <div className="h-px w-12 bg-[var(--gold)]" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--gray-900)]">
+              A Governing Body, Built From Within
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {trustStats.map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-xl border border-[var(--gray-200)] p-6 text-center"
+              >
+                <p className="text-3xl md:text-4xl font-bold text-[var(--gold)]">
+                  {stat.value}
+                </p>
+                <p className="text-sm text-[var(--gray-500)] uppercase tracking-wider mt-2">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center text-[var(--gray-500)] max-w-3xl mx-auto mt-10 leading-relaxed">
+            Reconstituted October 2020 in Chicago, Illinois under the House of
+            Simmons Bey &mdash; building economic infrastructure, cultural
+            authority, and governance from within the membership.
+          </p>
+
+          <div className="flex flex-wrap justify-center gap-6 mt-6">
+            <Link
+              href="/about"
+              className="text-sm font-semibold text-[var(--gold)] hover:text-[var(--gold-dark)]"
+            >
+              Read Our Story
+            </Link>
+            <Link
+              href="/businesses"
+              className="text-sm font-semibold text-[var(--gold)] hover:text-[var(--gold-dark)]"
+            >
+              Browse Businesses
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Preamble */}
-      <section className="relative bg-[var(--dark-bg)] py-16 md:py-24 overflow-hidden">
+      <section className="relative bg-[var(--dark-bg)] py-12 md:py-24 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xl md:text-2xl lg:text-3xl text-white/90 italic leading-relaxed font-serif">
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white/90 italic leading-relaxed font-serif">
             &ldquo;We, the Moorish American people of the Sultanate of Amexem
             &mdash; descendants and successors in interest to the ancient Nation
             of Moab &mdash; gather in fidelity to the principles of Love, Truth,
@@ -116,7 +190,7 @@ export default function HomePage() {
       {/* Three Pillars */}
       <section className="py-12 md:py-20 bg-[var(--gray-50)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
+          <div className="text-center mb-10 md:mb-14">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="h-px w-12 bg-[var(--gold)]" />
               <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">The Executive Mandate</span>
@@ -131,7 +205,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {[
               {
                 title: "Nationality & Standing",
@@ -178,7 +252,7 @@ export default function HomePage() {
       <section id="guide" className="relative bg-[var(--dark-bg)] text-white py-12 md:py-20 overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="h-px w-8 bg-[var(--cherry-red)]" />
@@ -224,9 +298,9 @@ export default function HomePage() {
       </section>
 
       {/* Stats */}
-      <section className="py-16 bg-white">
+      <section className="py-12 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
             {[
               { value: "Est. 2020", label: "Reconstituted Authority" },
               { value: "3 Tiers", label: "Of Membership" },

@@ -63,11 +63,11 @@ export default function Header() {
                 height={34}
                 className="w-[34px] h-[34px]"
               />
-              <div className="hidden sm:block">
+              <div className="block">
                 <p className="text-sm font-semibold text-white leading-tight">
                   Sultanate of Amexem
                 </p>
-                <p className="text-[10px] text-gray-400 leading-tight">
+                <p className="hidden sm:block text-[10px] text-gray-400 leading-tight">
                   Custodian of the Nation of Moab
                 </p>
               </div>
@@ -88,7 +88,7 @@ export default function Header() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setSearchOpen(!searchOpen)}
-                className="p-2 text-gray-400 hover:text-[var(--gold)] transition-colors"
+                className="p-2.5 -mr-1 text-gray-400 hover:text-[var(--gold)] transition-colors"
                 aria-label="Search"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +105,7 @@ export default function Header() {
 
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden p-2 text-gray-300"
+                className="lg:hidden p-2.5 -mr-1 text-gray-300"
                 aria-label="Toggle menu"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

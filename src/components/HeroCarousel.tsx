@@ -2,6 +2,14 @@
 
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
+import { getVariant } from "@/lib/ab-test";
+import { trackEvent } from "@/lib/analytics";
+
+const HERO_CTA_VARIANTS = [
+  "Learn More",
+  "Discover the Nation",
+  "Proclaim Your Nationality",
+];
 
 const slides = [
   {
@@ -32,6 +40,7 @@ const slides = [
 
 export default function HeroCarousel() {
   const [current, setCurrent] = useState(0);
+  const [heroCtaLabel, setHeroCtaLabel] = useState<string>(HERO_CTA_VARIANTS[0]);
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % slides.length);
@@ -42,7 +51,14 @@ export default function HeroCarousel() {
     return () => clearInterval(timer);
   }, [next]);
 
+  useEffect(() => {
+    const variant = getVariant("hero_cta", HERO_CTA_VARIANTS);
+    setHeroCtaLabel(variant);
+  }, []);
+
   const slide = slides[current];
+  const isFirstSlide = current === 0;
+  const ctaLabel = isFirstSlide ? heroCtaLabel : slide.cta.label;
 
   return (
     <section className="relative bg-[var(--dark-bg)] text-white overflow-hidden">
@@ -77,7 +93,7 @@ export default function HeroCarousel() {
 
           <p
             key={`desc-${current}`}
-            className="text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl"
+            className="text-base sm:text-lg text-gray-300 leading-relaxed mb-8 max-w-2xl"
           >
             {slide.description}
           </p>
@@ -85,20 +101,28 @@ export default function HeroCarousel() {
           <div className="">
             <Link
               href={slide.cta.href}
+              onClick={() => {
+                if (isFirstSlide) {
+                  trackEvent("hero_cta_click", {
+                    variant: heroCtaLabel,
+                    label: ctaLabel,
+                  });
+                }
+              }}
               className="inline-block px-7 py-3.5 bg-[var(--gold)] text-[var(--dark-bg)] font-semibold rounded-md hover:bg-[var(--gold-light)] transition-colors"
             >
-              {slide.cta.label}
+              {ctaLabel}
             </Link>
           </div>
         </div>
 
         {/* Slide indicators */}
-        <div className="flex items-center gap-3 mt-12">
+        <div className="flex items-center gap-3 mt-10 md:mt-12">
           {slides.map((s, i) => (
             <button
               key={s.tag}
               onClick={() => setCurrent(i)}
-              className="group flex items-center gap-2"
+              className="group flex items-center gap-2 py-3"
               aria-label={`Go to slide ${i + 1}`}
             >
               <div

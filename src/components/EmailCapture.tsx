@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 
 interface EmailCaptureProps {
   variant?: "inline" | "banner" | "card";
@@ -25,10 +26,12 @@ export default function EmailCapture({
       const supabase = createClient();
       await supabase.from("subscribers").insert({ email, source: "website" });
       // Always show success — don't if email already exists
+      trackEvent("newsletter_signup");
       setSubmitted(true);
       setEmail("");
     } catch {
       // Still show success to avoid revealing whether email exists
+      trackEvent("newsletter_signup");
       setSubmitted(true);
       setEmail("");
     } finally {
