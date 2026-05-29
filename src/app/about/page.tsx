@@ -172,7 +172,7 @@ export default function AboutPage() {
                 { year: "2024", event: "Formal organization of the Supreme Grand Council, Ministerial Board, and Executive Board under the Constitution" },
                 { year: "2026", event: "Bey Group of Companies rebrands as Bey Group International — expanding the economic mission to the global stage" },
               ].map((milestone, i) => (
-                <div key={milestone.year} className={`flex gap-6-delay-${(i % 4) + 1}`}>
+                <div key={milestone.year} className="flex gap-4 md:gap-6">
                   <div className="flex flex-col items-center">
                     <div className="w-12 h-12 rounded-full bg-[var(--gold)]/10 border border-[var(--gold)]/30 flex items-center justify-center shrink-0">
                       <span className="text-xs font-bold text-[var(--gold)]">
@@ -217,10 +217,10 @@ export default function AboutPage() {
                 { value: "Peace", meaning: "The condition we create and defend" },
                 { value: "Freedom", meaning: "The right of self-determination for our people" },
                 { value: "Justice", meaning: "The guarantee that every member is treated fairly" },
-              ].map((item, i) => (
+              ].map((item) => (
                 <div
                   key={item.value}
-                  className={`text-center p-5 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300-delay-${i + 1}`}
+                  className="text-center p-5 rounded-xl border border-[var(--gray-200)] hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
                 >
                   <h3 className="text-lg font-bold text-[var(--gold)] mb-2">
                     {item.value}

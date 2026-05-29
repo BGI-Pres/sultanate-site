@@ -286,7 +286,7 @@ export default function CitizenshipPage() {
       </section>
 
       {/* Membership Tiers */}
-      <section className="py-16">
+      <section className="py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4 mb-10">
             <div className="w-8 h-px bg-[var(--gold)]" />
@@ -402,7 +402,7 @@ export default function CitizenshipPage() {
       </section>
 
       {/* Dark CTA Section */}
-      <section className="bg-[var(--dark-bg)] py-16">
+      <section className="bg-[var(--dark-bg)] py-12 md:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="w-16 h-1 bg-[var(--gold)] mx-auto mb-6" />
           <h2 className="text-2xl font-bold text-white mb-4">

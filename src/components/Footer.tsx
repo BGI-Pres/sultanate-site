@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import SocialLinks from "@/components/SocialLinks";
+import FooterEmailSignup from "@/components/FooterEmailSignup";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -97,7 +98,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-[var(--gold)]/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="border-t border-[var(--gold)]/10 mt-12 pt-8">
+          <FooterEmailSignup />
+        </div>
+
+        <div className="mt-8 pt-8 border-t border-[var(--gold)]/10 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-500">
             &copy; {currentYear} Sultanate of Amexem. All rights reserved.
           </p>
