@@ -54,17 +54,16 @@ const FILTER_TABS: { key: "all" | PostType; label: string }[] = [
 
 async function getPublishedPosts(): Promise<Post[]> {
   try {
-    if (
-      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    ) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    console.log("[press] env check — URL:", !!url, "KEY:", !!key);
+
+    if (!url || !key) {
+      console.error("[press] missing env vars");
       return [];
     }
 
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    );
+    const supabase = createClient(url, key);
     const { data, error } = await supabase
       .from("posts")
       .select(
@@ -73,9 +72,15 @@ async function getPublishedPosts(): Promise<Post[]> {
       .eq("published", true)
       .order("published_at", { ascending: false });
 
-    if (error || !data) return [];
+    if (error) {
+      console.error("[press] supabase error:", JSON.stringify(error));
+      return [];
+    }
+    console.log("[press] posts fetched:", data?.length ?? 0);
+    if (!data) return [];
     return data as Post[];
-  } catch {
+  } catch (e) {
+    console.error("[press] fetch threw:", e);
     return [];
   }
 }
