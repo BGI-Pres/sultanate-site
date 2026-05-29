@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 
@@ -229,26 +228,8 @@ export default async function PressPage({
               {isUnfiltered && hero && (
                 <Link
                   href={`/press/${hero.slug}`}
-                  className="group mb-10 grid grid-cols-1 lg:grid-cols-2 overflow-hidden rounded-2xl border border-[var(--gray-200)] bg-white transition-all duration-300 hover:border-[var(--gold)] hover:shadow-xl hover:shadow-[var(--gold)]/10"
+                  className="group mb-10 overflow-hidden rounded-2xl border border-[var(--gray-200)] bg-white transition-all duration-300 hover:border-[var(--gold)] hover:shadow-xl hover:shadow-[var(--gold)]/10"
                 >
-                  <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[360px] w-full overflow-hidden bg-[var(--gray-100)]">
-                    {hero.cover_image_url ? (
-                      <Image
-                        src={hero.cover_image_url}
-                        alt={hero.title}
-                        fill
-                        priority
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-gradient-to-br from-[var(--dark-bg)] via-[var(--dark-bg)] to-[var(--gold-dark)]/30 flex items-center justify-center">
-                        <span className="text-[var(--gold)] text-sm uppercase tracking-[0.2em]">
-                          Sultanate of Amexem
-                        </span>
-                      </div>
-                    )}
-                  </div>
                   <div className="flex flex-col justify-center p-6 md:p-10">
                     <div className="mb-4 flex items-center gap-3">
                       <span className="inline-flex items-center rounded-full bg-[var(--gold)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--dark-bg)]">
@@ -296,26 +277,6 @@ export default async function PressPage({
                       key={post.id}
                       className="group flex flex-col overflow-hidden rounded-xl border border-[var(--gray-200)] bg-white transition-all duration-300 hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5"
                     >
-                      <Link
-                        href={`/press/${post.slug}`}
-                        className="relative block aspect-[16/9] w-full overflow-hidden bg-[var(--gray-100)]"
-                      >
-                        {post.cover_image_url ? (
-                          <Image
-                            src={post.cover_image_url}
-                            alt={post.title}
-                            fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="absolute inset-0 bg-gradient-to-br from-[var(--dark-bg)] via-[var(--dark-bg)] to-[var(--gold-dark)]/30 flex items-center justify-center">
-                            <span className="text-[var(--gold)] text-xs uppercase tracking-[0.2em]">
-                              Sultanate of Amexem
-                            </span>
-                          </div>
-                        )}
-                      </Link>
                       <div className="flex flex-1 flex-col p-5 md:p-6">
                         <div className="mb-3 flex items-center gap-3">
                           <span
