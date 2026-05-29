@@ -1,372 +1,323 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
 
-interface Application {
-  id: string;
-  user_id: string | null;
-  full_name: string;
-  date_of_birth: string | null;
-  address: string | null;
-  city: string | null;
-  state: string | null;
-  zip: string | null;
-  phone: string | null;
-  email: string;
-  employer: string | null;
-  occupation: string | null;
-  business_name: string | null;
-  surname_preference: string | null;
-  statement_of_intent: string | null;
-  how_heard: string | null;
-  constitution_acknowledged: boolean;
-  status: string;
-  admin_notes: string | null;
-  document_url: string | null;
-  created_at: string;
+type TabKey =
+  | "applications"
+  | "commerce_applications"
+  | "service_applications"
+  | "venture_proposals"
+  | "cooperative_applications"
+  | "asset_inquiries"
+  | "certifications"
+  | "card_requests";
+
+interface TabDef {
+  key: TabKey;
+  label: string;
+  nameCol: string;
+  emailCol: string;
+  extraCol?: { key: string; label: string };
 }
 
-const statusConfig: Record<string, { bg: string; text: string; label: string }> = {
-  pending: { bg: "bg-yellow-900/30", text: "text-yellow-400", label: "Pending" },
-  under_review: { bg: "bg-blue-900/30", text: "text-blue-400", label: "Under Review" },
-  approved: { bg: "bg-green-900/30", text: "text-green-400", label: "Approved" },
-  denied: { bg: "bg-red-900/30", text: "text-red-400", label: "Denied" },
+const TABS: TabDef[] = [
+  { key: "applications", label: "Membership", nameCol: "full_name", emailCol: "email" },
+  { key: "commerce_applications", label: "Commerce", nameCol: "contact_name", emailCol: "contact_email", extraCol: { key: "business_name", label: "Business" } },
+  { key: "service_applications", label: "Service", nameCol: "contact_name", emailCol: "contact_email", extraCol: { key: "provider_name", label: "Provider" } },
+  { key: "venture_proposals", label: "Venture", nameCol: "proposer_name", emailCol: "proposer_email", extraCol: { key: "proposal_name", label: "Proposal" } },
+  { key: "cooperative_applications", label: "Cooperative", nameCol: "applicant_name", emailCol: "applicant_email", extraCol: { key: "venture_name", label: "Venture" } },
+  { key: "asset_inquiries", label: "Asset", nameCol: "name", emailCol: "email", extraCol: { key: "inquiry_type", label: "Type" } },
+  { key: "certifications", label: "Certification", nameCol: "applicant_name", emailCol: "applicant_email", extraCol: { key: "business_name", label: "Business" } },
+  { key: "card_requests", label: "Card Request", nameCol: "full_name", emailCol: "email", extraCol: { key: "membership_tier", label: "Tier" } },
+];
+
+const STATUSES = ["pending", "approved", "rejected", "in_review", "completed"] as const;
+
+type Row = Record<string, unknown> & {
+  id: string;
+  status: string | null;
+  created_at: string;
 };
 
-function StatusBadge({ status }: { status: string }) {
-  const config = statusConfig[status] || statusConfig.pending;
-  return (
-    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${config.bg} ${config.text}`}>
-      {config.label}
-    </span>
-  );
-}
-
 export default function ApplicationsPage() {
-  const [applications, setApplications] = useState<Application[]>([]);
+  const [activeTab, setActiveTab] = useState<TabKey>("applications");
+  const [counts, setCounts] = useState<Record<TabKey, { total: number; pending: number }>>(
+    {} as Record<TabKey, { total: number; pending: number }>
+  );
+  const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [notesMap, setNotesMap] = useState<Record<string, string>>({});
-  const [savingNotes, setSavingNotes] = useState<string | null>(null);
-  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [savingId, setSavingId] = useState<string | null>(null);
 
   useEffect(() => {
-    loadApplications();
+    loadCounts();
   }, []);
 
-  async function loadApplications() {
+  useEffect(() => {
+    loadRows();
+    setExpandedId(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTab]);
+
+  async function loadCounts() {
+    const supabase = createClient();
+    const results = await Promise.all(
+      TABS.map(async (t) => {
+        const [totalRes, pendingRes] = await Promise.all([
+          supabase.from(t.key).select("*", { count: "exact", head: true }),
+          supabase
+            .from(t.key)
+            .select("*", { count: "exact", head: true })
+            .eq("status", "pending"),
+        ]);
+        return [t.key, { total: totalRes.count ?? 0, pending: pendingRes.count ?? 0 }] as const;
+      })
+    );
+    setCounts(Object.fromEntries(results) as Record<TabKey, { total: number; pending: number }>);
+  }
+
+  async function loadRows() {
+    setLoading(true);
     const supabase = createClient();
     const { data } = await supabase
-      .from("applications")
+      .from(activeTab)
       .select("*")
-      .order("created_at", { ascending: false });
-
-    if (data) {
-      setApplications(data as Application[]);
-      const notes: Record<string, string> = {};
-      for (const app of data as Application[]) {
-        notes[app.id] = app.admin_notes || "";
-      }
-      setNotesMap(notes);
-    }
+      .order("created_at", { ascending: false })
+      .limit(100);
+    setRows((data as Row[]) ?? []);
     setLoading(false);
   }
 
-  async function updateStatus(id: string, newStatus: string) {
-    setUpdatingStatus(id);
+  async function updateStatus(id: string, status: string) {
+    setSavingId(id);
     const supabase = createClient();
     const { error } = await supabase
-      .from("applications")
-      .update({ status: newStatus })
+      .from(activeTab)
+      .update({ status })
       .eq("id", id);
-
     if (!error) {
-      setApplications((prev) =>
-        prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app))
-      );
+      setRows((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+      loadCounts();
     }
-    setUpdatingStatus(null);
+    setSavingId(null);
   }
 
-  async function saveNotes(id: string) {
-    setSavingNotes(id);
-    const supabase = createClient();
-    const { error } = await supabase
-      .from("applications")
-      .update({ admin_notes: notesMap[id] || "" })
-      .eq("id", id);
+  const activeDef = TABS.find((t) => t.key === activeTab)!;
+  const filtered = rows.filter(
+    (r) => statusFilter === "all" || r.status === statusFilter
+  );
 
-    if (!error) {
-      setApplications((prev) =>
-        prev.map((app) =>
-          app.id === id ? { ...app, admin_notes: notesMap[id] || "" } : app
-        )
-      );
-    }
-    setSavingNotes(null);
+  function formatDate(iso: string) {
+    if (!iso) return "—";
+    return new Date(iso).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
   }
 
-  const pendingCount = applications.filter((a) => a.status === "pending").length;
+  function statusBadge(status: string | null) {
+    const s = status ?? "pending";
+    const classes: Record<string, string> = {
+      pending: "bg-yellow-50 text-yellow-700",
+      approved: "bg-green-50 text-green-700",
+      completed: "bg-green-50 text-green-700",
+      in_review: "bg-blue-50 text-blue-700",
+      rejected: "bg-red-50 text-red-700",
+    };
+    return (
+      <span
+        className={`text-xs font-medium px-2 py-1 rounded-full ${
+          classes[s] ?? "bg-gray-100 text-gray-600"
+        }`}
+      >
+        {s}
+      </span>
+    );
+  }
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-bold text-[var(--gray-900)]">
-            Applications
-          </h1>
-          <p className="text-[var(--gray-500)] mt-1">
-            Review and manage membership applications
-          </p>
-        </div>
-        {pendingCount > 0 && (
-          <div className="flex items-center gap-2 bg-yellow-900/20 border border-yellow-600/30 px-4 py-2 rounded-xl">
-            <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse" />
-            <span className="text-sm font-semibold text-yellow-400">
-              {pendingCount} pending
-            </span>
-          </div>
-        )}
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-[var(--gray-900)]">Applications</h1>
+        <p className="text-[var(--gray-500)] mt-1">
+          Unified inbox for every submission type
+        </p>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-4 border-b border-[var(--gray-200)] pb-3">
+        {TABS.map((tab) => {
+          const c = counts[tab.key];
+          const isActive = tab.key === activeTab;
+          return (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                isActive
+                  ? "bg-[var(--dark-bg)] text-[var(--gold)]"
+                  : "bg-[var(--gray-100)] text-[var(--gray-700)] hover:bg-[var(--gray-200)]"
+              }`}
+            >
+              {tab.label}
+              {c?.total ? (
+                <span
+                  className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                    isActive
+                      ? "bg-[var(--gold)]/20 text-[var(--gold)]"
+                      : "bg-white text-[var(--gray-500)]"
+                  }`}
+                >
+                  {c.total}
+                </span>
+              ) : null}
+              {c?.pending ? (
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-[var(--cherry-red)]/15 text-[var(--cherry-red)] font-semibold">
+                  {c.pending}
+                </span>
+              ) : null}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex items-center justify-between mb-4">
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-3 py-2 text-sm border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/40"
+        >
+          <option value="all">All statuses</option>
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <span className="text-sm text-[var(--gray-500)]">
+          {filtered.length} {filtered.length === 1 ? "entry" : "entries"}
+        </span>
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-[var(--gray-500)]">
-          Loading applications...
-        </div>
-      ) : applications.length === 0 ? (
-        <div className="bg-[var(--dark-bg)] rounded-xl border border-[var(--gold)]/10 p-8 text-center">
-          <p className="text-white/50 mb-2">No applications found.</p>
-          <p className="text-sm text-white/30">
-            Applications submitted through the portal will appear here.
+        <div className="text-center py-12 text-[var(--gray-500)]">Loading…</div>
+      ) : filtered.length === 0 ? (
+        <div className="bg-white rounded-lg border border-[var(--gray-200)] p-8 text-center">
+          <p className="text-[var(--gray-500)]">
+            {statusFilter === "all"
+              ? `No ${activeDef.label.toLowerCase()} submissions yet.`
+              : `No ${statusFilter} submissions.`}
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {/* Table header */}
-          <div className="hidden md:grid md:grid-cols-[1fr_1fr_0.7fr_0.7fr_0.7fr_0.5fr] gap-4 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-[var(--gold)] bg-[var(--dark-bg)] rounded-xl border border-[var(--gold)]/10">
-            <span>Name</span>
-            <span>Email</span>
-            <span>Surname Pref</span>
-            <span>Status</span>
-            <span>Date</span>
-            <span className="text-right">Actions</span>
-          </div>
-
-          {applications.map((app) => {
-            const isExpanded = expandedId === app.id;
-            return (
-              <div
-                key={app.id}
-                className="bg-[var(--dark-bg)] rounded-xl border border-[var(--gold)]/10 overflow-hidden transition-all"
-              >
-                {/* Row */}
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_0.7fr_0.7fr_0.7fr_0.5fr] gap-2 md:gap-4 px-5 py-4 items-center">
-                  <div className="font-medium text-white text-sm">
-                    {app.full_name || "—"}
-                  </div>
-                  <div className="text-white/50 text-sm truncate">
-                    {app.email}
-                  </div>
-                  <div className="text-white/70 text-sm">
-                    {app.surname_preference || "—"}
-                  </div>
-                  <div>
-                    <StatusBadge status={app.status} />
-                  </div>
-                  <div className="text-white/50 text-sm">
-                    {new Date(app.created_at).toLocaleDateString()}
-                  </div>
-                  <div className="text-right">
-                    <button
-                      onClick={() =>
-                        setExpandedId(isExpanded ? null : app.id)
-                      }
-                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[var(--gold)]/10 text-[var(--gold)] hover:bg-[var(--gold)]/20 transition-colors"
-                    >
-                      {isExpanded ? "Close" : "Review"}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Expanded Details */}
-                {isExpanded && (
-                  <div className="border-t border-[var(--gold)]/10 px-5 py-6 space-y-6">
-                    {/* Personal Information */}
-                    <div>
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-6 h-px bg-[var(--gold)]" />
-                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
-                          Personal Information
-                        </span>
-                        <div className="flex-1 h-px bg-[var(--gold)]/10" />
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <DetailField label="Full Name" value={app.full_name} />
-                        <DetailField label="Date of Birth" value={app.date_of_birth} />
-                        <DetailField label="Phone" value={app.phone} />
-                        <DetailField label="Email" value={app.email} />
-                        <DetailField
-                          label="Address"
-                          value={
-                            [app.address, app.city, app.state, app.zip]
-                              .filter(Boolean)
-                              .join(", ") || null
-                          }
-                        />
-                      </div>
-                    </div>
-
-                    {/* Employment Information */}
-                    <div>
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-6 h-px bg-[var(--gold)]" />
-                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
-                          Employment Information
-                        </span>
-                        <div className="flex-1 h-px bg-[var(--gold)]/10" />
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <DetailField label="Employer" value={app.employer} />
-                        <DetailField label="Occupation" value={app.occupation} />
-                        <DetailField label="Business Name" value={app.business_name} />
-                      </div>
-                    </div>
-
-                    {/* Application Details */}
-                    <div>
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-6 h-px bg-[var(--gold)]" />
-                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
-                          Application Details
-                        </span>
-                        <div className="flex-1 h-px bg-[var(--gold)]/10" />
-                      </div>
-                      <div className="space-y-4">
-                        <DetailField label="Surname Preference" value={app.surname_preference} />
-                        <div>
-                          <span className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1">
-                            Statement of Intent
+        <div className="bg-white rounded-lg border border-[var(--gray-200)] overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-[var(--gray-50)] border-b border-[var(--gray-200)]">
+                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Name</th>
+                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Email</th>
+                  {activeDef.extraCol && (
+                    <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">
+                      {activeDef.extraCol.label}
+                    </th>
+                  )}
+                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Submitted</th>
+                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Status</th>
+                  <th className="text-right px-4 py-3 font-medium text-[var(--gray-700)]">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((row) => {
+                  const isExpanded = expandedId === row.id;
+                  return (
+                    <Fragment key={row.id}>
+                      <tr
+                        className="border-b border-[var(--gray-100)] hover:bg-[var(--gray-50)] cursor-pointer"
+                        onClick={() => setExpandedId(isExpanded ? null : row.id)}
+                      >
+                        <td className="px-4 py-3 font-medium text-[var(--gray-900)]">
+                          {String(row[activeDef.nameCol] ?? "—")}
+                        </td>
+                        <td className="px-4 py-3 text-[var(--gray-500)]">
+                          {String(row[activeDef.emailCol] ?? "—")}
+                        </td>
+                        {activeDef.extraCol && (
+                          <td className="px-4 py-3 text-[var(--gray-700)]">
+                            {String(row[activeDef.extraCol.key] ?? "—")}
+                          </td>
+                        )}
+                        <td className="px-4 py-3 text-[var(--gray-500)]">
+                          {formatDate(row.created_at)}
+                        </td>
+                        <td className="px-4 py-3">{statusBadge(row.status)}</td>
+                        <td className="px-4 py-3 text-right">
+                          <span className="text-xs text-[var(--cherry-red)] font-medium">
+                            {isExpanded ? "Close" : "Open"}
                           </span>
-                          <p className="text-sm text-white/80 leading-relaxed bg-white/5 rounded-lg p-3">
-                            {app.statement_of_intent || "—"}
-                          </p>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                          <DetailField label="How They Heard" value={app.how_heard} />
-                          <DetailField
-                            label="Constitution Acknowledged"
-                            value={app.constitution_acknowledged ? "Yes" : "No"}
-                          />
-                          {app.document_url && (
-                            <div>
-                              <span className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1">
-                                Document Upload
-                              </span>
-                              <a
-                                href={app.document_url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-[var(--gold)] hover:underline"
-                              >
-                                View Document
-                              </a>
+                        </td>
+                      </tr>
+                      {isExpanded && (
+                        <tr className="bg-[var(--gray-50)]">
+                          <td
+                            colSpan={5 + (activeDef.extraCol ? 1 : 0)}
+                            className="px-4 py-4"
+                          >
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 mb-4">
+                              {Object.entries(row).map(([k, v]) => {
+                                if (k === "id" || k === "status" || k === "created_at" || k === "updated_at") return null;
+                                if (v === null || v === "" || v === undefined) return null;
+                                return (
+                                  <div key={k} className="text-xs">
+                                    <span className="font-medium text-[var(--gray-700)] capitalize">
+                                      {k.replace(/_/g, " ")}:
+                                    </span>{" "}
+                                    <span className="text-[var(--gray-600)]">
+                                      {typeof v === "boolean"
+                                        ? v
+                                          ? "Yes"
+                                          : "No"
+                                        : String(v)}
+                                    </span>
+                                  </div>
+                                );
+                              })}
                             </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Admin Notes */}
-                    <div>
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-6 h-px bg-[var(--gold)]" />
-                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
-                          Admin Notes
-                        </span>
-                        <div className="flex-1 h-px bg-[var(--gold)]/10" />
-                      </div>
-                      <textarea
-                        value={notesMap[app.id] || ""}
-                        onChange={(e) =>
-                          setNotesMap((prev) => ({
-                            ...prev,
-                            [app.id]: e.target.value,
-                          }))
-                        }
-                        rows={3}
-                        placeholder="Add internal notes about this application..."
-                        className="w-full px-4 py-3 bg-white/5 border border-[var(--gold)]/10 rounded-xl text-sm text-white/80 placeholder-white/20 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/30 focus:border-transparent resize-y"
-                      />
-                      <div className="flex justify-end mt-2">
-                        <button
-                          onClick={() => saveNotes(app.id)}
-                          disabled={savingNotes === app.id}
-                          className="text-xs font-semibold px-4 py-1.5 rounded-lg bg-white/10 text-white/70 hover:bg-white/15 transition-colors disabled:opacity-50"
-                        >
-                          {savingNotes === app.id ? "Saving..." : "Save Notes"}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Action Buttons */}
-                    <div>
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-6 h-px bg-[var(--gold)]" />
-                        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
-                          Actions
-                        </span>
-                        <div className="flex-1 h-px bg-[var(--gold)]/10" />
-                      </div>
-                      <div className="flex flex-wrap gap-3">
-                        <button
-                          onClick={() => updateStatus(app.id, "approved")}
-                          disabled={updatingStatus === app.id || app.status === "approved"}
-                          className="px-5 py-2 rounded-lg text-sm font-semibold bg-green-600/20 text-green-400 border border-green-500/20 hover:bg-green-600/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => updateStatus(app.id, "denied")}
-                          disabled={updatingStatus === app.id || app.status === "denied"}
-                          className="px-5 py-2 rounded-lg text-sm font-semibold bg-red-600/20 text-red-400 border border-red-500/20 hover:bg-red-600/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          Deny
-                        </button>
-                        <button
-                          onClick={() => updateStatus(app.id, "under_review")}
-                          disabled={updatingStatus === app.id || app.status === "under_review"}
-                          className="px-5 py-2 rounded-lg text-sm font-semibold bg-blue-600/20 text-blue-400 border border-blue-500/20 hover:bg-blue-600/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                        >
-                          Under Review
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                            <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-[var(--gray-200)]">
+                              <span className="text-xs font-medium text-[var(--gray-700)]">
+                                Set status:
+                              </span>
+                              {STATUSES.map((s) => (
+                                <button
+                                  key={s}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    updateStatus(row.id, s);
+                                  }}
+                                  disabled={savingId === row.id || row.status === s}
+                                  className={`text-xs px-2.5 py-1 rounded-md border transition-colors ${
+                                    row.status === s
+                                      ? "bg-[var(--gold)] text-[var(--dark-bg)] border-[var(--gold)] cursor-default"
+                                      : "bg-white text-[var(--gray-700)] border-[var(--gray-300)] hover:bg-[var(--gray-50)]"
+                                  } disabled:opacity-50`}
+                                >
+                                  {s}
+                                </button>
+                              ))}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function DetailField({
-  label,
-  value,
-}: {
-  label: string;
-  value: string | null | undefined;
-}) {
-  return (
-    <div>
-      <span className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-1">
-        {label}
-      </span>
-      <span className="text-sm text-white/80">{value || "—"}</span>
     </div>
   );
 }
