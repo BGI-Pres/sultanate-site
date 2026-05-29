@@ -117,8 +117,42 @@ export default async function PostPage({
 
   const label = POST_TYPE_LABELS[post.post_type] ?? "Article";
 
+  const description =
+    post.excerpt ?? post.body.replace(/\s+/g, " ").trim().slice(0, 200);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "NewsArticle",
+    headline: post.title,
+    description,
+    datePublished: post.published_at,
+    dateModified: post.updated_at ?? post.published_at,
+    author: {
+      "@type": "Organization",
+      name: post.author ?? "Sultanate of Amexem",
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Sultanate of Amexem",
+      logo: {
+        "@type": "ImageObject",
+        url: "https://sultanateofamexem.info/images/emblem.svg",
+      },
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `https://sultanateofamexem.info/press/${post.slug}`,
+    },
+    ...(post.cover_image_url ? { image: [post.cover_image_url] } : {}),
+    articleSection: label,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* ── Dark Hero ── */}
       <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

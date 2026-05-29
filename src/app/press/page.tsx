@@ -34,10 +34,8 @@ const POST_TYPE_LABELS: Record<PostType, string> = {
   event_recap: "Event Recap",
 };
 
-// Different gold tints per post type
 const POST_TYPE_BADGE_CLASSES: Record<PostType, string> = {
-  press_release:
-    "bg-[var(--gold)] text-[var(--dark-bg)]",
+  press_release: "bg-[var(--gold)] text-[var(--dark-bg)]",
   article:
     "bg-[var(--gold)]/15 text-[var(--gold-dark)] border border-[var(--gold)]/30",
   spotlight:
@@ -45,6 +43,14 @@ const POST_TYPE_BADGE_CLASSES: Record<PostType, string> = {
   event_recap:
     "bg-[var(--gold-dark)]/15 text-[var(--gold-dark)] border border-[var(--gold-dark)]/30",
 };
+
+const FILTER_TABS: { key: "all" | PostType; label: string }[] = [
+  { key: "all", label: "All" },
+  { key: "press_release", label: "Press Releases" },
+  { key: "article", label: "Articles" },
+  { key: "spotlight", label: "Spotlights" },
+  { key: "event_recap", label: "Event Recaps" },
+];
 
 async function getPublishedPosts(): Promise<Post[]> {
   try {
@@ -56,8 +62,8 @@ async function getPublishedPosts(): Promise<Post[]> {
     }
 
     const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     );
     const { data, error } = await supabase
       .from("posts")
@@ -85,7 +91,6 @@ function formatDate(dateStr: string | null) {
 
 function deriveExcerpt(post: Post): string {
   if (post.excerpt && post.excerpt.trim().length > 0) return post.excerpt;
-  // Strip basic markdown noise and take first 160 chars
   const stripped = post.body
     .replace(/[#>*_`~\-]+/g, " ")
     .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
@@ -95,8 +100,49 @@ function deriveExcerpt(post: Post): string {
   return stripped.length > 160 ? `${stripped.slice(0, 160).trim()}…` : stripped;
 }
 
-export default async function PressPage() {
-  const posts = await getPublishedPosts();
+function buildHref(type: string, q: string) {
+  const params = new URLSearchParams();
+  if (type !== "all") params.set("type", type);
+  if (q) params.set("q", q);
+  const qs = params.toString();
+  return qs ? `/press?${qs}` : "/press";
+}
+
+function matchesQuery(post: Post, q: string): boolean {
+  if (!q) return true;
+  const needle = q.toLowerCase();
+  return (
+    post.title.toLowerCase().includes(needle) ||
+    (post.excerpt?.toLowerCase().includes(needle) ?? false) ||
+    post.body.toLowerCase().includes(needle)
+  );
+}
+
+export default async function PressPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const sp = await searchParams;
+  const rawType = typeof sp.type === "string" ? sp.type : "all";
+  const activeType: "all" | PostType = (
+    ["all", "press_release", "article", "spotlight", "event_recap"].includes(
+      rawType
+    )
+      ? rawType
+      : "all"
+  ) as "all" | PostType;
+  const query = typeof sp.q === "string" ? sp.q.trim() : "";
+
+  const allPosts = await getPublishedPosts();
+  const filtered = allPosts.filter(
+    (p) =>
+      (activeType === "all" || p.post_type === activeType) &&
+      matchesQuery(p, query)
+  );
+
+  const isUnfiltered = activeType === "all" && !query;
+  const [hero, ...rest] = filtered;
 
   return (
     <>
@@ -116,7 +162,7 @@ export default async function PressPage() {
         </div>
       </section>
 
-      {/* ── Articles & Updates (dynamic posts) ── */}
+      {/* ── Articles & Updates ── */}
       <section className="py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3 mb-4">
@@ -126,84 +172,190 @@ export default async function PressPage() {
             </span>
             <div className="h-px w-12 bg-[var(--gold)]" />
           </div>
-          <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-10">
-            Press Releases & Updates
+          <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-6">
+            Press Releases &amp; Updates
           </h2>
 
-          {posts.length === 0 ? (
+          {/* Filter tabs */}
+          <div className="flex flex-wrap gap-2 mb-6 border-b border-[var(--gray-200)] pb-4">
+            {FILTER_TABS.map((tab) => {
+              const isActive = activeType === tab.key;
+              return (
+                <Link
+                  key={tab.key}
+                  href={buildHref(tab.key, query)}
+                  className={`inline-flex items-center rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-[var(--gold)] text-[var(--dark-bg)]"
+                      : "bg-[var(--gray-100)] text-[var(--gray-700)] hover:bg-[var(--gray-200)]"
+                  }`}
+                >
+                  {tab.label}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Active search chip */}
+          {query && (
+            <div className="mb-6 flex items-center gap-2 text-sm">
+              <span className="text-[var(--gray-700)]">
+                Showing results for{" "}
+                <span className="font-semibold text-[var(--gray-900)]">
+                  &ldquo;{query}&rdquo;
+                </span>
+                {filtered.length > 0 && (
+                  <span className="text-[var(--gray-500)]">
+                    {" "}
+                    ({filtered.length}{" "}
+                    {filtered.length === 1 ? "result" : "results"})
+                  </span>
+                )}
+              </span>
+              <Link
+                href={buildHref(activeType, "")}
+                className="inline-flex items-center gap-1 rounded-full bg-[var(--gray-100)] px-3 py-1 text-xs font-medium text-[var(--gray-700)] hover:bg-[var(--gray-200)]"
+              >
+                Clear search <span aria-hidden="true">&times;</span>
+              </Link>
+            </div>
+          )}
+
+          {filtered.length === 0 ? (
             <div className="rounded-xl border border-dashed border-[var(--gray-300)] bg-white p-10 text-center">
               <p className="text-[var(--gray-500)]">
-                No published articles yet — check back soon.
+                {query
+                  ? `No articles match “${query}”. Try a different search.`
+                  : "No published articles in this category yet — check back soon."}
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post) => {
-                const badgeClass =
-                  POST_TYPE_BADGE_CLASSES[post.post_type] ??
-                  POST_TYPE_BADGE_CLASSES.article;
-                const label =
-                  POST_TYPE_LABELS[post.post_type] ?? "Article";
-                const excerpt = deriveExcerpt(post);
-
-                return (
-                  <article
-                    key={post.id}
-                    className="group flex flex-col overflow-hidden rounded-xl border border-[var(--gray-200)] bg-white transition-all duration-300 hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5"
-                  >
-                    {post.cover_image_url && (
-                      <Link
-                        href={`/press/${post.slug}`}
-                        className="relative block aspect-[16/9] w-full overflow-hidden bg-[var(--gray-100)]"
-                      >
-                        <Image
-                          src={post.cover_image_url}
-                          alt={post.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      </Link>
-                    )}
-                    <div className="flex flex-1 flex-col p-5 md:p-6">
-                      <div className="mb-3 flex items-center gap-3">
-                        <span
-                          className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${badgeClass}`}
-                        >
-                          {label}
+            <>
+              {/* Featured hero post (only on unfiltered view) */}
+              {isUnfiltered && hero && (
+                <Link
+                  href={`/press/${hero.slug}`}
+                  className="group mb-10 grid grid-cols-1 lg:grid-cols-2 overflow-hidden rounded-2xl border border-[var(--gray-200)] bg-white transition-all duration-300 hover:border-[var(--gold)] hover:shadow-xl hover:shadow-[var(--gold)]/10"
+                >
+                  <div className="relative aspect-[16/10] lg:aspect-auto lg:min-h-[360px] w-full overflow-hidden bg-[var(--gray-100)]">
+                    {hero.cover_image_url ? (
+                      <Image
+                        src={hero.cover_image_url}
+                        alt={hero.title}
+                        fill
+                        priority
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-[var(--dark-bg)] via-[var(--dark-bg)] to-[var(--gold-dark)]/30 flex items-center justify-center">
+                        <span className="text-[var(--gold)] text-sm uppercase tracking-[0.2em]">
+                          Sultanate of Amexem
                         </span>
-                        {post.published_at && (
-                          <span className="text-xs text-[var(--gray-500)]">
-                            {formatDate(post.published_at)}
-                          </span>
-                        )}
                       </div>
-                      <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2 leading-snug">
-                        <Link
-                          href={`/press/${post.slug}`}
-                          className="hover:text-[var(--gold-dark)] transition-colors"
-                        >
-                          {post.title}
-                        </Link>
-                      </h3>
-                      {excerpt && (
-                        <p className="text-sm text-[var(--gray-700)] leading-relaxed mb-4 line-clamp-4">
-                          {excerpt}
-                        </p>
+                    )}
+                  </div>
+                  <div className="flex flex-col justify-center p-6 md:p-10">
+                    <div className="mb-4 flex items-center gap-3">
+                      <span className="inline-flex items-center rounded-full bg-[var(--gold)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--dark-bg)]">
+                        Featured
+                      </span>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${
+                          POST_TYPE_BADGE_CLASSES[hero.post_type] ??
+                          POST_TYPE_BADGE_CLASSES.article
+                        }`}
+                      >
+                        {POST_TYPE_LABELS[hero.post_type] ?? "Article"}
+                      </span>
+                      {hero.published_at && (
+                        <span className="text-xs text-[var(--gray-500)]">
+                          {formatDate(hero.published_at)}
+                        </span>
                       )}
-                      <div className="mt-auto pt-2">
+                    </div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-[var(--gray-900)] mb-3 leading-tight group-hover:text-[var(--gold-dark)] transition-colors">
+                      {hero.title}
+                    </h3>
+                    <p className="text-[var(--gray-700)] leading-relaxed mb-5">
+                      {deriveExcerpt(hero)}
+                    </p>
+                    <span className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--gold-dark)] group-hover:text-[var(--gold)] transition-colors">
+                      Read full release{" "}
+                      <span aria-hidden="true">&rarr;</span>
+                    </span>
+                  </div>
+                </Link>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {(isUnfiltered ? rest : filtered).map((post) => {
+                  const badgeClass =
+                    POST_TYPE_BADGE_CLASSES[post.post_type] ??
+                    POST_TYPE_BADGE_CLASSES.article;
+                  const label =
+                    POST_TYPE_LABELS[post.post_type] ?? "Article";
+                  const excerpt = deriveExcerpt(post);
+
+                  return (
+                    <article
+                      key={post.id}
+                      className="group flex flex-col overflow-hidden rounded-xl border border-[var(--gray-200)] bg-white transition-all duration-300 hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5"
+                    >
+                      {post.cover_image_url && (
                         <Link
                           href={`/press/${post.slug}`}
-                          className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--gold-dark)] hover:text-[var(--gold)] transition-colors"
+                          className="relative block aspect-[16/9] w-full overflow-hidden bg-[var(--gray-100)]"
                         >
-                          Read more <span aria-hidden="true">&rarr;</span>
+                          <Image
+                            src={post.cover_image_url}
+                            alt={post.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
                         </Link>
+                      )}
+                      <div className="flex flex-1 flex-col p-5 md:p-6">
+                        <div className="mb-3 flex items-center gap-3">
+                          <span
+                            className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${badgeClass}`}
+                          >
+                            {label}
+                          </span>
+                          {post.published_at && (
+                            <span className="text-xs text-[var(--gray-500)]">
+                              {formatDate(post.published_at)}
+                            </span>
+                          )}
+                        </div>
+                        <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2 leading-snug">
+                          <Link
+                            href={`/press/${post.slug}`}
+                            className="hover:text-[var(--gold-dark)] transition-colors"
+                          >
+                            {post.title}
+                          </Link>
+                        </h3>
+                        {excerpt && (
+                          <p className="text-sm text-[var(--gray-700)] leading-relaxed mb-4 line-clamp-4">
+                            {excerpt}
+                          </p>
+                        )}
+                        <div className="mt-auto pt-2">
+                          <Link
+                            href={`/press/${post.slug}`}
+                            className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--gold-dark)] hover:text-[var(--gold)] transition-colors"
+                          >
+                            Read more <span aria-hidden="true">&rarr;</span>
+                          </Link>
+                        </div>
                       </div>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </>
           )}
 
           <div className="mt-16 text-center">
