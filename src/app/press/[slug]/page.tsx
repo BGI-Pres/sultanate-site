@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -191,22 +190,6 @@ export default async function PostPage({
           </div>
         </div>
       </section>
-
-      {/* ── Cover image ── */}
-      {post.cover_image_url && (
-        <div className="relative w-full max-h-[400px] overflow-hidden bg-[var(--gray-100)]">
-          <div className="relative w-full" style={{ height: "400px" }}>
-            <Image
-              src={post.cover_image_url}
-              alt={post.title}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-          </div>
-        </div>
-      )}
 
       {/* ── Article body ── */}
       <article className="max-w-3xl mx-auto px-4 py-12 md:py-16">
