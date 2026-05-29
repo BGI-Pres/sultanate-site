@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 
 /* ── Shared style constants ── */
 const inputClass =
@@ -86,6 +87,8 @@ export default function ProfessionalServicesPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: contactName, email: contactEmail }),
       });
+
+      trackEvent("service_application_submitted");
 
       setSubmitted(true);
     } catch {

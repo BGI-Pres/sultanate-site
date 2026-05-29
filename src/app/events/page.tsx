@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 
 const recurring = [
   {
@@ -74,6 +75,8 @@ function EventCard({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email }),
       });
+
+      trackEvent("event_rsvp", { event_name: event.title });
 
       setSubmittedEmail(email);
       setSubmitted(true);

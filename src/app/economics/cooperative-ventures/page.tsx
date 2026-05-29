@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useRef, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 
 /* ── Shared style constants ── */
 const inputClass =
@@ -174,6 +175,8 @@ export default function CooperativeVenturesPage() {
           email: applicantEmail.trim(),
         }),
       });
+
+      trackEvent("cooperative_application_submitted", { intent: intent });
 
       setSubmitted(true);
     } catch {

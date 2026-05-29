@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackSquareClick } from "@/lib/analytics";
 
 export default function CredentialsSection() {
   const [isActiveMember, setIsActiveMember] = useState(false);
@@ -98,6 +99,7 @@ export default function CredentialsSection() {
                   href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackSquareClick(item.name, item.href)}
                   className="text-xs font-medium text-[var(--gold)] hover:text-[var(--gold-dark)] transition-colors"
                 >
                   Purchase &rarr;

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { trackEvent } from "@/lib/analytics";
 
 /* ── Shared style constants ── */
 const inputClass =
@@ -152,6 +153,8 @@ export default function VenturesPage() {
           email: proposerEmail.trim(),
         }),
       });
+
+      trackEvent("venture_proposal_submitted");
 
       setSubmitted(true);
     } catch {
