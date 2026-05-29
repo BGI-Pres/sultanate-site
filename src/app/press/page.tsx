@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title:
@@ -10,73 +13,83 @@ export const metadata: Metadata = {
   alternates: { canonical: "/press" },
 };
 
+type PostType = "press_release" | "article" | "spotlight" | "event_recap";
+
 interface Post {
   id: string;
+  slug: string;
   title: string;
-  excerpt: string;
-  category: string;
-  created_at: string;
+  excerpt: string | null;
+  body: string;
+  post_type: PostType;
+  cover_image_url: string | null;
+  author: string | null;
+  published_at: string | null;
 }
 
-const fallbackPosts: Post[] = [
-  {
-    id: "fallback-1",
-    title: "Welcome to Our New Website",
-    excerpt:
-      "The Sultanate of Amexem is proud to launch our redesigned official website, built to better serve our members and community.",
-    category: "Announcement",
-    created_at: "2026-05-27T00:00:00Z",
-  },
-  {
-    id: "fallback-2",
-    title: "Membership Applications Now Open",
-    excerpt:
-      "We are now accepting applications for membership in the Sultanate of Amexem. Learn about the process and membership tiers available.",
-    category: "Membership",
-    created_at: "2026-05-27T00:00:00Z",
-  },
-  {
-    id: "fallback-3",
-    title: "Preserving Our Heritage for Future Generations",
-    excerpt:
-      "An overview of our ongoing initiatives to document, preserve, and share the cultural heritage of the Nation of Moab.",
-    category: "Heritage",
-    created_at: "2026-05-27T00:00:00Z",
-  },
-];
+const POST_TYPE_LABELS: Record<PostType, string> = {
+  press_release: "Press Release",
+  article: "Article",
+  spotlight: "Spotlight",
+  event_recap: "Event Recap",
+};
 
-async function getPosts(): Promise<Post[]> {
+// Different gold tints per post type
+const POST_TYPE_BADGE_CLASSES: Record<PostType, string> = {
+  press_release:
+    "bg-[var(--gold)] text-[var(--dark-bg)]",
+  article:
+    "bg-[var(--gold)]/15 text-[var(--gold-dark)] border border-[var(--gold)]/30",
+  spotlight:
+    "bg-[var(--gold-light)]/25 text-[var(--gold-dark)] border border-[var(--gold-light)]/40",
+  event_recap:
+    "bg-[var(--gold-dark)]/15 text-[var(--gold-dark)] border border-[var(--gold-dark)]/30",
+};
+
+async function getPublishedPosts(): Promise<Post[]> {
   try {
     if (
       !process.env.NEXT_PUBLIC_SUPABASE_URL ||
       !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     ) {
-      return fallbackPosts;
+      return [];
     }
 
     const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from("posts")
-      .select("id, title, excerpt, category, created_at")
+      .select(
+        "id, slug, title, excerpt, body, post_type, cover_image_url, author, published_at"
+      )
       .eq("published", true)
-      .order("created_at", { ascending: false });
+      .order("published_at", { ascending: false });
 
-    if (error || !data || data.length === 0) {
-      return fallbackPosts;
-    }
-
+    if (error || !data) return [];
     return data as Post[];
   } catch {
-    return fallbackPosts;
+    return [];
   }
 }
 
-function formatDate(dateStr: string) {
+function formatDate(dateStr: string | null) {
+  if (!dateStr) return "";
   return new Date(dateStr).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+}
+
+function deriveExcerpt(post: Post): string {
+  if (post.excerpt && post.excerpt.trim().length > 0) return post.excerpt;
+  // Strip basic markdown noise and take first 160 chars
+  const stripped = post.body
+    .replace(/[#>*_`~\-]+/g, " ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+  return stripped.length > 160 ? `${stripped.slice(0, 160).trim()}…` : stripped;
 }
 
 const pressReleases = [
@@ -101,7 +114,7 @@ const pressReleases = [
 ];
 
 export default async function PressPage() {
-  const posts = await getPosts();
+  const posts = await getPublishedPosts();
 
   return (
     <>
@@ -175,42 +188,95 @@ export default async function PressPage() {
         </div>
       </section>
 
-      {/* ── News Feed ── */}
+      {/* ── Articles & Updates (dynamic posts) ── */}
       <section className="py-12 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4 mb-10">
-            <div className="h-px w-8 bg-[var(--gold)]" />
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--gold)]">
-              Latest Articles
+          <div className="flex items-center gap-3 mb-4">
+            <div className="h-px w-12 bg-[var(--gold)]" />
+            <span className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold">
+              Articles &amp; Updates
             </span>
-            <div className="h-px flex-1 bg-[var(--gold)]/20" />
+            <div className="h-px w-12 bg-[var(--gold)]" />
           </div>
+          <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-10">
+            Latest from the Sultanate
+          </h2>
 
-          <div className="max-w-4xl space-y-8">
-            {posts.map((post) => (
-              <article
-                key={post.id}
-                className="border border-[var(--gray-200)] bg-white rounded-xl hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5 transition-all duration-300"
-              >
-                <Link href={`/news/${post.id}`} className="block p-5 md:p-8">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-xs font-semibold text-[var(--cherry-red)] bg-red-50 px-2.5 py-1 rounded-full">
-                      {post.category}
-                    </span>
-                    <span className="text-sm text-[var(--gray-500)]">
-                      {formatDate(post.created_at)}
-                    </span>
-                  </div>
-                  <h2 className="text-xl font-semibold text-[var(--gray-900)] mb-3">
-                    {post.title}
-                  </h2>
-                  <p className="text-[var(--gray-500)] leading-relaxed">
-                    {post.excerpt}
-                  </p>
-                </Link>
-              </article>
-            ))}
-          </div>
+          {posts.length === 0 ? (
+            <div className="rounded-xl border border-dashed border-[var(--gray-300)] bg-white p-10 text-center">
+              <p className="text-[var(--gray-500)]">
+                No published articles yet — check back soon.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {posts.map((post) => {
+                const badgeClass =
+                  POST_TYPE_BADGE_CLASSES[post.post_type] ??
+                  POST_TYPE_BADGE_CLASSES.article;
+                const label =
+                  POST_TYPE_LABELS[post.post_type] ?? "Article";
+                const excerpt = deriveExcerpt(post);
+
+                return (
+                  <article
+                    key={post.id}
+                    className="group flex flex-col overflow-hidden rounded-xl border border-[var(--gray-200)] bg-white transition-all duration-300 hover:border-[var(--gold)] hover:shadow-lg hover:shadow-[var(--gold)]/5"
+                  >
+                    {post.cover_image_url && (
+                      <Link
+                        href={`/press/${post.slug}`}
+                        className="relative block aspect-[16/9] w-full overflow-hidden bg-[var(--gray-100)]"
+                      >
+                        <Image
+                          src={post.cover_image_url}
+                          alt={post.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </Link>
+                    )}
+                    <div className="flex flex-1 flex-col p-5 md:p-6">
+                      <div className="mb-3 flex items-center gap-3">
+                        <span
+                          className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${badgeClass}`}
+                        >
+                          {label}
+                        </span>
+                        {post.published_at && (
+                          <span className="text-xs text-[var(--gray-500)]">
+                            {formatDate(post.published_at)}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="text-lg font-semibold text-[var(--gray-900)] mb-2 leading-snug">
+                        <Link
+                          href={`/press/${post.slug}`}
+                          className="hover:text-[var(--gold-dark)] transition-colors"
+                        >
+                          {post.title}
+                        </Link>
+                      </h3>
+                      {excerpt && (
+                        <p className="text-sm text-[var(--gray-700)] leading-relaxed mb-4 line-clamp-4">
+                          {excerpt}
+                        </p>
+                      )}
+                      <div className="mt-auto pt-2">
+                        <Link
+                          href={`/press/${post.slug}`}
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-[var(--gold-dark)] hover:text-[var(--gold)] transition-colors"
+                        >
+                          Read more <span aria-hidden="true">&rarr;</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          )}
 
           <div className="mt-16 text-center">
             <div className="inline-flex items-center gap-3 mb-4">
