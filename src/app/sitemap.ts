@@ -1,18 +1,15 @@
 import type { MetadataRoute } from "next";
-import { createServerSupabaseClient } from "@/lib/supabase-server";
+import { createClient } from "@supabase/supabase-js";
 
 const baseUrl = "https://www.sultanateofamexem.com";
 
 async function getPublishedPostEntries(): Promise<MetadataRoute.Sitemap> {
   try {
-    if (
-      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    ) {
-      return [];
-    }
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!url || !key) return [];
 
-    const supabase = await createServerSupabaseClient();
+    const supabase = createClient(url, key);
     const { data, error } = await supabase
       .from("posts")
       .select("slug, updated_at")

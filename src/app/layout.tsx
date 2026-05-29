@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import GoogleAnalytics from "@/components/GoogleAnalytics";
 import MicrosoftClarity from "@/components/MicrosoftClarity";
 import {
   GoogleTagManagerScript,
@@ -176,7 +175,6 @@ export default function RootLayout({
         <main className="flex-1">{children}</main>
         <Footer />
         <MicrosoftClarity />
-        <GoogleAnalytics />
         <Analytics />
       </body>
     </html>
