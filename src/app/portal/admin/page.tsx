@@ -294,7 +294,7 @@ export default function AdminDashboard() {
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-0.5">
                       <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--gray-700)] bg-[var(--gray-100)] px-1.5 py-0.5 rounded">
-                        {m.tier ?? "Associate"}
+                        {m.tier ?? "Affiliate"}
                       </span>
                       <span
                         className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${
