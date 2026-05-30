@@ -255,6 +255,7 @@ export default function ApplyPage() {
       });
 
     if (insertError) {
+      console.error("Application submission failed", insertError);
       setError(
         "There was an issue submitting your application. Please try again.",
       );
