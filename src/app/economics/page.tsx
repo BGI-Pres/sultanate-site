@@ -103,16 +103,12 @@ export default function EconomicsPage() {
           <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-4">
             Enterprises Born From the Membership
           </h2>
-          <p className="text-[var(--gray-700)] leading-relaxed max-w-3xl mb-4 text-[15px]">
+          <p className="text-[var(--gray-700)] leading-relaxed max-w-3xl mb-10 text-[15px]">
             Bey Group International was born from the membership of the
             Sultanate — proof that when our people organize around shared
             economic purpose, institutions of real power emerge. The Sultanate
             does not wait for outside investment or external validation. We build
             from within.
-          </p>
-          <p className="text-[var(--gray-700)] leading-relaxed max-w-3xl mb-10 text-[15px] font-medium">
-            When our people organize around shared economic purpose, institutions
-            of real power emerge.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
