@@ -2,119 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { MEMBER_TIERS, type MemberTier } from "@/lib/tiers";
 
-const tiers = [
-  {
-    name: "Affiliate",
-    price: "Free",
-    priceNote: null,
-    description:
-      "Support the mission. Attend meetings and community events — no card, no dues.",
-    benefits: [
-      "Virtual & physical meeting access",
-      "Community event attendance",
-      "Public educational content & study groups",
-      "On-site news & press updates",
-    ],
-    requirements: ["Open to all — no application required"],
-    rankUp: {
-      target: "Community",
-      steps: [
-        "Attend meetings consistently for at least 3 months",
-        "Complete orientation study: Holy Koran, Divine Constitution & Bylaws, and Moorish Questionnaire",
-        "Apply for Community membership",
-      ],
-    },
-    cta: "Join as Affiliate",
-    featured: false,
-  },
-  {
-    name: "Community",
-    price: "$50",
-    priceNote: "per month",
-    description:
-      "A recognized member of the Sultanate. Required to attend meetings, pay monthly dues, and participate in community affairs.",
-    benefits: [
-      "All Affiliate benefits",
-      "Official membership card (purchase required)",
-      "Newsletter via mail & SMS",
-      "Member-only resources & study materials",
-      "Voting rights in community decisions",
-      "Required meeting attendance",
-      "Involvement in community affairs",
-    ],
-    requirements: [
-      "3 months consistent meeting attendance as Affiliate",
-      "Completed orientation study (sacred texts & Constitution)",
-      "Approved by leadership",
-    ],
-    rankUp: {
-      target: "General",
-      steps: [
-        "Active Community member for a minimum period",
-        "Demonstrated involvement in community affairs",
-        "Complete leadership training",
-        "Organize a local chapter/temple body",
-        "Pay $100 charter registration fee",
-      ],
-    },
-    cta: "Apply Now",
-    featured: true,
-  },
-  {
-    name: "General",
-    price: "$50",
-    priceNote: "per month + $100 charter registration",
-    description:
-      "Part of the Grand Body — the chartered chapter-leadership tier of the Sultanate.",
-    benefits: [
-      "All Community benefits",
-      "Organize & lead a local chapter/temple",
-      "Chapter leadership authority",
-      "Expanded resources & incentive programs",
-      "Local representation & member recruiting",
-      "Leadership development & mentorship access",
-    ],
-    requirements: [
-      "Active Community member with demonstrated involvement",
-      "Leadership training completed",
-      "Organized a local chapter/temple body",
-    ],
-    rankUp: {
-      target: "Lead",
-      steps: [
-        "Maintain an active chapter with regular attendance",
-        "Secure a physical location for your body",
-        "Receive leadership approval",
-        "Pay $100 charter registration fee",
-      ],
-    },
-    cta: "Apply Now",
-    featured: false,
-  },
-  {
-    name: "Lead",
-    price: "$50",
-    priceNote: "per month + $100 charter registration",
-    description:
-      "Senior operational leadership — established bodies with regional reach and advisory access.",
-    benefits: [
-      "All General benefits",
-      "Established body with a physical location",
-      "Lead meetings & mentor members",
-      "Regional operational decision-making",
-      "Priority communications & direct advisory access",
-    ],
-    requirements: [
-      "Active chapter as General member",
-      "Physical location established for your body",
-      "Leadership approval",
-    ],
-    rankUp: null,
-    cta: "Apply Now",
-    featured: false,
-  },
-];
+const tiers = MEMBER_TIERS;
 
 function ChevronIcon({ open }: { open: boolean }) {
   return (
@@ -133,7 +23,7 @@ function ChevronIcon({ open }: { open: boolean }) {
 function TierCard({
   tier,
 }: {
-  tier: (typeof tiers)[number];
+  tier: MemberTier;
 }) {
   const [showReqs, setShowReqs] = useState(false);
   const [showRankUp, setShowRankUp] = useState(false);

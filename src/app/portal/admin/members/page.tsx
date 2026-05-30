@@ -2,6 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
+import {
+  MEMBER_TIER_NAMES,
+  MEMBER_TIERS,
+  getTier,
+  tierPriceLabel,
+} from "@/lib/tiers";
 
 interface Member {
   id: string;
@@ -52,7 +58,7 @@ interface ApplicationRow {
   created_at: string;
 }
 
-const TIERS = ["Affiliate", "Community", "General", "Lead"] as const;
+const TIERS = MEMBER_TIER_NAMES;
 const STATUSES = ["pending", "active", "suspended", "denied"] as const;
 const ROLES = ["member", "admin"] as const;
 const PAGE_SIZE = 25;
@@ -60,12 +66,9 @@ const PAGE_SIZE = 25;
 type SortKey = "name" | "email" | "tier" | "status" | "joined";
 type SortDir = "asc" | "desc";
 
-const tierClass: Record<string, string> = {
-  Affiliate: "bg-gray-100 text-gray-700",
-  Community: "bg-[var(--gold)]/15 text-[var(--gold-dark)]",
-  General: "bg-blue-50 text-blue-700",
-  Lead: "bg-purple-50 text-purple-700",
-};
+function tierBadgeClass(name: string | null | undefined): string {
+  return getTier(name)?.badgeClass ?? "bg-gray-100 text-gray-600";
+}
 
 const statusClass: Record<string, string> = {
   active: "bg-green-50 text-green-700",
@@ -428,9 +431,9 @@ export default function MembersPage() {
             <option value="" disabled>
               Set tier…
             </option>
-            {TIERS.map((t) => (
-              <option key={t} value={t}>
-                {t}
+            {MEMBER_TIERS.map((t) => (
+              <option key={t.name} value={t.name}>
+                {t.name} — {tierPriceLabel(t)}
               </option>
             ))}
           </select>
@@ -508,9 +511,7 @@ export default function MembersPage() {
                     </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`text-xs font-medium px-2 py-1 rounded-full ${
-                          tierClass[m.tier ?? ""] ?? "bg-gray-100 text-gray-600"
-                        }`}
+                        className={`text-xs font-medium px-2 py-1 rounded-full ${tierBadgeClass(m.tier)}`}
                       >
                         {m.tier ?? "Affiliate"}
                       </span>
@@ -763,9 +764,9 @@ function MemberDrawer({
                     onChange={(e) => setDraft({ ...draft, tier: e.target.value })}
                     className={inputCls}
                   >
-                    {TIERS.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
+                    {MEMBER_TIERS.map((t) => (
+                      <option key={t.name} value={t.name}>
+                        {t.name} — {tierPriceLabel(t)}
                       </option>
                     ))}
                   </select>
@@ -784,6 +785,7 @@ function MemberDrawer({
                   </select>
                 </Field>
               </div>
+              <TierInfoCard tierName={draft.tier} />
               <Field label="Admin notes">
                 <textarea
                   value={draft.notes}
@@ -1023,9 +1025,9 @@ function AddMemberModal({
                 onChange={(e) => setForm({ ...form, tier: e.target.value })}
                 className={inputCls}
               >
-                {TIERS.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
+                {MEMBER_TIERS.map((t) => (
+                  <option key={t.name} value={t.name}>
+                    {t.name} — {tierPriceLabel(t)}
                   </option>
                 ))}
               </select>
@@ -1075,6 +1077,43 @@ function AddMemberModal({
           </button>
         </footer>
       </div>
+    </div>
+  );
+}
+
+/* ─── Tier info card (shown under the tier select in the drawer) ─── */
+function TierInfoCard({ tierName }: { tierName: string }) {
+  const tier = getTier(tierName);
+  if (!tier) return null;
+  return (
+    <div className="mt-1 mb-1 rounded-md border border-[var(--gray-200)] bg-[var(--gray-50)] px-3 py-2.5">
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <div className="flex items-center gap-2">
+          <span
+            className={`text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded ${tier.badgeClass}`}
+          >
+            {tier.name}
+          </span>
+          <span className="text-xs font-semibold text-[var(--gray-900)]">
+            {tierPriceLabel(tier)}
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          {tier.requiresDues && (
+            <span className="text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-amber-50 text-amber-700">
+              Dues required
+            </span>
+          )}
+          {tier.requiresCharter && (
+            <span className="text-[10px] uppercase tracking-wider font-semibold px-1.5 py-0.5 rounded bg-blue-50 text-blue-700">
+              Charter required
+            </span>
+          )}
+        </div>
+      </div>
+      <p className="text-xs text-[var(--gray-600)] leading-relaxed">
+        {tier.shortDescription}
+      </p>
     </div>
   );
 }
