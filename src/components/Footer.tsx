@@ -11,7 +11,7 @@ export default function Footer() {
       <div className="h-px bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
           <div>
             <div className="flex items-center gap-3 mb-4">
               <Image
@@ -48,6 +48,39 @@ export default function Footer() {
               <li><Link href="/press" className="hover:text-[var(--gold)] transition-colors">Press &amp; Updates</Link></li>
               <li><Link href="/resources" className="hover:text-[var(--gold)] transition-colors">Resources</Link></li>
               <li><Link href="/contact" className="hover:text-[var(--gold)] transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xs uppercase tracking-[0.2em] text-[var(--gold)] font-semibold mb-4">
+              Learn
+            </h3>
+            <ul className="space-y-2.5 text-sm text-gray-400">
+              <li>
+                <Link href="/moorish-american" className="hover:text-[var(--gold)] transition-colors">
+                  Moorish American Identity
+                </Link>
+              </li>
+              <li>
+                <Link href="/noble-drew-ali" className="hover:text-[var(--gold)] transition-colors">
+                  Noble Drew Ali
+                </Link>
+              </li>
+              <li>
+                <Link href="/noble-drew-ali" className="hover:text-[var(--gold)] transition-colors">
+                  Moorish Science Temple of America
+                </Link>
+              </li>
+              <li>
+                <Link href="/what-is-the-sultanate" className="hover:text-[var(--gold)] transition-colors">
+                  What is the Sultanate?
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:text-[var(--gold)] transition-colors">
+                  Frequently Asked Questions
+                </Link>
+              </li>
             </ul>
           </div>
 

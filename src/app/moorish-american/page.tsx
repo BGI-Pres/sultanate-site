@@ -2,15 +2,71 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Moorish American Nationality — Who We Are, Where We Come From",
+  title:
+    "Moorish American — Identity, Heritage, and Nationality of the Nation of Moab",
   description:
-    "Moorish American nationality: descendants of the Nation of Moab, ancestry and heritage restored by Noble Drew Ali, custodianship of the Sultanate of Amexem.",
+    "Moorish American is the proper nationality of the descendants of the ancient Nation of Moab — an ancestry restored by Noble Drew Ali and the Moorish Science Temple of America, custodially carried forward by the Sultanate of Amexem.",
   alternates: { canonical: "/moorish-american" },
+  openGraph: {
+    title: "Moorish American — Identity, Heritage, and Nationality",
+    description:
+      "Who are the Moorish Americans? Descendants of the Nation of Moab whose nationality was restored by Noble Drew Ali and the Moorish Science Temple of America.",
+    url: "https://www.sultanateofamexem.com/moorish-american",
+    type: "article",
+  },
+};
+
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline:
+    "Moorish American — Identity, Heritage, and Nationality of the Nation of Moab",
+  description:
+    "Moorish American is the proper nationality of the descendants of the ancient Nation of Moab — an ancestry restored by Noble Drew Ali and the Moorish Science Temple of America, custodially carried forward by the Sultanate of Amexem.",
+  url: "https://www.sultanateofamexem.com/moorish-american",
+  mainEntityOfPage: "https://www.sultanateofamexem.com/moorish-american",
+  author: {
+    "@type": "Organization",
+    name: "Sultanate of Amexem",
+    url: "https://www.sultanateofamexem.com",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Sultanate of Amexem",
+    url: "https://www.sultanateofamexem.com",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://www.sultanateofamexem.com/images/emblem.svg",
+    },
+  },
+  about: [
+    { "@type": "Thing", name: "Moorish American" },
+    { "@type": "Thing", name: "Nation of Moab" },
+    { "@type": "Person", name: "Noble Drew Ali" },
+    { "@type": "Organization", name: "Moorish Science Temple of America" },
+  ],
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.sultanateofamexem.com" },
+    { "@type": "ListItem", position: 2, name: "Moorish American", item: "https://www.sultanateofamexem.com/moorish-american" },
+  ],
 };
 
 export default function MoorishAmericanPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* ── Hero ── */}
       <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

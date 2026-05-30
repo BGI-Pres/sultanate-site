@@ -59,23 +59,23 @@ const heritageQAs: QA[] = [
 const membershipQAs: QA[] = [
   {
     q: "How do I become a member?",
-    a: "Begin by submitting an application through the Sultanate's apply page. Applicants are reviewed by the membership council and, once accepted, are inducted at the Initiate tier before progressing through the membership pathway.",
+    a: "Begin by attending a Friday Holy Day Meeting as an Affiliate — the free entry tier open to all. After consistent attendance and orientation study (Holy Koran, Divine Constitution & Bylaws, and the Moorish Questionnaire), submit a formal application through the Sultanate's apply page. The membership council reviews each applicant before elevation to Community standing.",
   },
   {
     q: "What are the membership tiers?",
-    a: "Membership progresses through clearly defined tiers — typically Initiate, Citizen, and Community member — with additional standing for those who hold office or lead trade circles. Each tier carries its own rights, responsibilities, and expectations within the Sultanate.",
+    a: "Membership progresses through four clearly defined tiers — Affiliate, Community, General, and Lead. Affiliate is the free entry standing. Community is the recognized dues-paying member with voting rights. General is the chapter-leadership tier within the Grand Body. Lead is senior operational leadership of a chartered body with a physical location. Each tier is earned through demonstrated standing.",
   },
   {
     q: "Is there a fee to join?",
-    a: "There is a one-time application and processing contribution required at the time of application. This covers administrative review, onboarding materials, and the initial enrollment of the new member into the Sultanate's rolls.",
+    a: "Affiliate standing is free — no application required, no dues. Community membership and above require monthly dues of $50, and General and Lead tiers carry an additional one-time charter registration fee. The application and orientation process itself involves no fee at the Affiliate level.",
   },
   {
     q: "What are monthly dues?",
-    a: "Members in good standing contribute modest monthly dues that fund the Uplifting Fund, member services, events, and the day-to-day operation of the Sultanate. Dues amounts scale with tier and are kept deliberately accessible.",
+    a: "Community, General, and Lead members contribute $50 per month, which funds the Uplifting Fund, member services, events, and the day-to-day operation of the Sultanate. Affiliate members pay no dues. Dues are kept deliberately accessible so that standing is determined by participation, not financial capacity.",
   },
   {
     q: "How long does it take to become a Community member?",
-    a: "The typical pathway from Initiate to Community member takes several months of consistent participation, attendance at meetings, and demonstrated alignment with Sultanate principles. There is no single fixed timeline — advancement reflects engagement, character, and standing.",
+    a: "The typical pathway from Affiliate to Community member requires at least 3 months of consistent meeting attendance, completion of orientation study (sacred texts and the Constitution), and approval by leadership. There is no single fixed timeline — advancement reflects engagement, character, and standing.",
   },
   {
     q: "Do I need to be Moorish American to attend meetings?",

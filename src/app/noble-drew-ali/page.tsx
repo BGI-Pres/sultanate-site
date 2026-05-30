@@ -2,30 +2,52 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Noble Drew Ali — The Prophet Who Rekindled the Light of Truth",
+  title:
+    "Noble Drew Ali — Prophet and Founder of the Moorish Science Temple of America",
   description:
-    "Noble Drew Ali, prophet of the Moorish Science Temple of America (MSTA), restored Moorish American nationality, the Nation of Moab lineage, and the foundation of the Sultanate of Amexem.",
+    "Noble Drew Ali (1886–1929), born Timothy Drew, was the prophet who founded the Moorish Science Temple of America and restored Moorish American nationality to the descendants of the Nation of Moab.",
   alternates: { canonical: "/noble-drew-ali" },
+  openGraph: {
+    title: "Noble Drew Ali — Prophet of the Moorish Science Temple of America",
+    description:
+      "The prophet who founded the Moorish Science Temple of America and restored Moorish American nationality to the descendants of the Nation of Moab.",
+    url: "https://www.sultanateofamexem.com/noble-drew-ali",
+    type: "profile",
+  },
 };
 
 const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Noble Drew Ali",
+  alternateName: ["Timothy Drew", "The Prophet Noble Drew Ali"],
   birthName: "Timothy Drew",
-  birthDate: "1886",
-  deathDate: "1929",
+  birthDate: "1886-01-08",
+  deathDate: "1929-07-20",
   description:
     "Prophet, founder of the Moorish Science Temple of America (MSTA), and restorer of Moorish American nationality. Taught that the so-called Negro was in fact Moorish American — a descendant of the ancient Nation of Moab.",
   jobTitle: "Prophet and Founder",
   affiliation: {
     "@type": "Organization",
     name: "Moorish Science Temple of America",
+    foundingDate: "1925",
+    founder: { "@type": "Person", name: "Noble Drew Ali" },
   },
-  foundingDate: "1925",
+  birthPlace: { "@type": "Place", name: "North Carolina, United States" },
+  deathPlace: { "@type": "Place", name: "Chicago, Illinois, United States" },
   nationality: { "@type": "Country", name: "United States" },
   sameAs: [
     "https://en.wikipedia.org/wiki/Noble_Drew_Ali",
+    "https://www.britannica.com/biography/Noble-Drew-Ali",
+  ],
+};
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://www.sultanateofamexem.com" },
+    { "@type": "ListItem", position: 2, name: "Noble Drew Ali", item: "https://www.sultanateofamexem.com/noble-drew-ali" },
   ],
 };
 
@@ -35,6 +57,10 @@ export default function NobleDrewAliPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       {/* ── Hero ── */}
       <section className="bg-[var(--dark-bg)] py-12 md:py-20 border-b-2 border-[var(--gold)]">
