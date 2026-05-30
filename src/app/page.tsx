@@ -139,12 +139,30 @@ export default function HomePage() {
             authority, and governance from within the membership.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-6 mt-6">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 mt-6">
             <Link
               href="/about"
               className="text-sm font-semibold text-[var(--gold)] hover:text-[var(--gold-dark)]"
             >
               Read Our Story
+            </Link>
+            <Link
+              href="/what-is-the-sultanate"
+              className="text-sm font-semibold text-[var(--gold)] hover:text-[var(--gold-dark)]"
+            >
+              What is the Sultanate?
+            </Link>
+            <Link
+              href="/moorish-american"
+              className="text-sm font-semibold text-[var(--gold)] hover:text-[var(--gold-dark)]"
+            >
+              Moorish American Identity
+            </Link>
+            <Link
+              href="/noble-drew-ali"
+              className="text-sm font-semibold text-[var(--gold)] hover:text-[var(--gold-dark)]"
+            >
+              Noble Drew Ali
             </Link>
             <Link
               href="/businesses"

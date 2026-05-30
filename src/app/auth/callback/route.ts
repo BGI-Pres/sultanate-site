@@ -2,10 +2,19 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
+// Only allow same-origin relative paths through ?next= to avoid open redirects
+// (e.g. ?next=//evil.com would otherwise bounce the user off-site).
+function safeNext(raw: string | null): string {
+  if (!raw) return "/portal";
+  if (!raw.startsWith("/")) return "/portal";
+  if (raw.startsWith("//") || raw.startsWith("/\\")) return "/portal";
+  return raw;
+}
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/portal";
+  const next = safeNext(searchParams.get("next"));
 
   if (code) {
     const cookieStore = await cookies();

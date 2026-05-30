@@ -19,6 +19,7 @@ const adminNav = [
   { href: "/portal/admin/finances", label: "Finances", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
   { href: "/portal/admin/rsvps", label: "RSVPs", icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" },
   { href: "/portal/admin/posts", label: "Posts", icon: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" },
+  { href: "/portal/admin/resources", label: "Resources", icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" },
   { href: "/portal/admin/content", label: "Content", icon: "M4 6h16M4 12h16M4 18h7" },
 ];
 
@@ -29,22 +30,47 @@ export default function PortalLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [authState, setAuthState] = useState<"loading" | "authed" | "anon">(
+    "loading",
+  );
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const isInAdminSection = pathname.startsWith("/portal/admin");
+
   useEffect(() => {
+    let cancelled = false;
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) return;
+      if (cancelled) return;
+      if (!data.user) {
+        // Bounce unauthenticated visitors to login, preserving where they were
+        // trying to go.
+        const redirectParam = encodeURIComponent(pathname);
+        router.replace(`/auth/login?redirect=${redirectParam}`);
+        setAuthState("anon");
+        return;
+      }
+      setAuthState("authed");
       supabase
         .from("members")
         .select("role")
         .eq("user_id", data.user.id)
         .maybeSingle()
         .then(({ data: member }) => {
-          if (member?.role === "admin") setIsAdmin(true);
+          if (cancelled) return;
+          const admin = member?.role === "admin";
+          setIsAdmin(admin);
+          // Non-admins should not see admin pages even though RLS protects the
+          // data — the UI looks broken otherwise.
+          if (isInAdminSection && !admin) {
+            router.replace("/portal");
+          }
         });
     });
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname, router, isInAdminSection]);
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -53,7 +79,13 @@ export default function PortalLayout({
     router.refresh();
   }
 
-  const isInAdminSection = pathname.startsWith("/portal/admin");
+  if (authState !== "authed") {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center text-sm text-[var(--gray-500)]">
+        {authState === "loading" ? "Loading…" : "Redirecting to sign in…"}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[80vh] bg-[var(--gray-50)]">

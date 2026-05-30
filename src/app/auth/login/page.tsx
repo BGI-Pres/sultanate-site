@@ -9,19 +9,24 @@ import { createClient } from "@/lib/supabase-client";
 function SocialButton({
   label,
   icon,
+  nextPath,
 }: {
   label: string;
   icon: React.ReactNode;
+  nextPath: string;
 }) {
   const [loading, setLoading] = useState(false);
 
   async function handleClick() {
     setLoading(true);
     const supabase = createClient();
+    // Forward the post-login destination through the OAuth callback so
+    // members land where they were originally trying to go.
+    const next = encodeURIComponent(nextPath);
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${next}`,
       },
     });
   }
@@ -38,13 +43,20 @@ function SocialButton({
   );
 }
 
+const AUTH_ERROR_COPY: Record<string, string> = {
+  auth_failed:
+    "Sign-in didn't complete. Please try again, or use email and password below.",
+};
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/portal";
+  const queryError = searchParams.get("error");
+  const initialError = queryError ? AUTH_ERROR_COPY[queryError] ?? "" : "";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(initialError);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: FormEvent) {
@@ -90,6 +102,7 @@ function LoginForm() {
       <div className="space-y-3 mb-6">
         <SocialButton
           label="Continue with Google"
+          nextPath={redirect}
           icon={
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
