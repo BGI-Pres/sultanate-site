@@ -30,22 +30,47 @@ export default function PortalLayout({
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [authState, setAuthState] = useState<"loading" | "authed" | "anon">(
+    "loading",
+  );
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const isInAdminSection = pathname.startsWith("/portal/admin");
+
   useEffect(() => {
+    let cancelled = false;
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
-      if (!data.user) return;
+      if (cancelled) return;
+      if (!data.user) {
+        // Bounce unauthenticated visitors to login, preserving where they were
+        // trying to go.
+        const redirectParam = encodeURIComponent(pathname);
+        router.replace(`/auth/login?redirect=${redirectParam}`);
+        setAuthState("anon");
+        return;
+      }
+      setAuthState("authed");
       supabase
         .from("members")
         .select("role")
         .eq("user_id", data.user.id)
         .maybeSingle()
         .then(({ data: member }) => {
-          if (member?.role === "admin") setIsAdmin(true);
+          if (cancelled) return;
+          const admin = member?.role === "admin";
+          setIsAdmin(admin);
+          // Non-admins should not see admin pages even though RLS protects the
+          // data — the UI looks broken otherwise.
+          if (isInAdminSection && !admin) {
+            router.replace("/portal");
+          }
         });
     });
-  }, []);
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname, router, isInAdminSection]);
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -54,7 +79,13 @@ export default function PortalLayout({
     router.refresh();
   }
 
-  const isInAdminSection = pathname.startsWith("/portal/admin");
+  if (authState !== "authed") {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center text-sm text-[var(--gray-500)]">
+        {authState === "loading" ? "Loading…" : "Redirecting to sign in…"}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[80vh] bg-[var(--gray-50)]">
