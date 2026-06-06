@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 /**
- * Form-submission notifications.
+ * Form-submission and decision notifications.
  *
  * Setup: provision a Resend account, verify a sending domain (or use the
  * temporary onboarding domain), then set these env vars in Vercel:
@@ -19,6 +19,7 @@ import { Resend } from "resend";
 const ADMIN_EMAILS = ["sultanateofamexem@gmail.com"];
 
 const FROM_DEFAULT = "Sultanate of Amexem <onboarding@resend.dev>";
+const SITE = "https://www.sultanateofamexem.com";
 
 type NotifyKind =
   | "membership_application"
@@ -31,7 +32,9 @@ type NotifyKind =
   | "commerce_application"
   | "venture_proposal"
   | "contact"
-  | "newsletter_signup";
+  | "newsletter_signup"
+  | "membership_approved"
+  | "membership_rejected";
 
 interface NotifyPayload {
   kind?: NotifyKind;
@@ -60,9 +63,11 @@ const SUBJECT_BY_KIND: Record<NotifyKind, (p: NotifyPayload) => string> = {
     `New Venture Proposal — ${p.details?.proposal_name ?? p.name ?? "Unknown"}`,
   contact: (p) => `Contact Form: ${p.details?.subject ?? "general"} — ${p.name ?? "Unknown"}`,
   newsletter_signup: (p) => `Newsletter signup — ${p.email ?? "Unknown"}`,
+  membership_approved: () => `Welcome to the Sultanate of Amexem`,
+  membership_rejected: () => `Update on your Sultanate of Amexem application`,
 };
 
-function renderBody(payload: NotifyPayload): { text: string; html: string } {
+function renderAdminBody(payload: NotifyPayload): { text: string; html: string } {
   const lines: string[] = [];
   if (payload.name) lines.push(`Name: ${payload.name}`);
   if (payload.email) lines.push(`Email: ${payload.email}`);
@@ -82,11 +87,78 @@ function renderBody(payload: NotifyPayload): { text: string; html: string } {
   return { text, html };
 }
 
+function renderApplicantBody(
+  kind: "membership_approved" | "membership_rejected",
+  payload: NotifyPayload,
+): { text: string; html: string } {
+  const name = payload.name?.split(" ")[0] || "Applicant";
+  const tier = payload.details?.tier;
+  const reason = payload.details?.decision_reason;
+
+  if (kind === "membership_approved") {
+    const tierLine = tier
+      ? `You have been accepted at the ${tier} tier of the Sultanate.`
+      : "You have been accepted as a member of the Sultanate.";
+
+    const text = [
+      `Greetings ${name},`,
+      "",
+      `Your application to the Sultanate of Amexem has been reviewed and approved. ${tierLine}`,
+      "",
+      "Next steps:",
+      `  1. Sign in to the member portal: ${SITE}/portal`,
+      "  2. Review the orientation materials and the Constitution.",
+      "  3. Attend the next Friday Holy Day Meeting (7:30 PM CST).",
+      tier && tier !== "Affiliate"
+        ? "  4. Monthly dues information is available on your dashboard."
+        : "",
+      "",
+      "Welcome to the body. Stand in your nationality.",
+      "",
+      "— The Sultanate of Amexem",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const html = textToHtml(text);
+    return { text, html };
+  }
+
+  // Rejection
+  const reasonBlock = reason
+    ? `\nThe review noted: "${reason}"\n`
+    : "";
+
+  const text = [
+    `Greetings ${name},`,
+    "",
+    "Thank you for submitting your application to the Sultanate of Amexem. After careful review, your application is not approved at this time.",
+    reasonBlock,
+    "You are welcome to continue attending Friday meetings as an Affiliate, complete the orientation study, and reapply when you feel called to do so. The path remains open.",
+    "",
+    `Membership details: ${SITE}/citizenship`,
+    "",
+    "— The Sultanate of Amexem",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { text, html: textToHtml(text) };
+}
+
+function textToHtml(s: string): string {
+  return `<div style="font: 15px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #111; max-width: 560px;">${escapeHtml(s).replace(/\n/g, "<br>")}</div>`;
+}
+
 function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
+}
+
+function isValidEmail(e: string | undefined | null): e is string {
+  return typeof e === "string" && /.+@.+\..+/.test(e);
 }
 
 export async function POST(request: Request) {
@@ -100,24 +172,81 @@ export async function POST(request: Request) {
   const kind: NotifyKind = payload.kind ?? "membership_application";
   const subjectFn = SUBJECT_BY_KIND[kind] ?? SUBJECT_BY_KIND.membership_application;
   const subject = subjectFn(payload);
-  const { text, html } = renderBody(payload);
 
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.NOTIFY_FROM ?? FROM_DEFAULT;
-  const replyTo = payload.email && /.+@.+\..+/.test(payload.email) ? payload.email : undefined;
+
+  // Decision emails: send to applicant + admin FYI copy.
+  // Everything else: admin notification only.
+  const isDecision = kind === "membership_approved" || kind === "membership_rejected";
 
   if (!apiKey) {
     console.warn(
       `[notify] RESEND_API_KEY not set — skipping email send. Subject was: "${subject}"`,
     );
-    console.log(`[notify] Would send to: ${ADMIN_EMAILS.join(", ")}`);
-    console.log(`[notify] Body:\n${text}`);
-    // Return 200 so the client-side form flow still treats this as success.
     return Response.json({ ok: true, sent: false, reason: "no_api_key" });
   }
 
+  const resend = new Resend(apiKey);
+
   try {
-    const resend = new Resend(apiKey);
+    if (isDecision) {
+      const applicantEmail = payload.email;
+      if (!isValidEmail(applicantEmail)) {
+        return Response.json(
+          { ok: false, sent: false, error: "invalid_applicant_email" },
+          { status: 400 },
+        );
+      }
+
+      const applicantBody = renderApplicantBody(
+        kind as "membership_approved" | "membership_rejected",
+        payload,
+      );
+      const adminBody = renderAdminBody(payload);
+      const adminSubject =
+        kind === "membership_approved"
+          ? `Application APPROVED — ${payload.name ?? applicantEmail}`
+          : `Application REJECTED — ${payload.name ?? applicantEmail}`;
+
+      const [applicantResult, adminResult] = await Promise.all([
+        resend.emails.send({
+          from,
+          to: [applicantEmail],
+          subject,
+          text: applicantBody.text,
+          html: applicantBody.html,
+          replyTo: ADMIN_EMAILS[0],
+        }),
+        resend.emails.send({
+          from,
+          to: ADMIN_EMAILS,
+          subject: adminSubject,
+          text: adminBody.text,
+          html: adminBody.html,
+          replyTo: applicantEmail,
+        }),
+      ]);
+
+      const errors = [applicantResult.error, adminResult.error].filter(Boolean);
+      if (errors.length > 0) {
+        console.error("[notify] resend error", errors);
+        return Response.json(
+          { ok: false, sent: false, error: errors.map((e) => e?.message).join("; ") },
+          { status: 502 },
+        );
+      }
+      return Response.json({
+        ok: true,
+        sent: true,
+        applicantId: applicantResult.data?.id,
+        adminId: adminResult.data?.id,
+      });
+    }
+
+    // Standard form notification: admin only.
+    const { text, html } = renderAdminBody(payload);
+    const replyTo = isValidEmail(payload.email) ? payload.email : undefined;
     const result = await resend.emails.send({
       from,
       to: ADMIN_EMAILS,
