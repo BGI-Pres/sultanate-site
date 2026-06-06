@@ -56,7 +56,10 @@ export default function ApplicationsPage() {
   );
   const [rows, setRows] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  // Default to pending so decided applications (approved / rejected /
+  // completed) drop out of the inbox view. The data is preserved in the DB —
+  // admin can switch the filter to view decided items.
+  const [statusFilter, setStatusFilter] = useState<string>("pending");
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [decisionModal, setDecisionModal] = useState<DecisionModalState>(null);
