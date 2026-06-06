@@ -189,6 +189,11 @@ export default function CertifyPage() {
       data: { user },
     } = await supabase.auth.getUser().catch(() => ({ data: { user: null } }));
 
+    // The DB constrains certification_type to 'existing' | 'new'; the UI
+    // keeps friendlier labels.
+    const certTypeForDb =
+      certType.startsWith("Form a new") ? "new" : "existing";
+
     const { error: insertError } = await supabase
       .from("certifications")
       .insert({
@@ -197,7 +202,7 @@ export default function CertifyPage() {
         applicant_email: applicantEmail,
         membership_id: membershipId || null,
         member_duration: memberDuration || null,
-        certification_type: certType,
+        certification_type: certTypeForDb,
         business_name: businessName,
         business_type: businessType || null,
         ein: ein || null,
@@ -230,9 +235,13 @@ export default function CertifyPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        kind: "business_certification",
         name: applicantName,
         email: applicantEmail,
-        surnamePref: `Business: ${businessName}`,
+        details: {
+          business_name: businessName,
+          certification_type: certType,
+        },
       }),
     });
 

@@ -11,11 +11,21 @@ export default function WelcomePage() {
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => {
+      const user = data.user;
       setName(
-        data.user?.user_metadata?.full_name ||
-          data.user?.email?.split("@")[0] ||
+        user?.user_metadata?.full_name ||
+          user?.email?.split("@")[0] ||
           "Member"
       );
+      if (user) {
+        // Self-clear the layout's first-visit redirect rule so subsequent
+        // /portal visits skip welcome.
+        supabase
+          .from("members")
+          .update({ has_seen_welcome: true })
+          .eq("user_id", user.id)
+          .then(() => undefined);
+      }
     });
   }, []);
 

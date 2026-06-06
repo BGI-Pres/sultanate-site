@@ -171,8 +171,14 @@ export default function CooperativeVenturesPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          kind: "cooperative_application",
           name: applicantName.trim(),
           email: applicantEmail.trim(),
+          details: {
+            venture_name: ventureName.trim(),
+            intent,
+            venture_type: intent === "propose" ? ventureType || null : null,
+          },
         }),
       });
 

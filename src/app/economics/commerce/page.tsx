@@ -103,7 +103,16 @@ export default function CommercePage() {
     fetch("/api/notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: contactName, email: contactEmail }),
+      body: JSON.stringify({
+        kind: "commerce_application",
+        name: contactName,
+        email: contactEmail,
+        details: {
+          business_name: businessName,
+          application_type: applicationType,
+          business_type: businessType || null,
+        },
+      }),
     });
 
     trackEvent("commerce_application_submitted", {

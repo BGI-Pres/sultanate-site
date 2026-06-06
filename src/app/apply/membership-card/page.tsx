@@ -197,9 +197,13 @@ export default function MembershipCardPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        kind: "membership_card",
         name: fullName,
         email,
-        surnamePref: `Card Request: ${reason}`,
+        details: {
+          reason,
+          membership_tier: membershipTier,
+        },
       }),
     });
 

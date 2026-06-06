@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Suspense, useState, type FormEvent } from "react";
+import { Suspense, useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
+import { safeRelativePath } from "@/lib/auth";
 
 function SocialButton({
   label,
@@ -51,13 +52,24 @@ const AUTH_ERROR_COPY: Record<string, string> = {
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/portal";
+  // Validate the redirect target — the password path uses it for router.push
+  // and the OAuth path forwards it through the callback. Both must reject
+  // off-origin targets to prevent open-redirect attacks.
+  const redirect = safeRelativePath(searchParams.get("redirect"));
   const queryError = searchParams.get("error");
   const initialError = queryError ? AUTH_ERROR_COPY[queryError] ?? "" : "";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(initialError);
   const [loading, setLoading] = useState(false);
+
+  // Already signed in? Skip the form.
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) router.replace(redirect);
+    });
+  }, [router, redirect]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

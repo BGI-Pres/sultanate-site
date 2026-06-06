@@ -286,11 +286,15 @@ export default function MembersPage() {
     notes?: string;
   }) {
     const supabase = createClient();
+    // Trim + lowercase so the row matches the unique(lower(email)) index and
+    // so the auth trigger's email-based claim links correctly when the
+    // member later signs in with Google.
+    const normalizedEmail = input.email.trim().toLowerCase();
     const { data, error } = await supabase
       .from("members")
       .insert({
         full_name: input.full_name,
-        email: input.email,
+        email: normalizedEmail,
         phone: input.phone || null,
         tier: input.tier,
         status: input.status,

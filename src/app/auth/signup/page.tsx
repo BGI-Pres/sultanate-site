@@ -2,16 +2,26 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Already signed in? Skip the form.
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) router.replace("/portal");
+    });
+  }, [router]);
 
   async function handleGoogleSignup() {
     const supabase = createClient();

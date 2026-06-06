@@ -21,6 +21,16 @@ export default function ContactForm() {
         .from("contact_submissions")
         .insert({ name, email, subject, message });
       if (!error) {
+        fetch("/api/notify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            kind: "contact",
+            name,
+            email,
+            details: { subject, message },
+          }),
+        });
         setSubmitted(true);
       }
     } catch {

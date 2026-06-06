@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { signOutAndRedirect } from "@/lib/auth";
 
 const memberNav = [
   { href: "/portal", label: "Dashboard", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
@@ -53,7 +54,7 @@ export default function PortalLayout({
       setAuthState("authed");
       supabase
         .from("members")
-        .select("role")
+        .select("role, has_seen_welcome")
         .eq("user_id", data.user.id)
         .maybeSingle()
         .then(({ data: member }) => {
@@ -64,6 +65,18 @@ export default function PortalLayout({
           // data — the UI looks broken otherwise.
           if (isInAdminSection && !admin) {
             router.replace("/portal");
+            return;
+          }
+          // First-time visit: route brand-new members through the welcome
+          // page once. Only triggers when landing exactly on /portal so the
+          // member can still navigate away from welcome and explore.
+          if (
+            member &&
+            !admin &&
+            !member.has_seen_welcome &&
+            pathname === "/portal"
+          ) {
+            router.replace("/portal/welcome");
           }
         });
     });
@@ -73,10 +86,7 @@ export default function PortalLayout({
   }, [pathname, router, isInAdminSection]);
 
   async function handleSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
+    await signOutAndRedirect(router);
   }
 
   if (authState !== "authed") {

@@ -73,7 +73,15 @@ function EventCard({
       await fetch("/api/notify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email }),
+        body: JSON.stringify({
+          kind: "event_rsvp",
+          name,
+          email,
+          details: {
+            event_name: event.title,
+            phone: phone || null,
+          },
+        }),
       });
 
       trackEvent("event_rsvp", { event_name: event.title });
