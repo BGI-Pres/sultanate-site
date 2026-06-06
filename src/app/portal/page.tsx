@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
+import { signOutAndRedirect } from "@/lib/auth";
 import { trackSquareClick } from "@/lib/analytics";
 import type { User } from "@supabase/supabase-js";
 
@@ -58,10 +59,7 @@ export default function PortalDashboard() {
 
   async function handleSignOut() {
     setSigningOut(true);
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
+    await signOutAndRedirect(router);
   }
 
   useEffect(() => {

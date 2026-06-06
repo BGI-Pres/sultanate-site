@@ -1,20 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-
-// Only allow same-origin relative paths through ?next= to avoid open redirects
-// (e.g. ?next=//evil.com would otherwise bounce the user off-site).
-function safeNext(raw: string | null): string {
-  if (!raw) return "/portal";
-  if (!raw.startsWith("/")) return "/portal";
-  if (raw.startsWith("//") || raw.startsWith("/\\")) return "/portal";
-  return raw;
-}
+import { safeRelativePath } from "@/lib/auth";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
-  const next = safeNext(searchParams.get("next"));
+  const next = safeRelativePath(searchParams.get("next"));
 
   if (code) {
     const cookieStore = await cookies();
@@ -41,5 +33,10 @@ export async function GET(request: Request) {
     }
   }
 
-  return NextResponse.redirect(`${origin}/auth/login?error=auth_failed`);
+  // Preserve the original destination across the failure so the user lands
+  // where they intended after a retry.
+  const loginUrl = new URL("/auth/login", origin);
+  loginUrl.searchParams.set("error", "auth_failed");
+  if (next !== "/portal") loginUrl.searchParams.set("redirect", next);
+  return NextResponse.redirect(loginUrl);
 }

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
+import { signOutAndRedirect } from "@/lib/auth";
 
 const navLinks = [
   { href: "/about", label: "About" },
@@ -39,11 +40,8 @@ export default function Header() {
 
   async function handleSignOut() {
     setSigningOut(true);
-    const supabase = createClient();
-    await supabase.auth.signOut();
     setMobileOpen(false);
-    router.push("/");
-    router.refresh();
+    await signOutAndRedirect(router);
   }
 
   function handleSearchKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
