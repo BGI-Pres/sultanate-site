@@ -266,7 +266,12 @@ export default function ApplyPage() {
     fetch("/api/notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: fullName, email, surnamePref }),
+      body: JSON.stringify({
+        kind: "membership_application",
+        name: fullName,
+        email,
+        details: { surname_preference: surnamePref },
+      }),
     });
 
     trackEvent("membership_application_submitted", { tier: "applicant" });

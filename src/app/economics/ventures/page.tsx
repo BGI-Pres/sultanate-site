@@ -149,8 +149,14 @@ export default function VenturesPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          kind: "venture_proposal",
           name: proposerName.trim(),
           email: proposerEmail.trim(),
+          details: {
+            proposal_name: proposalName.trim(),
+            institution_type: institutionType,
+            target_community: targetCommunity.trim(),
+          },
         }),
       });
 

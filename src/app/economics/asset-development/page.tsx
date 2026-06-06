@@ -120,7 +120,12 @@ export default function AssetDevelopmentPage() {
       fetch("/api/notify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim() }),
+        body: JSON.stringify({
+          kind: "asset_inquiry",
+          name: name.trim(),
+          email: email.trim(),
+          details: { inquiry_type: inquiryType },
+        }),
       });
 
       trackEvent("asset_inquiry_submitted", { inquiry_type: inquiryType });

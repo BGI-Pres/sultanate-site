@@ -85,7 +85,17 @@ export default function ProfessionalServicesPage() {
       fetch("/api/notify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: contactName, email: contactEmail }),
+        body: JSON.stringify({
+          kind: "service_application",
+          name: contactName,
+          email: contactEmail,
+          details: {
+            provider_name: providerName,
+            application_type: applicationType,
+            profession,
+            service_area: serviceArea,
+          },
+        }),
       });
 
       trackEvent("service_application_submitted");

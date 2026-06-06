@@ -230,9 +230,13 @@ export default function CertifyPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        kind: "business_certification",
         name: applicantName,
         email: applicantEmail,
-        surnamePref: `Business: ${businessName}`,
+        details: {
+          business_name: businessName,
+          certification_type: certType,
+        },
       }),
     });
 
