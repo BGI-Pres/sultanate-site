@@ -34,7 +34,8 @@ type NotifyKind =
   | "contact"
   | "newsletter_signup"
   | "membership_approved"
-  | "membership_rejected";
+  | "membership_rejected"
+  | "enrollment_invite";
 
 interface NotifyPayload {
   kind?: NotifyKind;
@@ -65,6 +66,8 @@ const SUBJECT_BY_KIND: Record<NotifyKind, (p: NotifyPayload) => string> = {
   newsletter_signup: (p) => `Newsletter signup — ${p.email ?? "Unknown"}`,
   membership_approved: () => `Welcome to the Sultanate of Amexem`,
   membership_rejected: () => `Update on your Sultanate of Amexem application`,
+  enrollment_invite: (p) =>
+    `You have been invited to the Sultanate of Amexem${p.details?.invited_by_name ? ` by ${p.details.invited_by_name}` : ""}`,
 };
 
 function renderAdminBody(payload: NotifyPayload): { text: string; html: string } {
@@ -146,6 +149,33 @@ function renderApplicantBody(
   return { text, html: textToHtml(text) };
 }
 
+function renderInviteBody(payload: NotifyPayload): { text: string; html: string } {
+  const name = payload.name?.split(" ")[0] || "Friend";
+  const inviter = payload.details?.invited_by_name || "the Sultanate";
+  const code = payload.details?.code || "";
+  const message = payload.details?.inviter_message;
+  const link = code ? `${SITE}/enroll/${code}` : `${SITE}/enroll`;
+
+  const messageBlock = message ? `\nA word from ${inviter}:\n"${message}"\n` : "";
+
+  const text = [
+    `Greetings ${name},`,
+    "",
+    `${inviter} has invited you to enroll in the Sultanate of Amexem — the custodial governing authority for the descendants of the Nation of Moab, modernly identified as Moorish American.`,
+    messageBlock,
+    `Open your personal invitation:`,
+    link,
+    "",
+    "This link is yours alone. It opens a private landing page where you can review the Sultanate's mission, the five principles, and submit your enrollment application.",
+    "",
+    "— The Sultanate of Amexem",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { text, html: textToHtml(text) };
+}
+
 function textToHtml(s: string): string {
   return `<div style="font: 15px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #111; max-width: 560px;">${escapeHtml(s).replace(/\n/g, "<br>")}</div>`;
 }
@@ -177,8 +207,10 @@ export async function POST(request: Request) {
   const from = process.env.NOTIFY_FROM ?? FROM_DEFAULT;
 
   // Decision emails: send to applicant + admin FYI copy.
+  // Enrollment invites: send to invitee only (the inviter doesn't need an FYI).
   // Everything else: admin notification only.
   const isDecision = kind === "membership_approved" || kind === "membership_rejected";
+  const isInvite = kind === "enrollment_invite";
 
   if (!apiKey) {
     console.warn(
@@ -242,6 +274,30 @@ export async function POST(request: Request) {
         applicantId: applicantResult.data?.id,
         adminId: adminResult.data?.id,
       });
+    }
+
+    if (isInvite) {
+      const inviteeEmail = payload.email;
+      if (!isValidEmail(inviteeEmail)) {
+        return Response.json(
+          { ok: false, sent: false, error: "invalid_invitee_email" },
+          { status: 400 },
+        );
+      }
+      const { text, html } = renderInviteBody(payload);
+      const result = await resend.emails.send({
+        from,
+        to: [inviteeEmail],
+        subject,
+        text,
+        html,
+        replyTo: ADMIN_EMAILS[0],
+      });
+      if (result.error) {
+        console.error("[notify] resend error", result.error);
+        return Response.json({ ok: false, sent: false, error: result.error.message }, { status: 502 });
+      }
+      return Response.json({ ok: true, sent: true, id: result.data?.id });
     }
 
     // Standard form notification: admin only.

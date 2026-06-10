@@ -211,7 +211,7 @@ export default function EnrollmentForm({
         }),
       });
 
-      trackEvent("membership_application_submitted", { tier: "invite", inviter: inviter || null });
+      trackEvent("membership_application_submitted", { tier: "invite", inviter: inviter || undefined });
       setSubmitted(true);
     } catch {
       setError("There was an issue submitting your application. Please try again.");
