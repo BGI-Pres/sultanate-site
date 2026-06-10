@@ -32,14 +32,14 @@ const STATUS_META: Record<
   string,
   { label: string; class: string }
 > = {
-  sent:      { label: "Sent",      class: "bg-gray-100 text-gray-700" },
-  opened:    { label: "Opened",    class: "bg-[#C5A55A]/15 text-[#A8893E]" },
-  started:   { label: "Started",   class: "bg-blue-50 text-blue-700" },
-  completed: { label: "Completed", class: "bg-[#2D5A27]/15 text-[#1E3D1A]" },
-  accepted:  { label: "Accepted",  class: "bg-[#C5A55A]/15 text-[#A8893E]" },
-  bounced:   { label: "Bounced",   class: "bg-red-50 text-red-700" },
-  expired:   { label: "Expired",   class: "bg-gray-100 text-gray-500" },
-  revoked:   { label: "Revoked",   class: "bg-gray-200 text-gray-600 line-through" },
+  sent:      { label: "Sent",      class: "bg-[var(--gray-100)] text-[var(--gray-700)] ring-1 ring-[var(--gray-200)]" },
+  opened:    { label: "Opened",    class: "bg-[var(--gold)]/12 text-[var(--gold-dark)] ring-1 ring-[var(--gold)]/30" },
+  started:   { label: "Started",   class: "bg-[#2f6aa8]/10 text-[#2f6aa8] ring-1 ring-[#2f6aa8]/25" },
+  completed: { label: "Completed", class: "bg-[var(--forest-green)]/12 text-[var(--forest-green-dark)] ring-1 ring-[var(--forest-green)]/30" },
+  accepted:  { label: "Accepted",  class: "bg-[var(--gold)]/15 text-[var(--gold-dark)] ring-1 ring-[var(--gold)]/35" },
+  bounced:   { label: "Bounced",   class: "bg-[var(--cherry-red)]/10 text-[var(--cherry-red-dark)] ring-1 ring-[var(--cherry-red)]/25" },
+  expired:   { label: "Expired",   class: "bg-[var(--gray-100)] text-[var(--gray-500)] ring-1 ring-[var(--gray-200)]" },
+  revoked:   { label: "Revoked",   class: "bg-[var(--gray-200)] text-[var(--gray-700)] line-through ring-1 ring-[var(--gray-300)]" },
 };
 
 function fmt(dt: string | null | undefined) {
@@ -262,23 +262,32 @@ export default function AdminInvitesPage() {
 
   return (
     <div>
-      <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+      <div className="flex flex-wrap items-end justify-between gap-4 pb-5 mb-6 border-b border-[var(--gray-200)] relative">
+        <span className="absolute left-0 right-0 -bottom-px h-px bg-[linear-gradient(90deg,transparent,var(--gold),transparent)]" />
         <div>
-          <h1 className="text-2xl font-bold text-[var(--gray-900)]">Invite Hub</h1>
-          <p className="text-[var(--gray-500)] mt-1 text-sm">
-            Send personal enrollment invitations and track their progress
+          <div className="flex items-center gap-3 mb-2">
+            <span className="h-px w-8 bg-[var(--gold)]" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--gold-dark)]">
+              Member Acquisition
+            </span>
+          </div>
+          <h1 className="text-3xl font-bold text-[var(--gray-900)] tracking-tight">
+            Invite <span className="italic font-normal text-[var(--gold-dark)]" style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif' }}>Hub</span>
+          </h1>
+          <p className="text-[var(--gray-500)] mt-1.5 text-sm max-w-lg">
+            Send personal enrollment invitations and track their progress through the funnel.
           </p>
         </div>
         <button
           onClick={() => setComposeOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm bg-[var(--dark-bg)] text-[var(--gold)] rounded-md hover:bg-black"
+          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold bg-[var(--dark-bg)] text-[var(--gold)] rounded-md hover:bg-black transition-colors shadow-[0_4px_18px_-6px_rgba(15,26,14,0.35)]"
         >
-          + New Invitation
+          <span className="text-base leading-none">+</span> New Invitation
         </button>
       </div>
 
       {/* Funnel */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-7">
         <FunnelCell label="Sent" num={funnel.total} sub={`${funnel.delivered} delivered`} accent="#1E3D1A" />
         <FunnelCell
           label="Opened"
@@ -296,7 +305,8 @@ export default function AdminInvitesPage() {
           label="Completed"
           num={funnel.completed}
           sub={`${funnel.pct(funnel.completed, funnel.delivered)}% conversion`}
-          accent="#2D5A27"
+          accent="#C5A55A"
+          highlight
         />
       </div>
 
@@ -337,61 +347,61 @@ export default function AdminInvitesPage() {
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-[var(--gray-200)] overflow-hidden">
+        <div className="bg-white rounded-lg border border-[var(--gray-200)] overflow-hidden shadow-[0_1px_0_rgba(0,0,0,0.02)]">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[var(--gray-50)] border-b border-[var(--gray-200)]">
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Invitee</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Code</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Status</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Inviter</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Sent</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Last activity</th>
-                  <th className="text-right px-4 py-3 font-medium text-[var(--gray-700)]">Actions</th>
+                  <th className="text-left px-4 py-3 text-[10px] uppercase tracking-[0.14em] font-semibold text-[var(--gray-500)]">Invitee</th>
+                  <th className="text-left px-4 py-3 text-[10px] uppercase tracking-[0.14em] font-semibold text-[var(--gray-500)]">Code</th>
+                  <th className="text-left px-4 py-3 text-[10px] uppercase tracking-[0.14em] font-semibold text-[var(--gray-500)]">Status</th>
+                  <th className="text-left px-4 py-3 text-[10px] uppercase tracking-[0.14em] font-semibold text-[var(--gray-500)]">Inviter</th>
+                  <th className="text-left px-4 py-3 text-[10px] uppercase tracking-[0.14em] font-semibold text-[var(--gray-500)]">Sent</th>
+                  <th className="text-left px-4 py-3 text-[10px] uppercase tracking-[0.14em] font-semibold text-[var(--gray-500)]">Last activity</th>
+                  <th className="text-right px-4 py-3 text-[10px] uppercase tracking-[0.14em] font-semibold text-[var(--gray-500)]">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map((inv) => (
                   <tr
                     key={inv.id}
-                    className="border-b border-[var(--gray-100)] hover:bg-[var(--gray-50)] cursor-pointer"
+                    className="border-b border-[var(--gray-100)] last:border-b-0 hover:bg-[var(--gold)]/[0.04] cursor-pointer transition-colors"
                     onClick={() => setActive(inv)}
                   >
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5">
                       <div className="font-medium text-[var(--gray-900)]">{inv.name}</div>
                       <div className="text-xs text-[var(--gray-500)]">{inv.email}</div>
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-[var(--gray-700)]">
+                    <td className="px-4 py-3.5 font-mono text-xs text-[var(--gold-dark)] tracking-tight">
                       {inv.code}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5">
                       <StatusPill status={effectiveStatus(inv)} />
                     </td>
-                    <td className="px-4 py-3 text-[var(--gray-500)] text-xs">
+                    <td className="px-4 py-3.5 text-[var(--gray-500)] text-xs">
                       {inv.invited_by_name ?? "—"}
                     </td>
-                    <td className="px-4 py-3 text-[var(--gray-500)] text-xs whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-[var(--gray-500)] text-xs whitespace-nowrap">
                       {fmt(inv.sent_at)}
                     </td>
-                    <td className="px-4 py-3 text-[var(--gray-500)] text-xs whitespace-nowrap">
+                    <td className="px-4 py-3.5 text-[var(--gray-500)] text-xs whitespace-nowrap">
                       {ago(inv.last_activity)}
                     </td>
                     <td
-                      className="px-4 py-3 text-right"
+                      className="px-4 py-3.5 text-right whitespace-nowrap"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <button
                         onClick={() => resendInvite(inv)}
                         disabled={!!inv.revoked_at}
-                        className="text-xs px-2 py-1 rounded border border-[var(--gray-300)] hover:bg-[var(--gray-50)] mr-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                        className="text-xs px-2.5 py-1.5 rounded-md border border-[var(--gray-300)] text-[var(--gray-700)] hover:bg-white hover:border-[var(--gold)]/40 hover:text-[var(--gold-dark)] mr-1.5 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                         title={inv.revoked_at ? "Revoked — cannot resend" : "Resend (1h cooldown)"}
                       >
                         Resend
                       </button>
                       <button
                         onClick={() => setActive(inv)}
-                        className="text-xs px-2 py-1 rounded bg-[var(--dark-bg)] text-[var(--gold)]"
+                        className="text-xs px-2.5 py-1.5 rounded-md bg-[var(--dark-bg)] text-[var(--gold)] hover:bg-black transition-colors"
                       >
                         View
                       </button>
@@ -437,10 +447,16 @@ export default function AdminInvitesPage() {
 
       {toast && (
         <div
-          className={`fixed bottom-6 right-6 px-4 py-3 rounded-md shadow-lg text-sm z-50 ${
-            toast.kind === "ok" ? "bg-green-600 text-white" : "bg-red-600 text-white"
+          className={`fixed bottom-6 right-6 px-4 py-3 rounded-md shadow-[0_18px_50px_-10px_rgba(0,0,0,0.35)] text-sm z-50 flex items-center gap-2 ${
+            toast.kind === "ok"
+              ? "bg-[var(--forest-green-dark)] text-white"
+              : "bg-[var(--cherry-red)] text-white"
           }`}
         >
+          <span
+            className="w-1.5 h-1.5 rounded-full"
+            style={{ background: toast.kind === "ok" ? "var(--gold)" : "white" }}
+          />
           {toast.msg}
         </div>
       )}
@@ -464,22 +480,40 @@ function FunnelCell({
   num,
   sub,
   accent,
+  highlight = false,
 }: {
   label: string;
   num: number;
   sub: string;
   accent: string;
+  highlight?: boolean;
 }) {
   return (
-    <div className="bg-white rounded-lg border border-[var(--gray-200)] p-4">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--gray-500)]">
+    <div
+      className={`relative bg-white rounded-lg border border-[var(--gray-200)] p-5 overflow-hidden transition-shadow hover:shadow-[0_18px_40px_-28px_rgba(15,26,14,0.35)] ${
+        highlight ? "ring-1 ring-[var(--gold)]/30" : ""
+      }`}
+    >
+      <span
+        className="absolute inset-x-0 top-0 h-[3px]"
+        style={{ background: accent }}
+      />
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-[10px] uppercase tracking-[0.16em] font-semibold text-[var(--gray-500)]">
           {label}
         </span>
-        <span className="w-2 h-2 rounded-full" style={{ background: accent }} />
+        <span
+          className="w-1.5 h-1.5 rounded-full"
+          style={{ background: accent }}
+        />
       </div>
-      <div className="text-2xl font-bold text-[var(--gray-900)]">{num}</div>
-      <div className="text-xs text-[var(--gray-500)] mt-1">{sub}</div>
+      <div
+        className={`text-4xl leading-none ${highlight ? "text-[var(--gold-dark)]" : "text-[var(--gray-900)]"}`}
+        style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontWeight: 600 }}
+      >
+        {num}
+      </div>
+      <div className="text-xs text-[var(--gray-500)] mt-2 leading-tight">{sub}</div>
     </div>
   );
 }
@@ -551,13 +585,27 @@ function ComposeModal({
     "w-full px-3 py-2 text-sm border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/40";
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden">
-        <header className="px-6 py-4 border-b border-[var(--gray-200)] flex items-center justify-between">
-          <h2 className="text-lg font-bold text-[var(--gray-900)]">Send invitation</h2>
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-[var(--dark-bg)]/55 backdrop-blur-[2px]">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+        <div className="h-1 bg-[linear-gradient(90deg,transparent,var(--gold),transparent)]" />
+        <header className="px-6 pt-5 pb-4 border-b border-[var(--gray-200)] flex items-start justify-between">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="h-px w-6 bg-[var(--gold)]" />
+              <span className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--gold-dark)]">
+                New Invitation
+              </span>
+            </div>
+            <h2
+              className="text-xl text-[var(--gray-900)]"
+              style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 500 }}
+            >
+              Send invitation
+            </h2>
+          </div>
           <button
             onClick={onClose}
-            className="text-[var(--gray-500)] hover:text-[var(--gray-900)] text-xl leading-none"
+            className="text-[var(--gray-500)] hover:text-[var(--gray-900)] text-2xl leading-none -mt-1"
           >
             ×
           </button>
@@ -673,12 +721,24 @@ function LinkOnlyModal({
   }
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden">
-        <header className="px-6 py-4 border-b border-[var(--gray-200)]">
-          <h2 className="text-lg font-bold text-[var(--gray-900)]">Invitation link ready</h2>
-          <p className="text-xs text-[var(--gray-500)] mt-1">
-            For {invite.name} · {invite.email} · no email was sent.
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-[var(--dark-bg)]/55 backdrop-blur-[2px]">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden">
+        <div className="h-1 bg-[linear-gradient(90deg,transparent,var(--gold),transparent)]" />
+        <header className="px-6 pt-5 pb-4 border-b border-[var(--gray-200)]">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="h-px w-6 bg-[var(--gold)]" />
+            <span className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--gold-dark)]">
+              Invitation Created
+            </span>
+          </div>
+          <h2
+            className="text-xl text-[var(--gray-900)]"
+            style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 500 }}
+          >
+            Invitation link ready
+          </h2>
+          <p className="text-xs text-[var(--gray-500)] mt-1.5">
+            For <span className="text-[var(--gray-700)]">{invite.name}</span> · {invite.email} · no email was sent.
           </p>
         </header>
         <div className="px-6 py-5 space-y-3">
@@ -743,16 +803,28 @@ function InviteDrawer({
 
   return (
     <div className="fixed inset-0 z-40 flex">
-      <div className="flex-1 bg-black/40" onClick={onClose} />
+      <div className="flex-1 bg-[var(--dark-bg)]/55 backdrop-blur-[2px]" onClick={onClose} />
       <aside className="w-full max-w-lg bg-white shadow-2xl flex flex-col overflow-hidden">
-        <header className="px-6 py-4 border-b border-[var(--gray-200)] flex items-center justify-between">
+        <div className="h-1 bg-[linear-gradient(90deg,transparent,var(--gold),transparent)]" />
+        <header className="px-6 pt-5 pb-4 border-b border-[var(--gray-200)] flex items-start justify-between">
           <div>
-            <h2 className="text-lg font-bold text-[var(--gray-900)]">{invite.name}</h2>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="h-px w-6 bg-[var(--gold)]" />
+              <span className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--gold-dark)]">
+                Invitation
+              </span>
+            </div>
+            <h2
+              className="text-xl text-[var(--gray-900)]"
+              style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 500 }}
+            >
+              {invite.name}
+            </h2>
             <p className="text-xs text-[var(--gray-500)] mt-0.5">{invite.email}</p>
           </div>
           <button
             onClick={onClose}
-            className="text-[var(--gray-500)] hover:text-[var(--gray-900)] text-xl leading-none"
+            className="text-[var(--gray-500)] hover:text-[var(--gray-900)] text-2xl leading-none -mt-1"
           >
             ×
           </button>
@@ -776,7 +848,7 @@ function InviteDrawer({
           </div>
 
           <section>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--gray-500)] mb-2">
+            <h3 className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--gold-dark)] mb-3 flex items-center gap-2 before:content-[''] before:h-px before:w-5 before:bg-[var(--gold)]">
               Invitation link
             </h3>
             <div className="flex items-center gap-2">
@@ -800,13 +872,22 @@ function InviteDrawer({
           </section>
 
           <section>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--gray-500)] mb-3">
+            <h3 className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--gold-dark)] mb-4 flex items-center gap-2 before:content-[''] before:h-px before:w-5 before:bg-[var(--gold)]">
               Timeline
             </h3>
-            <ol className="space-y-2">
-              {timeline.map((e) => (
-                <li key={e.label} className="flex items-center gap-3 text-sm">
-                  <span className="w-2 h-2 rounded-full bg-[#2D5A27]" />
+            <ol className="space-y-2.5 relative pl-1">
+              {timeline.map((e, idx) => (
+                <li key={e.label} className="flex items-center gap-3 text-sm relative">
+                  <span
+                    className={`w-2 h-2 rounded-full ring-2 ring-white ${
+                      e.label === "Revoked"
+                        ? "bg-[var(--cherry-red)]"
+                        : "bg-[var(--gold)]"
+                    }`}
+                  />
+                  {idx < timeline.length - 1 && (
+                    <span className="absolute left-[3px] top-4 w-px h-3 bg-[var(--gold)]/30" />
+                  )}
                   <span className="font-medium text-[var(--gray-700)]">{e.label}</span>
                   <span className="text-[var(--gray-500)] text-xs ml-auto whitespace-nowrap">
                     {fmt(e.at)}
@@ -821,7 +902,7 @@ function InviteDrawer({
 
           {invite.inviter_message && (
             <section>
-              <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--gray-500)] mb-2">
+              <h3 className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--gold-dark)] mb-3 flex items-center gap-2 before:content-[''] before:h-px before:w-5 before:bg-[var(--gold)]">
                 Personal message
               </h3>
               <p className="text-sm text-[var(--gray-700)] italic leading-relaxed bg-[var(--gray-50)] p-3 rounded-md border border-[var(--gray-200)]">
@@ -831,7 +912,7 @@ function InviteDrawer({
           )}
 
           <section>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--gray-500)] mb-2">
+            <h3 className="text-[10px] uppercase tracking-[0.22em] font-semibold text-[var(--gold-dark)] mb-3 flex items-center gap-2 before:content-[''] before:h-px before:w-5 before:bg-[var(--gold)]">
               Details
             </h3>
             <div className="text-xs space-y-1 text-[var(--gray-700)]">
