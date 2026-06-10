@@ -22,6 +22,10 @@ interface Invite {
   last_activity: string;
   application_id: string | null;
   created_at: string;
+  revoked_at: string | null;
+  last_resent_at: string | null;
+  resend_count: number;
+  bounce_reason: string | null;
 }
 
 const STATUS_META: Record<
@@ -35,16 +39,8 @@ const STATUS_META: Record<
   accepted:  { label: "Accepted",  class: "bg-[#C5A55A]/15 text-[#A8893E]" },
   bounced:   { label: "Bounced",   class: "bg-red-50 text-red-700" },
   expired:   { label: "Expired",   class: "bg-gray-100 text-gray-500" },
+  revoked:   { label: "Revoked",   class: "bg-gray-200 text-gray-600 line-through" },
 };
-
-function generateCode(): string {
-  const alphabet = "ACDEFGHJKLMNPRTWXY349";
-  const pick = (n: number) =>
-    Array.from({ length: n }, () =>
-      alphabet[Math.floor(Math.random() * alphabet.length)],
-    ).join("");
-  return `AMX-${pick(4)}-${pick(4)}`;
-}
 
 function fmt(dt: string | null | undefined) {
   if (!dt) return "—";
@@ -64,11 +60,16 @@ function ago(dt: string | null | undefined) {
   return `${Math.round(diff / 86_400_000)}d ago`;
 }
 
+function effectiveStatus(inv: Invite): string {
+  return inv.revoked_at ? "revoked" : inv.status;
+}
+
 export default function AdminInvitesPage() {
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loading, setLoading] = useState(true);
   const [composeOpen, setComposeOpen] = useState(false);
   const [active, setActive] = useState<Invite | null>(null);
+  const [linkOnlyCreated, setLinkOnlyCreated] = useState<Invite | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [toast, setToast] = useState<{ msg: string; kind: "ok" | "err" } | null>(null);
@@ -95,17 +96,18 @@ export default function AdminInvitesPage() {
     loadInvites();
   }, [loadInvites]);
 
-  /* ─── Funnel metrics ─── */
+  /* ─── Funnel metrics (revoked excluded) ─── */
   const funnel = useMemo(() => {
-    const total = invites.length;
-    const delivered = invites.filter((i) => i.status !== "bounced").length;
-    const opened = invites.filter((i) =>
+    const live = invites.filter((i) => !i.revoked_at);
+    const total = live.length;
+    const delivered = live.filter((i) => i.status !== "bounced").length;
+    const opened = live.filter((i) =>
       ["opened", "started", "completed", "accepted"].includes(i.status),
     ).length;
-    const started = invites.filter((i) =>
+    const started = live.filter((i) =>
       ["started", "completed", "accepted"].includes(i.status),
     ).length;
-    const completed = invites.filter((i) =>
+    const completed = live.filter((i) =>
       ["completed", "accepted"].includes(i.status),
     ).length;
     const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
@@ -116,7 +118,13 @@ export default function AdminInvitesPage() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return invites.filter((i) => {
-      if (statusFilter !== "all" && i.status !== statusFilter) return false;
+      const status = effectiveStatus(i);
+      if (statusFilter === "all") {
+        // Hide revoked from default view
+        if (status === "revoked") return false;
+      } else if (status !== statusFilter) {
+        return false;
+      }
       if (!q) return true;
       return (
         i.name.toLowerCase().includes(q) ||
@@ -127,18 +135,18 @@ export default function AdminInvitesPage() {
     });
   }, [invites, query, statusFilter]);
 
-  /* ─── Send invite ─── */
+  /* ─── Create invite (server-generated code) ─── */
   async function createInvite(input: {
     name: string;
     email: string;
     inviter_message?: string;
-  }) {
+    sendEmail: boolean;
+  }): Promise<Invite | null> {
     const supabase = createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Look up inviter's display name from members
     let invitedByName: string | null = null;
     if (user) {
       const { data: member } = await supabase
@@ -149,8 +157,14 @@ export default function AdminInvitesPage() {
       invitedByName = member?.full_name ?? user.email ?? null;
     }
 
-    const code = generateCode();
     const normalizedEmail = input.email.trim().toLowerCase();
+
+    const { data: code, error: codeErr } = await supabase.rpc("generate_invite_code");
+    if (codeErr || !code) {
+      flash(`Code generation failed: ${codeErr?.message ?? "unknown"}`, "err");
+      return null;
+    }
+
     const { data, error } = await supabase
       .from("invites")
       .insert({
@@ -167,58 +181,52 @@ export default function AdminInvitesPage() {
 
     if (error) {
       flash(`Create failed: ${error.message}`, "err");
-      return false;
+      return null;
     }
 
-    // Fire-and-forget email send
-    fetch("/api/notify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        kind: "enrollment_invite",
-        name: input.name.trim(),
-        email: normalizedEmail,
-        details: {
-          code,
-          invited_by_name: invitedByName,
-          inviter_message: input.inviter_message?.trim() || null,
-        },
-      }),
-    });
+    const created = data as Invite;
+    setInvites((prev) => [created, ...prev]);
 
-    setInvites((prev) => [data as Invite, ...prev]);
-    flash(`Invitation sent to ${normalizedEmail}`);
-    return true;
+    if (input.sendEmail) {
+      fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          kind: "enrollment_invite",
+          name: input.name.trim(),
+          email: normalizedEmail,
+          details: {
+            code,
+            invited_by_name: invitedByName,
+            inviter_message: input.inviter_message?.trim() || null,
+          },
+        }),
+      });
+      flash(`Invitation sent to ${normalizedEmail}`);
+    } else {
+      flash(`Link generated for ${normalizedEmail}`);
+    }
+
+    return created;
   }
 
-  /* ─── Resend ─── */
+  /* ─── Resend via RPC (1h cooldown enforced server-side) ─── */
   async function resendInvite(inv: Invite) {
-    const supabase = createClient();
-    // Update sent_at + last_activity, reset status if expired/bounced
-    const newStatus =
-      inv.status === "expired" || inv.status === "bounced" ? "sent" : inv.status;
-    const newExpiry = new Date(new Date().getTime() + 30 * 24 * 3600 * 1000).toISOString();
-    const { error } = await supabase
-      .from("invites")
-      .update({
-        sent_at: new Date().toISOString(),
-        last_activity: new Date().toISOString(),
-        expires_at: newExpiry,
-        status: newStatus,
-      })
-      .eq("id", inv.id);
-    if (error) {
-      flash(`Resend failed: ${error.message}`, "err");
+    if (inv.revoked_at) {
+      flash("Cannot resend a revoked invitation.", "err");
       return;
     }
-    setInvites((prev) =>
-      prev.map((i) =>
-        i.id === inv.id
-          ? { ...i, status: newStatus, sent_at: new Date().toISOString(), expires_at: newExpiry, last_activity: new Date().toISOString() }
-          : i,
-      ),
-    );
-    // Re-send email
+    const supabase = createClient();
+    const { data, error } = await supabase.rpc("resend_invite", { p_id: inv.id });
+    if (error) {
+      const msg = error.message.includes("cooldown_active")
+        ? "Resend cooldown: please wait at least 1 hour between sends."
+        : `Resend failed: ${error.message}`;
+      flash(msg, "err");
+      return;
+    }
+    const updated = data as Invite;
+    setInvites((prev) => prev.map((i) => (i.id === inv.id ? updated : i)));
     fetch("/api/notify", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -236,16 +244,20 @@ export default function AdminInvitesPage() {
     flash(`Nudge sent to ${inv.email}`);
   }
 
-  async function deleteInvite(inv: Invite) {
+  /* ─── Revoke (soft-delete) ─── */
+  async function revokeInvite(inv: Invite) {
     const supabase = createClient();
-    const { error } = await supabase.from("invites").delete().eq("id", inv.id);
+    const { error } = await supabase.rpc("revoke_invite", { p_id: inv.id });
     if (error) {
-      flash(`Delete failed: ${error.message}`, "err");
+      flash(`Revoke failed: ${error.message}`, "err");
       return;
     }
-    setInvites((prev) => prev.filter((i) => i.id !== inv.id));
+    const now = new Date().toISOString();
+    setInvites((prev) =>
+      prev.map((i) => (i.id === inv.id ? { ...i, revoked_at: now, last_activity: now } : i)),
+    );
     setActive(null);
-    flash("Invite removed");
+    flash("Invitation revoked. The link will no longer work.");
   }
 
   return (
@@ -302,7 +314,7 @@ export default function AdminInvitesPage() {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="px-3 py-2 text-sm border border-[var(--gray-300)] rounded-md"
         >
-          <option value="all">All statuses</option>
+          <option value="all">All (active)</option>
           {Object.entries(STATUS_META).map(([k, m]) => (
             <option key={k} value={k}>
               {m.label}
@@ -354,7 +366,7 @@ export default function AdminInvitesPage() {
                       {inv.code}
                     </td>
                     <td className="px-4 py-3">
-                      <StatusPill status={inv.status} />
+                      <StatusPill status={effectiveStatus(inv)} />
                     </td>
                     <td className="px-4 py-3 text-[var(--gray-500)] text-xs">
                       {inv.invited_by_name ?? "—"}
@@ -371,8 +383,9 @@ export default function AdminInvitesPage() {
                     >
                       <button
                         onClick={() => resendInvite(inv)}
-                        className="text-xs px-2 py-1 rounded border border-[var(--gray-300)] hover:bg-[var(--gray-50)] mr-1"
-                        title="Resend or nudge"
+                        disabled={!!inv.revoked_at}
+                        className="text-xs px-2 py-1 rounded border border-[var(--gray-300)] hover:bg-[var(--gray-50)] mr-1 disabled:opacity-40 disabled:cursor-not-allowed"
+                        title={inv.revoked_at ? "Revoked — cannot resend" : "Resend (1h cooldown)"}
                       >
                         Resend
                       </button>
@@ -395,9 +408,21 @@ export default function AdminInvitesPage() {
         <ComposeModal
           onClose={() => setComposeOpen(false)}
           onCreate={async (input) => {
-            const ok = await createInvite(input);
-            if (ok) setComposeOpen(false);
+            const created = await createInvite(input);
+            if (created) {
+              setComposeOpen(false);
+              if (!input.sendEmail) {
+                setLinkOnlyCreated(created);
+              }
+            }
           }}
+        />
+      )}
+
+      {linkOnlyCreated && (
+        <LinkOnlyModal
+          invite={linkOnlyCreated}
+          onClose={() => setLinkOnlyCreated(null)}
         />
       )}
 
@@ -406,7 +431,7 @@ export default function AdminInvitesPage() {
           invite={active}
           onClose={() => setActive(null)}
           onResend={() => resendInvite(active)}
-          onDelete={() => deleteInvite(active)}
+          onRevoke={() => revokeInvite(active)}
         />
       )}
 
@@ -459,27 +484,66 @@ function FunnelCell({
   );
 }
 
+interface DuplicateMatch {
+  id: string;
+  code: string;
+  name: string;
+  email: string;
+  status: string;
+  sent_at: string;
+}
+
 function ComposeModal({
   onClose,
   onCreate,
 }: {
   onClose: () => void;
-  onCreate: (input: { name: string; email: string; inviter_message?: string }) => Promise<void>;
+  onCreate: (input: {
+    name: string;
+    email: string;
+    inviter_message?: string;
+    sendEmail: boolean;
+  }) => Promise<void>;
 }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
   const [err, setErr] = useState("");
+  const [duplicate, setDuplicate] = useState<DuplicateMatch | null>(null);
+  const [proceedAnyway, setProceedAnyway] = useState(false);
 
-  async function handleSend() {
+  // Debounced duplicate check
+  useEffect(() => {
+    const trimmed = email.trim();
+    if (!trimmed || !trimmed.includes("@")) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setDuplicate(null);
+      return;
+    }
+    const t = setTimeout(async () => {
+      const supabase = createClient();
+      const { data } = await supabase
+        .rpc("find_live_invite", { p_email: trimmed })
+        .maybeSingle();
+      setDuplicate((data as DuplicateMatch | null) ?? null);
+      setProceedAnyway(false);
+    }, 350);
+    return () => clearTimeout(t);
+  }, [email]);
+
+  async function handleSubmit(sendEmail: boolean) {
     if (!name.trim() || !email.trim()) {
       setErr("Name and email are required.");
       return;
     }
+    if (duplicate && !proceedAnyway) {
+      setErr("A live invitation already exists for this email. Confirm to send anyway.");
+      return;
+    }
     setErr("");
     setSending(true);
-    await onCreate({ name, email, inviter_message: message });
+    await onCreate({ name, email, inviter_message: message, sendEmail });
     setSending(false);
   }
 
@@ -520,6 +584,29 @@ function ComposeModal({
               className={inputCls}
             />
           </label>
+
+          {duplicate && (
+            <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs">
+              <p className="text-amber-800 font-medium mb-1">
+                A live invitation already exists for this email
+              </p>
+              <p className="text-amber-700">
+                {duplicate.name} · code{" "}
+                <span className="font-mono">{duplicate.code}</span> · status{" "}
+                <span className="font-medium">{duplicate.status}</span> ·{" "}
+                {fmt(duplicate.sent_at)}
+              </p>
+              <label className="mt-2 flex items-center gap-2 text-amber-800">
+                <input
+                  type="checkbox"
+                  checked={proceedAnyway}
+                  onChange={(e) => setProceedAnyway(e.target.checked)}
+                />
+                <span>Send anyway (creates a second invitation)</span>
+              </label>
+            </div>
+          )}
+
           <label className="block">
             <span className="block text-xs font-medium text-[var(--gray-700)] mb-1">
               Personal message <span className="text-[var(--gray-500)] font-normal">(optional)</span>
@@ -534,8 +621,8 @@ function ComposeModal({
           </label>
           {err && <p className="text-xs text-[var(--cherry-red)]">{err}</p>}
           <p className="text-[11px] text-[var(--gray-500)]">
-            Invitation expires in 30 days. The invitee receives a personal link to a private
-            landing page with the enrollment form.
+            Invitation expires in 30 days. Use <strong>Generate link</strong> to skip the
+            email and copy the URL to deliver yourself.
           </p>
         </div>
         <footer className="px-6 py-4 border-t border-[var(--gray-200)] flex justify-end gap-2 bg-[var(--gray-50)]">
@@ -547,7 +634,14 @@ function ComposeModal({
             Cancel
           </button>
           <button
-            onClick={handleSend}
+            onClick={() => handleSubmit(false)}
+            disabled={sending}
+            className="text-sm px-3 py-2 rounded-md border border-[var(--gray-300)] disabled:opacity-50"
+          >
+            {sending ? "Working…" : "Generate link only"}
+          </button>
+          <button
+            onClick={() => handleSubmit(true)}
             disabled={sending}
             className="text-sm px-3 py-2 rounded-md bg-[var(--dark-bg)] text-[var(--gold)] font-semibold disabled:opacity-50"
           >
@@ -559,30 +653,93 @@ function ComposeModal({
   );
 }
 
+function LinkOnlyModal({
+  invite,
+  onClose,
+}: {
+  invite: Invite;
+  onClose: () => void;
+}) {
+  const url =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/enroll/${invite.code}`
+      : `/enroll/${invite.code}`;
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/40">
+      <div className="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden">
+        <header className="px-6 py-4 border-b border-[var(--gray-200)]">
+          <h2 className="text-lg font-bold text-[var(--gray-900)]">Invitation link ready</h2>
+          <p className="text-xs text-[var(--gray-500)] mt-1">
+            For {invite.name} · {invite.email} · no email was sent.
+          </p>
+        </header>
+        <div className="px-6 py-5 space-y-3">
+          <div className="flex items-center gap-2">
+            <input
+              readOnly
+              value={url}
+              className="flex-1 px-3 py-2 text-xs font-mono border border-[var(--gray-300)] rounded-md bg-[var(--gray-50)]"
+            />
+            <button
+              onClick={copy}
+              className="text-xs px-3 py-2 rounded-md bg-[var(--dark-bg)] text-[var(--gold)] whitespace-nowrap"
+            >
+              {copied ? "Copied!" : "Copy"}
+            </button>
+          </div>
+          <p className="text-[11px] text-[var(--gray-500)]">
+            The invitation is recorded in the hub. You can send it through any channel —
+            DM, signal, hand-deliver. The invite expires in 30 days.
+          </p>
+        </div>
+        <footer className="px-6 py-4 border-t border-[var(--gray-200)] flex justify-end gap-2 bg-[var(--gray-50)]">
+          <button
+            onClick={onClose}
+            className="text-sm px-3 py-2 rounded-md bg-[var(--dark-bg)] text-[var(--gold)]"
+          >
+            Done
+          </button>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
 function InviteDrawer({
   invite,
   onClose,
   onResend,
-  onDelete,
+  onRevoke,
 }: {
   invite: Invite;
   onClose: () => void;
   onResend: () => void;
-  onDelete: () => void;
+  onRevoke: () => void;
 }) {
-  const [confirmDel, setConfirmDel] = useState(false);
+  const [confirmRevoke, setConfirmRevoke] = useState(false);
   const timeline = [
     { label: "Sent", at: invite.sent_at },
     { label: "Opened", at: invite.opened_at },
     { label: "Started", at: invite.started_at },
     { label: "Completed", at: invite.completed_at },
     { label: "Accepted", at: invite.accepted_at },
+    { label: "Revoked", at: invite.revoked_at },
   ].filter((e) => e.at);
 
   const enrollUrl =
     typeof window !== "undefined"
       ? `${window.location.origin}/enroll/${invite.code}`
       : `/enroll/${invite.code}`;
+
+  const isRevoked = !!invite.revoked_at;
 
   return (
     <div className="fixed inset-0 z-40 flex">
@@ -603,11 +760,19 @@ function InviteDrawer({
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <StatusPill status={invite.status} />
+              <StatusPill status={effectiveStatus(invite)} />
               <span className="text-xs text-[var(--gray-500)]">
                 Code: <span className="font-mono">{invite.code}</span>
               </span>
             </div>
+            {invite.bounce_reason && (
+              <p className="text-xs text-red-700 mt-1">Bounce: {invite.bounce_reason}</p>
+            )}
+            {invite.resend_count > 0 && (
+              <p className="text-xs text-[var(--gray-500)] mt-1">
+                Resent {invite.resend_count}× — last {ago(invite.last_resent_at)}
+              </p>
+            )}
           </div>
 
           <section>
@@ -627,6 +792,11 @@ function InviteDrawer({
                 Copy
               </button>
             </div>
+            {isRevoked && (
+              <p className="text-[11px] text-red-700 mt-1">
+                This link has been revoked and will no longer accept submissions.
+              </p>
+            )}
           </section>
 
           <section>
@@ -687,36 +857,41 @@ function InviteDrawer({
           </section>
         </div>
         <footer className="px-6 py-4 border-t border-[var(--gray-200)] flex items-center justify-between gap-2">
-          {confirmDel ? (
+          {confirmRevoke ? (
             <>
-              <span className="text-xs text-[var(--cherry-red)]">Remove this invitation?</span>
+              <span className="text-xs text-[var(--cherry-red)]">Revoke this invitation?</span>
               <div className="flex gap-2">
                 <button
-                  onClick={() => setConfirmDel(false)}
+                  onClick={() => setConfirmRevoke(false)}
                   className="text-sm px-3 py-2 rounded-md border border-[var(--gray-300)]"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={onDelete}
+                  onClick={onRevoke}
                   className="text-sm px-3 py-2 rounded-md bg-[var(--cherry-red)] text-white"
                 >
-                  Remove
+                  Revoke
                 </button>
               </div>
             </>
           ) : (
             <>
-              <button
-                onClick={() => setConfirmDel(true)}
-                className="text-sm text-[var(--cherry-red)] hover:underline"
-              >
-                Remove
-              </button>
+              {!isRevoked ? (
+                <button
+                  onClick={() => setConfirmRevoke(true)}
+                  className="text-sm text-[var(--cherry-red)] hover:underline"
+                >
+                  Revoke
+                </button>
+              ) : (
+                <span className="text-xs text-[var(--gray-500)]">Revoked {ago(invite.revoked_at)}</span>
+              )}
               <div className="flex gap-2">
                 <button
                   onClick={onResend}
-                  className="text-sm px-3 py-2 rounded-md border border-[var(--gray-300)] hover:bg-[var(--gray-50)]"
+                  disabled={isRevoked}
+                  className="text-sm px-3 py-2 rounded-md border border-[var(--gray-300)] hover:bg-[var(--gray-50)] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Resend
                 </button>

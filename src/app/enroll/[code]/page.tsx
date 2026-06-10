@@ -13,6 +13,7 @@ interface Invite {
   invited_by_name: string | null;
   inviter_message: string | null;
   expires_at: string;
+  revoked_at: string | null;
 }
 
 const PRINCIPLES = ["Love", "Truth", "Peace", "Freedom", "Justice"];
@@ -104,6 +105,20 @@ export default function EnrollPage() {
   }
 
   if (!invite) return null;
+
+  if (invite.revoked_at) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0F1A0E] text-white text-center px-6">
+        <div className="max-w-md">
+          <h1 className="text-2xl font-bold mb-3">This invitation is no longer valid</h1>
+          <p className="text-white/70 text-sm">
+            It was revoked by the Sultanate. Reach out to{" "}
+            {invite.invited_by_name ?? "the council"} for a new invitation.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const expired = new Date(invite.expires_at) < new Date();
   if (expired) {
@@ -437,9 +452,9 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
     setError("");
     const supabase = createClient();
 
-    const { data, error: insertErr } = await supabase
-      .from("applications")
-      .insert({
+    const { error: submitErr } = await supabase.rpc("submit_enrollment", {
+      p_code: invite.code,
+      p_payload: {
         full_name: fullName,
         date_of_birth: dob || null,
         phone,
@@ -459,21 +474,21 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
         affirm_principles: affirm,
         constitution_acknowledged: affirm,
         terms_accepted: affirm,
-      })
-      .select("id")
-      .single();
+      },
+    });
 
-    if (insertErr) {
-      setError(`Submission failed: ${insertErr.message}`);
+    if (submitErr) {
+      const msg = submitErr.message.includes("invite_expired")
+        ? "This invitation has expired. Please ask your inviter to send a fresh one."
+        : submitErr.message.includes("invite_revoked")
+          ? "This invitation has been revoked and can no longer be used."
+          : submitErr.message.includes("already_submitted")
+            ? "This invitation has already been used."
+            : `Submission failed: ${submitErr.message}`;
+      setError(msg);
       setSubmitting(false);
       return;
     }
-
-    // Mark invite completed and link to the new application row.
-    await supabase.rpc("complete_invite", {
-      p_code: invite.code,
-      p_application_id: data.id,
-    });
 
     // Notify admins.
     fetch("/api/notify", {
