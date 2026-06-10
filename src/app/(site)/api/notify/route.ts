@@ -152,9 +152,12 @@ function renderApplicantBody(
 function renderInviteBody(payload: NotifyPayload): { text: string; html: string } {
   const name = payload.name?.split(" ")[0] || "Friend";
   const inviter = payload.details?.invited_by_name || "the Sultanate";
-  const code = payload.details?.code || "";
+  const code = payload.details?.code;
+  if (!code) {
+    throw new Error("enrollment_invite requires details.code");
+  }
   const message = payload.details?.inviter_message;
-  const link = code ? `${SITE}/enroll/${code}` : `${SITE}/enroll`;
+  const link = `${SITE}/enroll/${code}`;
 
   const messageBlock = message ? `\nA word from ${inviter}:\n"${message}"\n` : "";
 
