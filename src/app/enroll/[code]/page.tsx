@@ -86,21 +86,12 @@ export default function EnrollPage() {
 
   if (notFound) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0F1A0E] text-white text-center px-6">
-        <div className="max-w-md">
-          <h1 className="text-2xl font-bold mb-3">Invitation not found</h1>
-          <p className="text-white/70 text-sm">
-            This invitation code is invalid or has been retired. If you believe this is in error,
-            reach out to the person who invited you.
-          </p>
-          <button
-            onClick={() => router.push("/")}
-            className="mt-6 text-sm text-[#C5A55A] hover:underline"
-          >
-            Return to Sultanate of Amexem
-          </button>
-        </div>
-      </div>
+      <SacredScreen
+        eyebrow="Sultanate of Amexem"
+        title="Invitation not found"
+        body="This invitation code is invalid or has been retired. If you believe this is in error, reach out to the person who invited you."
+        action={{ label: "Return to Sultanate of Amexem", onClick: () => router.push("/") }}
+      />
     );
   }
 
@@ -108,48 +99,118 @@ export default function EnrollPage() {
 
   if (invite.revoked_at) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0F1A0E] text-white text-center px-6">
-        <div className="max-w-md">
-          <h1 className="text-2xl font-bold mb-3">This invitation is no longer valid</h1>
-          <p className="text-white/70 text-sm">
-            It was revoked by the Sultanate. Reach out to{" "}
-            {invite.invited_by_name ?? "the council"} for a new invitation.
-          </p>
-        </div>
-      </div>
+      <SacredScreen
+        eyebrow="Invitation Withdrawn"
+        title="No longer valid"
+        body={`This invitation has been withdrawn by the Sultanate. Reach out to ${invite.invited_by_name ?? "the council"} for a new invitation.`}
+      />
     );
   }
 
   const expired = new Date(invite.expires_at) < new Date();
   if (expired) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0F1A0E] text-white text-center px-6">
-        <div className="max-w-md">
-          <h1 className="text-2xl font-bold mb-3">This invitation has expired</h1>
-          <p className="text-white/70 text-sm">
-            Your invitation lapsed on {new Date(invite.expires_at).toLocaleDateString()}.
-            Reach out to {invite.invited_by_name ?? "the Sultanate"} to request a fresh link.
-          </p>
-        </div>
-      </div>
+      <SacredScreen
+        eyebrow="Invitation Lapsed"
+        title="This invitation has expired"
+        body={`Your invitation lapsed on ${new Date(invite.expires_at).toLocaleDateString()}. Reach out to ${invite.invited_by_name ?? "the Sultanate"} to request a fresh link.`}
+      />
     );
   }
 
   if (invite.status === "completed" || invite.status === "accepted") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0F1A0E] text-white text-center px-6">
-        <div className="max-w-md">
-          <h1 className="text-2xl font-bold mb-3">Application already submitted</h1>
-          <p className="text-white/70 text-sm">
-            We have your enrollment, {invite.name.split(" ")[0]}. The Supreme Grand Council
-            will be in touch by email within two to four weeks.
-          </p>
-        </div>
-      </div>
+      <SacredScreen
+        eyebrow="Application Received"
+        title="Already submitted"
+        body={`We have your enrollment, ${invite.name.split(" ")[0]}. The Supreme Grand Council will be in touch by email within two to four weeks.`}
+      />
     );
   }
 
   return <EnrollContent invite={invite} />;
+}
+
+/* ─── Shared gate screen — emblem ring, eyebrow, italic serif, gold rule ─── */
+function SacredScreen({
+  eyebrow,
+  title,
+  body,
+  action,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  action?: { label: string; onClick: () => void };
+}) {
+  return (
+    <div className="min-h-screen relative flex items-center justify-center bg-[#0F1A0E] text-white text-center px-6 overflow-hidden">
+      <div
+        className="absolute inset-0 opacity-[0.06] pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 50% 50%, #C5A55A 0 1.2px, transparent 1.6px)",
+          backgroundSize: "34px 34px",
+        }}
+      />
+      <div
+        className="absolute w-[620px] h-[620px] rounded-full pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle, rgba(197,165,90,0.16), transparent 65%)",
+          top: "-180px",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      />
+      <span className="absolute top-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,#C5A55A,transparent)]" />
+      <span className="absolute bottom-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,#C5A55A,transparent)]" />
+      <div className="relative max-w-md">
+        <div className="relative w-[120px] h-[120px] mx-auto mb-7 flex items-center justify-center">
+          <span className="absolute inset-[-10px] rounded-full border border-[#C5A55A]/55" />
+          <span className="absolute inset-[-22px] rounded-full border border-[#C5A55A]/20" />
+          <Image
+            src="/images/emblem.svg"
+            alt="Sultanate emblem"
+            width={84}
+            height={84}
+            className="drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]"
+          />
+        </div>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.32em] text-[#C5A55A] mb-4">
+          {eyebrow}
+        </p>
+        <h1
+          className="text-4xl md:text-5xl mb-5 leading-[1.1]"
+          style={{
+            fontFamily: 'Georgia, "Times New Roman", Times, serif',
+            fontStyle: "italic",
+            fontWeight: 400,
+          }}
+        >
+          {title}
+        </h1>
+        <div
+          className="mx-auto mb-6 h-px"
+          style={{
+            width: 96,
+            background:
+              "linear-gradient(90deg, transparent, #C5A55A, transparent)",
+          }}
+        />
+        <p className="text-white/72 text-sm leading-relaxed">{body}</p>
+        {action && (
+          <button
+            onClick={action.onClick}
+            className="mt-8 inline-flex items-center gap-2 text-[12px] uppercase tracking-[0.22em] font-semibold text-[#C5A55A] hover:text-[#D4BA7A] transition-colors"
+          >
+            <span className="h-px w-6 bg-[#C5A55A]" />
+            {action.label}
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 /* ─── Main landing content ─── */
@@ -512,16 +573,34 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
 
   if (submitted) {
     return (
-      <div className="max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 p-10 text-center shadow-sm">
-        <div className="w-14 h-14 rounded-full bg-[#2D5A27]/10 text-[#2D5A27] flex items-center justify-center mx-auto mb-5">
-          <svg className="w-7 h-7" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
+      <div className="relative max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 p-10 md:p-14 text-center shadow-[0_24px_60px_-30px_rgba(15,26,14,0.4)] overflow-hidden">
+        <span className="absolute top-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,#C5A55A,transparent)]" />
+        <span className="absolute bottom-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,#C5A55A,transparent)]" />
+        <div className="relative w-[108px] h-[108px] mx-auto mb-7 flex items-center justify-center">
+          <span className="absolute inset-[-10px] rounded-full border border-[#C5A55A]/60" />
+          <span className="absolute inset-[-22px] rounded-full border border-[#C5A55A]/25" />
+          <div className="w-16 h-16 rounded-full bg-[#2D5A27]/10 text-[#2D5A27] flex items-center justify-center">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
         </div>
-        <h3 className="text-2xl font-bold mb-3">Your application has been received</h3>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[#A8893E] mb-3">
+          Application Received
+        </p>
+        <h3
+          className="text-3xl md:text-4xl text-[#1a1a1a] mb-4 leading-tight"
+          style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
+        >
+          Welcome, {fullName.split(" ")[0]}
+        </h3>
+        <div
+          className="mx-auto mb-5 h-px"
+          style={{ width: 96, background: "linear-gradient(90deg, transparent, #C5A55A, transparent)" }}
+        />
         <p className="text-gray-600 text-sm leading-relaxed max-w-md mx-auto">
-          Thank you, {fullName.split(" ")[0]}. The Supreme Grand Council will review your
-          enrollment. Expect a decision by email within two to four weeks.
+          The Supreme Grand Council will review your enrollment. Expect a decision by
+          email within two to four weeks. Stand in your nationality.
         </p>
       </div>
     );
