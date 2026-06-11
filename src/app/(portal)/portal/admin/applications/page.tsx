@@ -1,6 +1,7 @@
 "use client";
 
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
 import { MEMBER_TIERS, tierPriceLabel } from "@/lib/tiers";
 
@@ -50,6 +51,12 @@ type DecisionModalState =
   | null;
 
 export default function ApplicationsPage() {
+  const searchParams = useSearchParams();
+  // Deep-link target — `/portal/admin/applications?id=<uuid>` opens the
+  // page with that row pre-expanded and scrolled into view. Used by the
+  // Invite Hub's drawer to jump straight to the linked application.
+  const focusId = searchParams.get("id");
+
   const [activeTab, setActiveTab] = useState<TabKey>("applications");
   const [counts, setCounts] = useState<Record<TabKey, { total: number; pending: number }>>(
     {} as Record<TabKey, { total: number; pending: number }>
@@ -59,8 +66,9 @@ export default function ApplicationsPage() {
   // Default to pending so decided applications (approved / rejected /
   // completed) drop out of the inbox view. The data is preserved in the DB —
   // admin can switch the filter to view decided items.
-  const [statusFilter, setStatusFilter] = useState<string>("pending");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>(focusId ? "all" : "pending");
+  const [expandedId, setExpandedId] = useState<string | null>(focusId);
+  const focusHandledRef = useRef(false);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [decisionModal, setDecisionModal] = useState<DecisionModalState>(null);
   const [toast, setToast] = useState<{ msg: string; kind: "ok" | "err" } | null>(null);
@@ -77,9 +85,22 @@ export default function ApplicationsPage() {
   useEffect(() => {
     loadRows();
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setExpandedId(null);
+    setExpandedId(activeTab === "applications" ? focusId : null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
+
+  // After the rows load, scroll the focused application into view exactly
+  // once. Avoids fighting the user if they later click another row.
+  useEffect(() => {
+    if (focusHandledRef.current) return;
+    if (!focusId || loading) return;
+    if (!rows.some((r) => r.id === focusId)) return;
+    focusHandledRef.current = true;
+    requestAnimationFrame(() => {
+      const el = document.getElementById(`app-row-${focusId}`);
+      if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });
+    });
+  }, [focusId, loading, rows]);
 
   async function loadCounts() {
     const supabase = createClient();
@@ -370,11 +391,25 @@ export default function ApplicationsPage() {
                   return (
                     <Fragment key={row.id}>
                       <tr
-                        className="border-b border-[var(--gray-100)] hover:bg-[var(--gray-50)] cursor-pointer"
+                        id={`app-row-${row.id}`}
+                        className={`border-b border-[var(--gray-100)] hover:bg-[var(--gray-50)] cursor-pointer ${
+                          focusId === row.id ? "bg-[var(--gold)]/8 ring-1 ring-inset ring-[var(--gold)]/40" : ""
+                        }`}
                         onClick={() => setExpandedId(isExpanded ? null : row.id)}
                       >
                         <td className="px-4 py-3 font-medium text-[var(--gray-900)]">
-                          {String(row[activeDef.nameCol] ?? "—")}
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span>{String(row[activeDef.nameCol] ?? "—")}</span>
+                            {isMembershipTab && row.invite_code ? (
+                              <span
+                                className="inline-flex items-center gap-1 text-[10px] font-mono uppercase tracking-wide px-2 py-0.5 rounded-full bg-[var(--gold)]/15 text-[var(--gold)] border border-[var(--gold)]/30"
+                                title="Submitted through an invitation link"
+                              >
+                                <span aria-hidden>↳</span>
+                                {String(row.invite_code)}
+                              </span>
+                            ) : null}
+                          </div>
                         </td>
                         <td className="px-4 py-3 text-[var(--gray-500)]">
                           {String(row[activeDef.emailCol] ?? "—")}

@@ -1,8 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase-client";
 import styles from "./invites.module.css";
+
+interface LinkedApplication {
+  id: string;
+  status: string | null;
+  full_name: string | null;
+  email: string | null;
+  created_at: string;
+}
 
 /* ─── Types ─── */
 interface Invite {
@@ -920,12 +929,38 @@ function DetailDrawer({
   const [copied, setCopied] = useState(false);
   const [confirmRevoke, setConfirmRevoke] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [linkedApp, setLinkedApp] = useState<LinkedApplication | null>(null);
 
   const isRevoked = !!invite.revoked_at;
   const canResend = !isRevoked &&
     ["sent", "opened", "started", "bounced", "expired"].includes(status);
   // Only a dead link — never claimed — is safe to hard delete.
   const canDelete = !invite.application_id && !invite.completed_at && !invite.accepted_at;
+
+  // Fetch the linked membership application when the drawer opens. Cheap —
+  // single row by primary key — and surfaces the application's status +
+  // name so admins don't have to bounce to the Applications page just to
+  // see what came in.
+  useEffect(() => {
+    let cancelled = false;
+    if (!invite.application_id) {
+      setLinkedApp(null);
+      return;
+    }
+    const supabase = createClient();
+    supabase
+      .from("applications")
+      .select("id, status, full_name, email, created_at")
+      .eq("id", invite.application_id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled) return;
+        setLinkedApp((data as LinkedApplication) ?? null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [invite.application_id]);
 
   async function copyLink() {
     try {
@@ -1051,10 +1086,31 @@ function DetailDrawer({
             )}
             {invite.application_id && (
               <div className={styles.drawerMetaCell} style={{ gridColumn: "1 / -1" }}>
-                <div className={styles.dmLabel}>Linked Application</div>
-                <div className={`${styles.dmValue} ${styles.dmValueMono}`}>
-                  {invite.application_id}
-                </div>
+                <div className={styles.dmLabel}>Membership Application</div>
+                {linkedApp ? (
+                  <Link
+                    href={`/portal/admin/applications?id=${linkedApp.id}`}
+                    className={styles.linkedAppCard}
+                  >
+                    <div className={styles.linkedAppHead}>
+                      <span className={styles.linkedAppName}>
+                        {linkedApp.full_name?.trim() || linkedApp.email || "Submitted application"}
+                      </span>
+                      <span className={`${styles.linkedAppPill} ${styles[`appStatus_${linkedApp.status ?? "pending"}`] ?? ""}`}>
+                        {linkedApp.status ?? "pending"}
+                      </span>
+                    </div>
+                    <div className={styles.linkedAppMeta}>
+                      {linkedApp.email && <span>{linkedApp.email}</span>}
+                      <span>Submitted {fmt(linkedApp.created_at)}</span>
+                    </div>
+                    <span className={styles.linkedAppCta}>Open in Applications →</span>
+                  </Link>
+                ) : (
+                  <div className={`${styles.dmValue} ${styles.dmValueMono}`}>
+                    {invite.application_id}
+                  </div>
+                )}
               </div>
             )}
           </div>
