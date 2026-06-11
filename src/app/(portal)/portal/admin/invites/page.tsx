@@ -293,7 +293,12 @@ export default function AdminInvitesPage() {
         .select("full_name")
         .eq("user_id", user.id)
         .maybeSingle();
-      invitedByName = member?.full_name ?? user.email ?? null;
+      // Only stamp a real human name on the invite. Falling back to the
+      // admin's email address leaks "sultanateofamexem@gmail.com" into the
+      // recipient-facing "Extended by …" byline — the page reads cleaner
+      // in the anonymous "By private invitation of the Supreme Grand
+      // Council" branch.
+      invitedByName = member?.full_name?.trim() || null;
     }
 
     const { data: code, error: codeErr } = await supabase.rpc("generate_invite_code");

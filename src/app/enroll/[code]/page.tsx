@@ -542,7 +542,11 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
   }
 
   const inviterLabel = invite.admin_label?.trim() || INVITER_DEFAULT_TITLE;
-  const inviterName = invite.invited_by_name?.trim() || null;
+  // Treat email-shaped strings as no name. Older invites recorded the
+  // admin's email when their member profile had no full_name, and the
+  // recipient should never see "Extended by an-email@host.com".
+  const rawInviter = invite.invited_by_name?.trim() || null;
+  const inviterName = rawInviter && !rawInviter.includes("@") ? rawInviter : null;
 
   return (
     <div className="bg-white text-[#1a1a1a] min-h-screen">
@@ -631,7 +635,7 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
           {invite.inviter_message && (
             <div className="mb-6 md:mb-8 max-w-2xl p-4 md:p-5 rounded-lg border border-[#C5A55A]/30 bg-[#C5A55A]/5">
               <p className="text-[11px] md:text-xs uppercase tracking-wider text-[#C5A55A] mb-2 font-semibold">
-                A word from {invite.invited_by_name ?? "your inviter"}
+                A word from {inviterName ?? "your inviter"}
               </p>
               <p className="text-white/85 text-sm leading-relaxed italic">
                 &ldquo;{invite.inviter_message}&rdquo;
@@ -951,7 +955,14 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
   const [duration, setDuration] = useState(draftStr("duration"));
   const [surnamePref, setSurnamePref] = useState(draftStr("surnamePref"));
   const [statement, setStatement] = useState(draftStr("statement"));
-  const [howHeard, setHowHeard] = useState(draftStr("howHeard", invite.invited_by_name ?? ""));
+  const [howHeard, setHowHeard] = useState(() => {
+    // Pre-fill "How did you hear" with the inviter's name only when it
+    // looks like a real human name. Falling back to an admin's email
+    // both leaks the address and is useless answer text.
+    const name = invite.invited_by_name?.trim();
+    const seed = name && !name.includes("@") ? name : "";
+    return draftStr("howHeard", seed);
+  });
   const [canAttend, setCanAttend] = useState(draftBool("canAttend"));
   const [canDues, setCanDues] = useState(draftBool("canDues"));
   const [canParticipate, setCanParticipate] = useState(draftBool("canParticipate"));
