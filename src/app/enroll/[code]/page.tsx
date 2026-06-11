@@ -608,16 +608,16 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             You have been invited to the Sultanate of Amexem.
           </p>
           <h1 className="text-[34px] md:text-6xl font-bold leading-[1.04] md:leading-[1.02] tracking-[-0.01em] mb-5 md:mb-7">
-            <span className="block">Reclaim your <span className="text-[#C5A55A]">nationality.</span></span>
-            <span className="block">Secure your <span className="text-[#C5A55A]">economy.</span></span>
-            <span className="block">Found your <span className="text-[#C5A55A]">lineage.</span></span>
+            <span className="block">Proclaim your <span className="text-[#C5A55A]">nationality.</span></span>
+            <span className="block">Secure your <span className="text-[#C5A55A]">economic security.</span></span>
+            <span className="block">Restore your <span className="text-[#C5A55A]">ancestral lineage.</span></span>
           </h1>
           <p className="text-base md:text-lg text-white/72 max-w-2xl leading-relaxed mb-6 md:mb-8">
             Membership is a name entered on the Original Roll of the custodial governing
             authority for the descendants of the Nation of Moab &mdash; modernly
             identified as Moorish American. Three things only the Original Roll holds:
-            lawful standing, equity in cooperative ventures, and a seat your descendants
-            inherit.
+            proclaimed nationality, economic security inside the cooperative, and the
+            ancestral lineage your descendants inherit.
           </p>
 
           {/* Scarcity chips — three things every visitor sees before scrolling */}
