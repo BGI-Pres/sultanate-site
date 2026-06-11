@@ -609,7 +609,7 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
           </p>
           <h1 className="text-[34px] md:text-6xl font-bold leading-[1.04] md:leading-[1.02] tracking-[-0.01em] mb-5 md:mb-7">
             <span className="block">Proclaim your <span className="text-[#C5A55A]">nationality.</span></span>
-            <span className="block">Secure your <span className="text-[#C5A55A]">economic security.</span></span>
+            <span className="block">Anchor your <span className="text-[#C5A55A]">economic security.</span></span>
             <span className="block">Restore your <span className="text-[#C5A55A]">ancestral lineage.</span></span>
           </h1>
           <p className="text-base md:text-lg text-white/72 max-w-2xl leading-relaxed mb-6 md:mb-8">
