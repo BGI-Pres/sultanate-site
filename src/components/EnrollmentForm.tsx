@@ -1,9 +1,30 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
 import { trackEvent } from "@/lib/analytics";
+
+/**
+ * Optional invite context. When supplied:
+ *   - the form prefills name + email from the invite, then overlays any
+ *     `draft_payload` saved on the invite row (resume support),
+ *   - the first user edit fires `mark_invite_started`,
+ *   - every edit debounce-saves the in-flight form state via
+ *     `save_enrollment_draft`,
+ *   - submission goes through the `submit_enrollment` RPC so the invite
+ *     row is updated to `completed` and back-linked to the resulting
+ *     application atomically.
+ * Without `invite`, the form behaves exactly as before: direct insert
+ * into `applications`. That keeps the standalone /apply path intact.
+ */
+export interface EnrollmentFormInvite {
+  code: string;
+  name: string | null;
+  email: string | null;
+  invited_by_name: string | null;
+  draft_payload: Record<string, unknown> | null;
+}
 
 const TOTAL_STEPS = 4;
 const STEP_LABELS = [
@@ -87,44 +108,113 @@ function SummaryRow({ label, value }: { label: string; value: string | boolean |
    Main EnrollmentForm component
    ═══════════════════════════════════════════════════════ */
 export default function EnrollmentForm({
-  inviter,
-  code,
+  inviter: inviterProp,
+  code: codeProp,
+  invite,
 }: {
-  inviter: string;
-  code: string;
+  inviter?: string;
+  code?: string;
+  invite?: EnrollmentFormInvite;
 }) {
-  const [step, setStep] = useState(1);
+  // When the page hands us a full invite object, prefer it for both the
+  // inviter label and the code. Legacy /apply call sites still pass the
+  // string props directly.
+  const inviter = invite?.invited_by_name?.trim() || inviterProp || "";
+  const code = invite?.code || codeProp || "";
+
+  // Resume support: draft_payload wins over invite-stamped name/email,
+  // which in turn wins over empty. An empty-string draft value is
+  // honored — a user who cleared a prefilled field shouldn't get it back.
+  const draft = (invite?.draft_payload ?? {}) as Record<string, unknown>;
+  const draftStr = (k: string, fallback = "") => {
+    const v = draft[k];
+    return typeof v === "string" ? v : fallback;
+  };
+  const draftBool = (k: string) => draft[k] === true;
+
+  const [step, setStep] = useState(typeof draft.step === "number" ? (draft.step as number) : 1);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const topRef = useRef<HTMLDivElement>(null);
 
   /* Step 1 — Personal Info */
-  const [fullName, setFullName] = useState("");
-  const [dob, setDob] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [stateVal, setStateVal] = useState("");
-  const [zip, setZip] = useState("");
+  const [fullName, setFullName] = useState(draftStr("fullName", invite?.name ?? ""));
+  const [dob, setDob] = useState(draftStr("dob"));
+  const [phone, setPhone] = useState(draftStr("phone"));
+  const [email, setEmail] = useState(draftStr("email", invite?.email ?? ""));
+  const [address, setAddress] = useState(draftStr("address"));
+  const [city, setCity] = useState(draftStr("city"));
+  const [stateVal, setStateVal] = useState(draftStr("stateVal"));
+  const [zip, setZip] = useState(draftStr("zip"));
 
   /* Step 2 — Heritage & Intent */
-  const [moorishStatus, setMoorishStatus] = useState("");
-  const [duration, setDuration] = useState("");
-  const [surnamePref, setSurnamePref] = useState("");
-  const [statement, setStatement] = useState("");
-  const [howHeard, setHowHeard] = useState(inviter ? "Personal invitation" : "");
+  const [moorishStatus, setMoorishStatus] = useState(draftStr("moorishStatus"));
+  const [duration, setDuration] = useState(draftStr("duration"));
+  const [surnamePref, setSurnamePref] = useState(draftStr("surnamePref"));
+  const [statement, setStatement] = useState(draftStr("statement"));
+  const [howHeard, setHowHeard] = useState(
+    draftStr("howHeard", inviter ? "Personal invitation" : "")
+  );
 
   /* Step 3 — Commitments */
-  const [canAttend, setCanAttend] = useState(false);
-  const [canDues, setCanDues] = useState(false);
-  const [canParticipate, setCanParticipate] = useState(false);
-  const [affirm, setAffirm] = useState(false);
+  const [canAttend, setCanAttend] = useState(draftBool("canAttend"));
+  const [canDues, setCanDues] = useState(draftBool("canDues"));
+  const [canParticipate, setCanParticipate] = useState(draftBool("canParticipate"));
+  const [affirm, setAffirm] = useState(draftBool("affirm"));
 
   /* Step 4 — Review */
-  const [terms, setTerms] = useState(false);
-  const [ack, setAck] = useState(false);
+  const [terms, setTerms] = useState(draftBool("terms"));
+  const [ack, setAck] = useState(draftBool("ack"));
+
+  /* ── Invite-mode side effects ── */
+  const startedRef = useRef(false);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Fire mark_invite_started exactly once on the first edit. The RPC is
+  // idempotent server-side, but firing once keeps the funnel clean.
+  useEffect(() => {
+    if (!invite || submitted || startedRef.current) return;
+    // Any one of these being a non-empty change vs. the prefilled defaults
+    // counts as "started". We treat the first effect run after a real
+    // change as the trigger.
+    startedRef.current = true;
+    const supabase = createClient();
+    supabase.rpc("mark_invite_started", { p_code: invite.code }).then(() => undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fullName, phone, dob, address, statement]);
+
+  // Debounced auto-save of in-flight form state to the invite row so a
+  // user who closes the tab mid-application can pick up where they left
+  // off. Skipped after submission to avoid clobbering a completed row.
+  useEffect(() => {
+    if (!invite || submitted) return;
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      const supabase = createClient();
+      supabase
+        .rpc("save_enrollment_draft", {
+          p_code: invite.code,
+          p_partial: {
+            step,
+            fullName, dob, phone, email,
+            address, city, stateVal, zip,
+            moorishStatus, duration, surnamePref, statement, howHeard,
+            canAttend, canDues, canParticipate, affirm,
+            terms, ack,
+          },
+        })
+        .then(() => undefined);
+    }, 1200);
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
+  }, [
+    invite, submitted, step,
+    fullName, dob, phone, email, address, city, stateVal, zip,
+    moorishStatus, duration, surnamePref, statement, howHeard,
+    canAttend, canDues, canParticipate, affirm, terms, ack,
+  ]);
 
   function scrollToTop() {
     if (topRef.current) {
@@ -169,36 +259,77 @@ export default function EnrollmentForm({
 
     try {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser().catch(() => ({ data: { user: null } }));
-
       const howHeardFinal = inviter
         ? `Personal invitation by ${inviter}${howHeard && howHeard !== "Personal invitation" ? ` — ${howHeard}` : ""}`
         : howHeard;
 
-      const { error: insertError } = await supabase.from("applications").insert({
-        user_id: user?.id ?? null,
-        full_name: fullName,
-        date_of_birth: dob || null,
-        phone: phone || null,
-        email,
-        address: address || null,
-        city: city || null,
-        state: stateVal || null,
-        zip: zip || null,
-        moorish_status: moorishStatus || null,
-        identification_duration: duration || null,
-        surname_preference: surnamePref || null,
-        statement_of_intent: statement,
-        how_heard: howHeardFinal || null,
-        can_attend_assemblies: canAttend,
-        can_pay_dues: canDues,
-        can_participate: canParticipate,
-        affirm_principles: affirm,
-        terms_accepted: terms,
-        constitution_acknowledged: ack,
-      });
-
-      if (insertError) throw insertError;
+      if (invite) {
+        // Invite mode — the RPC inserts the application, stamps the
+        // invite_id + invite_code back-reference, updates the invite row
+        // to status='completed', and back-fills invite.name/email if they
+        // were null. All in one transaction.
+        const { error: rpcError } = await supabase.rpc("submit_enrollment", {
+          p_code: invite.code,
+          p_payload: {
+            full_name: fullName,
+            date_of_birth: dob || null,
+            phone,
+            email,
+            address: address || null,
+            city: city || null,
+            state: stateVal || null,
+            zip: zip || null,
+            moorish_status: moorishStatus || null,
+            identification_duration: duration || null,
+            surname_preference: surnamePref || null,
+            statement_of_intent: statement,
+            how_heard: howHeardFinal || null,
+            can_attend_assemblies: canAttend,
+            can_pay_dues: canDues,
+            can_participate: canParticipate,
+            affirm_principles: affirm,
+            constitution_acknowledged: ack,
+            terms_accepted: terms,
+          },
+        });
+        if (rpcError) {
+          const msg = rpcError.message?.includes("invite_expired")
+            ? "This invitation has expired. Please ask your inviter to send a fresh one."
+            : rpcError.message?.includes("invite_revoked")
+              ? "This invitation has been revoked and can no longer be used."
+              : rpcError.message?.includes("already_submitted")
+                ? "This invitation has already been used."
+                : "There was an issue submitting your application. Please try again.";
+          setError(msg);
+          return;
+        }
+      } else {
+        // Standalone /apply path — direct insert, unchanged.
+        const { data: { user } } = await supabase.auth.getUser().catch(() => ({ data: { user: null } }));
+        const { error: insertError } = await supabase.from("applications").insert({
+          user_id: user?.id ?? null,
+          full_name: fullName,
+          date_of_birth: dob || null,
+          phone: phone || null,
+          email,
+          address: address || null,
+          city: city || null,
+          state: stateVal || null,
+          zip: zip || null,
+          moorish_status: moorishStatus || null,
+          identification_duration: duration || null,
+          surname_preference: surnamePref || null,
+          statement_of_intent: statement,
+          how_heard: howHeardFinal || null,
+          can_attend_assemblies: canAttend,
+          can_pay_dues: canDues,
+          can_participate: canParticipate,
+          affirm_principles: affirm,
+          terms_accepted: terms,
+          constitution_acknowledged: ack,
+        });
+        if (insertError) throw insertError;
+      }
 
       fetch("/api/notify", {
         method: "POST",
@@ -207,11 +338,18 @@ export default function EnrollmentForm({
           kind: "membership_application",
           name: fullName,
           email,
-          details: { surname_preference: surnamePref, invite_code: code || null, inviter: inviter || null },
+          details: {
+            surname_preference: surnamePref,
+            invite_code: code || null,
+            inviter: inviter || null,
+          },
         }),
       });
 
-      trackEvent("membership_application_submitted", { tier: "invite", inviter: inviter || undefined });
+      trackEvent("membership_application_submitted", {
+        tier: invite ? "invite" : "direct",
+        inviter: inviter || undefined,
+      });
       setSubmitted(true);
     } catch {
       setError("There was an issue submitting your application. Please try again.");
