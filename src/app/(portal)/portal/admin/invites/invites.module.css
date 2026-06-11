@@ -118,6 +118,10 @@
 .iconBtn:hover:not(:disabled) { background: var(--bg); color: var(--ink); }
 .iconBtn:disabled { opacity: 0.35; cursor: not-allowed; }
 .iconBtn svg { width: 16px; height: 16px; }
+.iconBtnDanger { color: var(--cherry-dark); }
+.iconBtnDanger:hover:not(:disabled) {
+  background: var(--cherry-tint); color: var(--cherry-dark); border-color: rgba(155,27,48,0.3);
+}
 
 /* ─────────── Funnel ─────────── */
 .funnel {
@@ -173,6 +177,13 @@
 .panelBar {
   display: flex; align-items: center; gap: 14px;
   padding: 16px 20px; border-bottom: 1px solid var(--line); flex-wrap: wrap;
+}
+/* The panel clips its rounded corners, so the table needs its own
+   scroll surface — otherwise the right-hand action column gets cut
+   off on narrow viewports with no scrollbar to recover it. */
+.tableScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .panelTitle { font-size: 15px; font-weight: 600; color: var(--ink); }
 .panelTitle .dim { color: var(--ink-3); font-weight: 500; }

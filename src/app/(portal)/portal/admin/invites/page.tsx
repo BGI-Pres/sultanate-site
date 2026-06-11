@@ -74,6 +74,7 @@ const I = {
   clock: "M12 3a9 9 0 100 18 9 9 0 000-18zM12 8v4l3 2",
   badge: "M12 2l2.4 5 5.6.6-4 4 1 5.4L12 19l-5 3 1-5.4-4-4 5.6-.6z",
   ban: "M5.6 5.6l12.8 12.8M12 3a9 9 0 100 18 9 9 0 000-18z",
+  trash: "M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6",
 };
 
 function Icon({ d }: { d: string }) {
@@ -344,6 +345,22 @@ export default function AdminInvitesPage() {
     flash(`Invitation reset — link refreshed for 30 more days`);
   }
 
+  /* ─── Delete (hard) — only for dead links that no one claimed ─── */
+  async function deleteInvite(inv: Invite) {
+    const supabase = createClient();
+    const { error } = await supabase.rpc("delete_invite", { p_id: inv.id });
+    if (error) {
+      const msg = error.message.includes("invite_has_application")
+        ? "Can't delete — an application was already submitted from this link. Revoke it instead."
+        : `Delete failed: ${error.message}`;
+      flash(msg, "err");
+      return;
+    }
+    setInvites((prev) => prev.filter((i) => i.id !== inv.id));
+    if (active && active.id === inv.id) setActive(null);
+    flash("Invitation deleted");
+  }
+
   /* ─── Revoke ─── */
   async function revokeInvite(inv: Invite) {
     const supabase = createClient();
@@ -530,29 +547,32 @@ export default function AdminInvitesPage() {
             </p>
           </div>
         ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Recipient</th>
-                <th>Code</th>
-                <th>Status</th>
-                <th>Invited By</th>
-                <th>Generated</th>
-                <th>Last Activity</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((inv) => (
-                <InviteRow
-                  key={inv.id}
-                  inv={inv}
-                  onOpen={setActive}
-                  onResend={resendInvite}
-                />
-              ))}
-            </tbody>
-          </table>
+          <div className={styles.tableScroll}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Recipient</th>
+                  <th>Code</th>
+                  <th>Status</th>
+                  <th>Invited By</th>
+                  <th>Generated</th>
+                  <th>Last Activity</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((inv) => (
+                  <InviteRow
+                    key={inv.id}
+                    inv={inv}
+                    onOpen={setActive}
+                    onResend={resendInvite}
+                    onDelete={deleteInvite}
+                  />
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
@@ -571,6 +591,7 @@ export default function AdminInvitesPage() {
           onClose={() => setActive(null)}
           onResend={() => resendInvite(active)}
           onRevoke={() => revokeInvite(active)}
+          onDelete={() => deleteInvite(active)}
         />
       )}
 
@@ -642,15 +663,29 @@ function InviteRow({
   inv,
   onOpen,
   onResend,
+  onDelete,
 }: {
   inv: Invite;
   onOpen: (i: Invite) => void;
   onResend: (i: Invite) => void;
+  onDelete: (i: Invite) => void;
 }) {
   const seed = inv.name ?? inv.admin_label ?? inv.code;
   const [bg, fg] = avatarTone(seed);
   const status = effectiveStatus(inv);
   const canNudge = ["sent", "opened", "started", "bounced", "expired"].includes(status);
+  // A "dead link" is one no recipient has claimed — safe to hard delete.
+  // If someone already submitted, the server refuses anyway; we hide the
+  // button so admins don't confuse it with revoke.
+  const canDelete = !inv.application_id && !inv.completed_at && !inv.accepted_at;
+
+  function handleDelete(e: React.MouseEvent) {
+    e.stopPropagation();
+    const tag = inv.admin_label || inv.name || inv.code;
+    if (window.confirm(`Delete invitation "${tag}"? This permanently removes the link.`)) {
+      onDelete(inv);
+    }
+  }
   return (
     <tr onClick={() => onOpen(inv)}>
       <td>
@@ -688,6 +723,16 @@ function InviteRow({
               disabled={!!inv.revoked_at}
             >
               <Icon d={I.refresh} />
+            </button>
+          )}
+          {canDelete && (
+            <button
+              type="button"
+              className={`${styles.iconBtn} ${styles.iconBtnDanger}`}
+              onClick={handleDelete}
+              title="Delete this dead link"
+            >
+              <Icon d={I.trash} />
             </button>
           )}
           <button
@@ -857,20 +902,25 @@ function DetailDrawer({
   onClose,
   onResend,
   onRevoke,
+  onDelete,
 }: {
   invite: Invite;
   onClose: () => void;
   onResend: () => void;
   onRevoke: () => void;
+  onDelete: () => void;
 }) {
   const status = effectiveStatus(invite);
   const url = buildInviteUrl(invite.code);
   const [copied, setCopied] = useState(false);
   const [confirmRevoke, setConfirmRevoke] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const isRevoked = !!invite.revoked_at;
   const canResend = !isRevoked &&
     ["sent", "opened", "started", "bounced", "expired"].includes(status);
+  // Only a dead link — never claimed — is safe to hard delete.
+  const canDelete = !invite.application_id && !invite.completed_at && !invite.accepted_at;
 
   async function copyLink() {
     try {
@@ -1045,7 +1095,24 @@ function DetailDrawer({
         </div>
 
         <div className={styles.drawerFoot}>
-          {confirmRevoke ? (
+          {confirmDelete ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(false)}
+                className={`${styles.btn} ${styles.btnGhost}`}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={onDelete}
+                className={`${styles.btn} ${styles.btnCherry}`}
+              >
+                <Icon d={I.trash} /> Confirm Delete
+              </button>
+            </>
+          ) : confirmRevoke ? (
             <>
               <button
                 type="button"
@@ -1064,12 +1131,22 @@ function DetailDrawer({
             </>
           ) : (
             <>
+              {canDelete && (
+                <button
+                  type="button"
+                  onClick={() => setConfirmDelete(true)}
+                  className={`${styles.btn} ${styles.btnGhost}`}
+                  title="Permanently remove this dead link"
+                >
+                  <Icon d={I.trash} /> Delete
+                </button>
+              )}
               {!isRevoked && (
                 <button
                   type="button"
                   onClick={() => setConfirmRevoke(true)}
                   className={`${styles.btn} ${styles.btnGhost}`}
-                  title="Disable this link"
+                  title="Disable this link without deleting it"
                 >
                   <Icon d={I.ban} /> Revoke
                 </button>
@@ -1083,7 +1160,7 @@ function DetailDrawer({
                   <Icon d={I.refresh} /> Refresh Link
                 </button>
               )}
-              {!canResend && isRevoked && (
+              {!canResend && isRevoked && !canDelete && (
                 <button
                   type="button"
                   onClick={onClose}
