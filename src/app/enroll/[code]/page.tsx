@@ -581,7 +581,7 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             onClick={scrollToEnroll}
             className="text-[11px] md:text-xs text-gray-400 hover:text-[#C5A55A] transition-colors"
           >
-            Take name on Roll
+            Take your place
           </button>
         </div>
       </div>
