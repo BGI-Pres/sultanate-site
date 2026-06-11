@@ -100,7 +100,7 @@ export default function PortalLayout({
 
   return (
     <div className="min-h-[80vh] bg-[var(--gray-50)]">
-      <div className="bg-[var(--dark-bg)] text-white py-3 border-b border-[var(--gold)]/20">
+      <div className="bg-[var(--dark-bg)] text-white py-2 border-b border-[var(--gold)]/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {isAdmin && isInAdminSection && (
@@ -121,8 +121,8 @@ export default function PortalLayout({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="flex flex-col lg:flex-row gap-6">
           <nav className="lg:w-56 shrink-0">
             <ul className="flex lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 -mx-1 lg:mx-0">
               {memberNav.map((item) => {
