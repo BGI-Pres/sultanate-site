@@ -627,12 +627,13 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             <span className="block">Restore your <span className="text-[#C5A55A]">ancestral lineage.</span></span>
           </h1>
           <p className="text-base md:text-lg text-white/72 max-w-2xl leading-relaxed mb-6 md:mb-8">
-            <span className="text-[#C5A55A] font-semibold">Faithful</span> is a title
-            entered next to the names of active members on the Original Roll of the
-            custodial governing authority for the descendants of the Nation of Moab
-            &mdash; modernly identified as Moorish American. Three things only the
-            Original Roll holds: proclaimed nationality, economic security inside the
-            cooperative, and the ancestral lineage your descendants inherit.
+            <span className="text-[#C5A55A] font-semibold">Faithful</span>{" "}
+            is a title entered next to the names of active members on the Original
+            Roll of the custodial governing authority for the descendants of the
+            Nation of Moab &mdash; modernly identified as Moorish American. Three
+            things only the Original Roll holds: proclaimed nationality, economic
+            security inside the cooperative, and the ancestral lineage your
+            descendants inherit.
           </p>
 
           {/* Scarcity chips — three things every visitor sees before scrolling */}
