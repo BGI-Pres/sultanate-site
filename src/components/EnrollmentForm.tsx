@@ -24,6 +24,10 @@ export interface EnrollmentFormInvite {
   email: string | null;
   invited_by_name: string | null;
   draft_payload: Record<string, unknown> | null;
+  /** Optional — for multi-use group links, draft auto-save is skipped
+   *  because the invite row's draft_payload is shared across recipients.
+   *  Defaults to single-use semantics when omitted. */
+  max_uses?: number;
 }
 
 const TOTAL_STEPS = 4;
@@ -171,13 +175,12 @@ export default function EnrollmentForm({
   const startedRef = useRef(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const isGroupLink = !!invite && (invite.max_uses ?? 1) > 1;
+
   // Fire mark_invite_started exactly once on the first edit. The RPC is
   // idempotent server-side, but firing once keeps the funnel clean.
   useEffect(() => {
     if (!invite || submitted || startedRef.current) return;
-    // Any one of these being a non-empty change vs. the prefilled defaults
-    // counts as "started". We treat the first effect run after a real
-    // change as the trigger.
     startedRef.current = true;
     const supabase = createClient();
     supabase.rpc("mark_invite_started", { p_code: invite.code }).then(() => undefined);
@@ -186,9 +189,12 @@ export default function EnrollmentForm({
 
   // Debounced auto-save of in-flight form state to the invite row so a
   // user who closes the tab mid-application can pick up where they left
-  // off. Skipped after submission to avoid clobbering a completed row.
+  // off. Skipped after submission, and skipped entirely for group links
+  // — the draft_payload column is shared across all recipients of a
+  // multi-use invite, so saving here would overwrite another person's
+  // in-flight state.
   useEffect(() => {
-    if (!invite || submitted) return;
+    if (!invite || submitted || isGroupLink) return;
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
       const supabase = createClient();
@@ -210,7 +216,7 @@ export default function EnrollmentForm({
       if (saveTimer.current) clearTimeout(saveTimer.current);
     };
   }, [
-    invite, submitted, step,
+    invite, submitted, isGroupLink, step,
     fullName, dob, phone, email, address, city, stateVal, zip,
     moorishStatus, duration, surnamePref, statement, howHeard,
     canAttend, canDues, canParticipate, affirm, terms, ack,

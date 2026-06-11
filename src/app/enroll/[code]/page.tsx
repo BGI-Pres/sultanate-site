@@ -17,6 +17,8 @@ interface Invite {
   expires_at: string;
   revoked_at: string | null;
   draft_payload: Record<string, unknown> | null;
+  max_uses: number;
+  uses_count: number;
 }
 
 // The honorific shown next to the inviter's name when no admin_label is set.
@@ -185,16 +187,28 @@ export default function EnrollPage() {
     );
   }
 
-  if (invite.status === "completed" || invite.status === "accepted") {
+  // Single-use invites flip to 'completed' once they're claimed; group
+  // links (max_uses > 1) only count as exhausted when uses_count meets
+  // the cap. Until then, more recipients on the same code can still
+  // submit. Single-use kept this gate so a recipient who comes back
+  // doesn't see the form a second time.
+  const exhausted =
+    invite.uses_count >= invite.max_uses ||
+    (invite.max_uses <= 1 &&
+      (invite.status === "completed" || invite.status === "accepted"));
+  if (exhausted) {
     const greet = invite.name?.split(" ")[0];
+    const isGroup = invite.max_uses > 1;
     return (
       <SacredScreen
-        eyebrow="Application Received"
-        title="Already submitted"
+        eyebrow={isGroup ? "Invitation Closed" : "Application Received"}
+        title={isGroup ? "This invitation is full" : "Already submitted"}
         body={
-          greet
-            ? `We have your enrollment, ${greet}. The Supreme Grand Council will be in touch by email within two to four weeks.`
-            : "We have your enrollment. The Supreme Grand Council will be in touch by email within two to four weeks."
+          isGroup
+            ? `All ${invite.max_uses} seats on this invitation have been taken. Reach out to ${invite.invited_by_name ?? "the council"} for a fresh link.`
+            : greet
+              ? `We have your enrollment, ${greet}. The Supreme Grand Council will be in touch by email within two to four weeks.`
+              : "We have your enrollment. The Supreme Grand Council will be in touch by email within two to four weeks."
         }
       />
     );
@@ -977,10 +991,15 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
           <EnrollmentForm
             invite={{
               code: invite.code,
-              name: invite.name,
-              email: invite.email,
+              // Group links serve multiple recipients — a stamped name,
+              // email, or saved draft belongs to one of them, not the
+              // person currently filling the form. Strip those for any
+              // invite with capacity for more than one use.
+              name: invite.max_uses > 1 ? null : invite.name,
+              email: invite.max_uses > 1 ? null : invite.email,
               invited_by_name: invite.invited_by_name,
-              draft_payload: invite.draft_payload,
+              draft_payload: invite.max_uses > 1 ? null : invite.draft_payload,
+              max_uses: invite.max_uses,
             }}
           />
         </div>

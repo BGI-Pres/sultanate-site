@@ -38,6 +38,8 @@ interface Invite {
   last_resent_at: string | null;
   resend_count: number;
   bounce_reason: string | null;
+  max_uses: number;
+  uses_count: number;
 }
 
 type View = "all" | "awaiting" | "completed";
@@ -289,7 +291,10 @@ export default function AdminInvitesPage() {
   }, [base, statusFilter, query]);
 
   /* ─── Create invitation (link only) ─── */
-  async function createInvite(label: string): Promise<Invite | null> {
+  // The number of recipients a single invite link can serve. 1 = the
+  // legacy single-use behavior; > 1 turns the link into a "group link"
+  // that flips to status='completed' only when the cap is met.
+  async function createInvite(label: string, maxUses = 1): Promise<Invite | null> {
     const supabase = createClient();
     const {
       data: { user },
@@ -324,6 +329,7 @@ export default function AdminInvitesPage() {
         invited_by: user?.id ?? null,
         invited_by_name: invitedByName,
         status: "sent",
+        max_uses: Math.max(1, Math.min(25, Math.floor(maxUses))),
       })
       .select()
       .single();
@@ -334,7 +340,11 @@ export default function AdminInvitesPage() {
     }
     const created = data as Invite;
     setInvites((prev) => [created, ...prev]);
-    flash(`Invitation link generated${label ? ` for "${label}"` : ""}`);
+    flash(
+      created.max_uses > 1
+        ? `Group link generated · up to ${created.max_uses} seats${label ? ` · "${label}"` : ""}`
+        : `Invitation link generated${label ? ` for "${label}"` : ""}`
+    );
     return created;
   }
 
@@ -691,7 +701,7 @@ function InviteRow({
   // A "dead link" is one no recipient has claimed — safe to hard delete.
   // If someone already submitted, the server refuses anyway; we hide the
   // button so admins don't confuse it with revoke.
-  const canDelete = !inv.application_id && !inv.completed_at && !inv.accepted_at;
+  const canDelete = inv.uses_count === 0 && !inv.application_id && !inv.completed_at && !inv.accepted_at;
 
   function handleDelete(e: React.MouseEvent) {
     e.stopPropagation();
@@ -719,7 +729,29 @@ function InviteRow({
           </div>
         </div>
       </td>
-      <td className={styles.cellCode}>{inv.code}</td>
+      <td className={styles.cellCode}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <span>{inv.code}</span>
+          {inv.max_uses > 1 ? (
+            <span
+              title={`Group link · ${inv.uses_count} of ${inv.max_uses} seats taken`}
+              style={{
+                fontSize: 10.5,
+                fontFamily: "var(--mono)",
+                fontWeight: 600,
+                color: "var(--gold-dark)",
+                background: "var(--gold-tint)",
+                border: "1px solid rgba(168,137,62,0.3)",
+                padding: "1px 6px",
+                borderRadius: 999,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {inv.uses_count}/{inv.max_uses}
+            </span>
+          ) : null}
+        </div>
+      </td>
       <td>
         <StatusPill status={status} />
       </td>
@@ -769,9 +801,11 @@ function ComposeModal({
   onCreate,
 }: {
   onClose: () => void;
-  onCreate: (label: string) => Promise<Invite | null>;
+  onCreate: (label: string, maxUses: number) => Promise<Invite | null>;
 }) {
   const [label, setLabel] = useState("");
+  const [linkKind, setLinkKind] = useState<"single" | "group">("single");
+  const [groupCap, setGroupCap] = useState<number>(25);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const [created, setCreated] = useState<Invite | null>(null);
@@ -780,7 +814,8 @@ function ComposeModal({
   async function handleGenerate() {
     setErr("");
     setBusy(true);
-    const inv = await onCreate(label);
+    const maxUses = linkKind === "group" ? Math.max(2, Math.min(25, groupCap)) : 1;
+    const inv = await onCreate(label, maxUses);
     setBusy(false);
     if (!inv) {
       setErr("Could not generate the invitation. Try again.");
@@ -844,10 +879,61 @@ function ComposeModal({
                   Helps you find this link later. The recipient never sees it.
                 </p>
               </div>
+
+              <div className={styles.field}>
+                <label className={styles.fieldLabel}>
+                  Link type
+                </label>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    onClick={() => setLinkKind("single")}
+                    className={`${styles.chipFilter} ${linkKind === "single" ? styles.on : ""}`}
+                    style={{ fontSize: 13 }}
+                  >
+                    Single use
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setLinkKind("group")}
+                    className={`${styles.chipFilter} ${linkKind === "group" ? styles.on : ""}`}
+                    style={{ fontSize: 13 }}
+                  >
+                    Group link
+                  </button>
+                </div>
+                {linkKind === "group" ? (
+                  <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 10 }}>
+                    <label
+                      htmlFor="invite-cap"
+                      style={{ fontSize: 12.5, color: "var(--ink-2)", fontWeight: 600 }}
+                    >
+                      Max seats
+                    </label>
+                    <input
+                      id="invite-cap"
+                      type="number"
+                      min={2}
+                      max={25}
+                      value={groupCap}
+                      onChange={(e) => setGroupCap(Number(e.target.value) || 25)}
+                      className={styles.input}
+                      style={{ width: 96 }}
+                    />
+                    <span style={{ fontSize: 12, color: "var(--ink-3)" }}>up to 25</span>
+                  </div>
+                ) : null}
+                <p className={styles.fieldHint} style={{ marginTop: 8 }}>
+                  {linkKind === "group"
+                    ? `One link, up to ${Math.max(2, Math.min(25, groupCap))} different recipients can submit. The link expires when the cap is reached.`
+                    : "One link, one recipient. The link closes once they submit."}
+                </p>
+              </div>
+
               <p style={{ fontSize: 12.5, color: "var(--ink-3)", lineHeight: 1.55 }}>
-                Each link is single-use, expires in 30 days, and tracks opens and
-                completions back to this row. The recipient fills in their own name
-                and contact details when they submit the application.
+                Every link expires in 30 days and tracks opens, starts, and submissions
+                back to this row. Recipients fill in their own name and contact details
+                when they submit the application.
               </p>
             </>
           )}
@@ -935,7 +1021,7 @@ function DetailDrawer({
   const canResend = !isRevoked &&
     ["sent", "opened", "started", "bounced", "expired"].includes(status);
   // Only a dead link — never claimed — is safe to hard delete.
-  const canDelete = !invite.application_id && !invite.completed_at && !invite.accepted_at;
+  const canDelete = invite.uses_count === 0 && !invite.application_id && !invite.completed_at && !invite.accepted_at;
 
   // Fetch the linked membership application when the drawer opens. Cheap —
   // single row by primary key — and surfaces the application's status +
@@ -1070,6 +1156,19 @@ function DetailDrawer({
               <div className={styles.dmLabel}>Expires</div>
               <div className={styles.dmValue}>{fmt(invite.expires_at)}</div>
             </div>
+            {invite.max_uses > 1 && (
+              <div className={styles.drawerMetaCell} style={{ gridColumn: "1 / -1" }}>
+                <div className={styles.dmLabel}>Group Link Usage</div>
+                <div className={styles.dmValue}>
+                  <strong>{invite.uses_count}</strong>
+                  <span style={{ color: "var(--ink-3)" }}>
+                    {" "}of {invite.max_uses} seats taken
+                    {invite.uses_count < invite.max_uses &&
+                      ` · ${invite.max_uses - invite.uses_count} remaining`}
+                  </span>
+                </div>
+              </div>
+            )}
             {invite.admin_label && (
               <div className={styles.drawerMetaCell} style={{ gridColumn: "1 / -1" }}>
                 <div className={styles.dmLabel}>Label</div>
