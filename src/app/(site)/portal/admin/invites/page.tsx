@@ -2,16 +2,19 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase-client";
+import styles from "./invites.module.css";
 
+/* ─── Types ─── */
 interface Invite {
   id: string;
   code: string;
-  name: string;
-  email: string;
+  name: string | null;
+  email: string | null;
   phone: string | null;
   inviter_message: string | null;
   invited_by: string | null;
   invited_by_name: string | null;
+  admin_label: string | null;
   status: string;
   sent_at: string;
   opened_at: string | null;
@@ -28,20 +31,70 @@ interface Invite {
   bounce_reason: string | null;
 }
 
-const STATUS_META: Record<
-  string,
-  { label: string; class: string }
-> = {
-  sent:      { label: "Sent",      class: "bg-gray-100 text-gray-700" },
-  opened:    { label: "Opened",    class: "bg-yellow-50 text-yellow-700" },
-  started:   { label: "Started",   class: "bg-blue-50 text-blue-700" },
-  completed: { label: "Completed", class: "bg-green-50 text-green-700" },
-  accepted:  { label: "Accepted",  class: "bg-green-50 text-green-700" },
-  bounced:   { label: "Bounced",   class: "bg-red-50 text-red-700" },
-  expired:   { label: "Expired",   class: "bg-gray-100 text-gray-500" },
-  revoked:   { label: "Revoked",   class: "bg-gray-200 text-gray-600 line-through" },
+type View = "all" | "awaiting" | "completed";
+
+/* ─── Status configuration ─── */
+const STATUS_LABEL: Record<string, string> = {
+  sent: "Generated",
+  opened: "Opened",
+  started: "Started",
+  completed: "Completed",
+  accepted: "Accepted",
+  bounced: "Bounced",
+  expired: "Expired",
+  revoked: "Revoked",
 };
 
+const STATUS_PILL: Record<string, string> = {
+  sent: styles.pillSent,
+  opened: styles.pillOpened,
+  started: styles.pillStarted,
+  completed: styles.pillCompleted,
+  accepted: styles.pillAccepted,
+  bounced: styles.pillBounced,
+  expired: styles.pillExpired,
+  revoked: styles.pillRevoked,
+};
+
+/* ─── Icons (stroke, 24vb) ─── */
+const I = {
+  send: "M3.5 20.5 21 12 3.5 3.5 3.5 10l12 2-12 2z",
+  link: "M9 15l6-6M10 6l1-1a4 4 0 016 6l-1 1M14 18l-1 1a4 4 0 01-6-6l1-1",
+  copy: "M9 9h10v12H9zM5 15H4V4h11v1",
+  check: "M5 13l4 4L19 7",
+  close: "M6 6l12 12M18 6L6 18",
+  search: "M11 4a7 7 0 105 12 7 7 0 00-5-12zM20 20l-3.5-3.5",
+  eye: "M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z M12 9a3 3 0 100 6 3 3 0 000-6z",
+  pencil: "M4 20h4L18.5 9.5a2 2 0 00-2.8-2.8L5 17.2zM14 7l3 3",
+  layers: "M12 3l9 5-9 5-9-5zM3 13l9 5 9-5",
+  users: "M8 11a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM2 20a6 6 0 0112 0M17 11a3 3 0 100-6M16 20a6 6 0 016-6",
+  refresh: "M4 12a8 8 0 0113-6l3 2M20 12a8 8 0 01-13 6l-3-2M19 4v4h-4M5 20v-4h4",
+  arrowRight: "M5 12h14M13 6l6 6-6 6",
+  alert: "M12 3 2 20h20zM12 9v5M12 17h.01",
+  clock: "M12 3a9 9 0 100 18 9 9 0 000-18zM12 8v4l3 2",
+  badge: "M12 2l2.4 5 5.6.6-4 4 1 5.4L12 19l-5 3 1-5.4-4-4 5.6-.6z",
+  ban: "M5.6 5.6l12.8 12.8M12 3a9 9 0 100 18 9 9 0 000-18z",
+};
+
+function Icon({ d }: { d: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      {d.split(" M").map((seg, i) => (
+        <path key={i} d={(i ? "M" : "") + seg} />
+      ))}
+    </svg>
+  );
+}
+
+/* ─── Helpers ─── */
 function fmt(dt: string | null | undefined) {
   if (!dt) return "—";
   return new Date(dt).toLocaleDateString("en-US", {
@@ -51,32 +104,79 @@ function fmt(dt: string | null | undefined) {
   });
 }
 
+function fmtDateTime(dt: string | null | undefined) {
+  if (!dt) return "—";
+  return new Date(dt).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 function ago(dt: string | null | undefined) {
   if (!dt) return "—";
   const diff = Date.now() - new Date(dt).getTime();
   if (diff < 60_000) return "just now";
   if (diff < 3_600_000) return `${Math.round(diff / 60_000)}m ago`;
   if (diff < 86_400_000) return `${Math.round(diff / 3_600_000)}h ago`;
-  return `${Math.round(diff / 86_400_000)}d ago`;
+  const d = Math.round(diff / 86_400_000);
+  if (d < 30) return `${d}d ago`;
+  return new Date(dt).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+function initials(name: string | null | undefined): string {
+  if (!name) return "—";
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join("");
+}
+
+function avatarTone(seed: string): [string, string] {
+  const tones: [string, string][] = [
+    ["#e9f0e6", "#1E3D1A"],
+    ["#f6efdd", "#A8893E"],
+    ["#fbeaed", "#9B1B30"],
+    ["#eef4fb", "#2f6aa8"],
+    ["#f0efe9", "#5a5c52"],
+  ];
+  let h = 0;
+  for (const c of seed) h = (h * 31 + c.charCodeAt(0)) % tones.length;
+  return tones[h];
 }
 
 function effectiveStatus(inv: Invite): string {
   return inv.revoked_at ? "revoked" : inv.status;
 }
 
+function displayName(inv: Invite): string {
+  return inv.name?.trim() || inv.admin_label?.trim() || "Unclaimed invitation";
+}
+
+function buildInviteUrl(code: string): string {
+  if (typeof window === "undefined") return `/enroll/${code}`;
+  return `${window.location.origin}/enroll/${code}`;
+}
+
+/* ============================================================ */
+/* Main page                                                    */
+/* ============================================================ */
 export default function AdminInvitesPage() {
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loading, setLoading] = useState(true);
-  const [composeOpen, setComposeOpen] = useState(false);
-  const [active, setActive] = useState<Invite | null>(null);
-  const [linkOnlyCreated, setLinkOnlyCreated] = useState<Invite | null>(null);
+  const [view, setView] = useState<View>("all");
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [composeOpen, setComposeOpen] = useState(false);
+  const [active, setActive] = useState<Invite | null>(null);
   const [toast, setToast] = useState<{ msg: string; kind: "ok" | "err" } | null>(null);
 
   const flash = useCallback((msg: string, kind: "ok" | "err" = "ok") => {
     setToast({ msg, kind });
-    setTimeout(() => setToast(null), 3500);
+    setTimeout(() => setToast(null), 3200);
   }, []);
 
   const loadInvites = useCallback(async () => {
@@ -96,52 +196,90 @@ export default function AdminInvitesPage() {
     loadInvites();
   }, [loadInvites]);
 
-  /* ─── Funnel metrics (revoked excluded) ─── */
-  const funnel = useMemo(() => {
+  /* ─── View counts ─── */
+  const counts = useMemo(() => {
     const live = invites.filter((i) => !i.revoked_at);
-    const total = live.length;
-    const delivered = live.filter((i) => i.status !== "bounced").length;
-    const opened = live.filter((i) =>
-      ["opened", "started", "completed", "accepted"].includes(i.status),
-    ).length;
-    const started = live.filter((i) =>
-      ["started", "completed", "accepted"].includes(i.status),
-    ).length;
-    const completed = live.filter((i) =>
-      ["completed", "accepted"].includes(i.status),
-    ).length;
-    const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
-    return { total, delivered, opened, started, completed, pct };
+    return {
+      all: live.length,
+      awaiting: live.filter((i) =>
+        ["sent", "opened", "started"].includes(i.status)
+      ).length,
+      completed: live.filter((i) =>
+        ["completed", "accepted"].includes(i.status)
+      ).length,
+    };
   }, [invites]);
 
-  /* ─── Filter + search ─── */
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+  /* ─── Base list per view ─── */
+  const base = useMemo(() => {
     return invites.filter((i) => {
-      const status = effectiveStatus(i);
-      if (statusFilter === "all") {
-        // Hide revoked from default view
-        if (status === "revoked") return false;
-      } else if (status !== statusFilter) {
-        return false;
-      }
-      if (!q) return true;
-      return (
-        i.name.toLowerCase().includes(q) ||
-        i.email.toLowerCase().includes(q) ||
-        i.code.toLowerCase().includes(q) ||
-        (i.invited_by_name ?? "").toLowerCase().includes(q)
-      );
+      if (i.revoked_at && view !== "all") return false;
+      if (view === "awaiting") return ["sent", "opened", "started"].includes(i.status);
+      if (view === "completed") return ["completed", "accepted"].includes(i.status);
+      return true;
     });
-  }, [invites, query, statusFilter]);
+  }, [invites, view]);
 
-  /* ─── Create invite (server-generated code) ─── */
-  async function createInvite(input: {
-    name: string;
-    email: string;
-    inviter_message?: string;
-    sendEmail: boolean;
-  }): Promise<Invite | null> {
+  /* ─── Funnel metrics (Generated → Opened → Started → Completed) ─── */
+  const funnel = useMemo(() => {
+    const live = invites.filter((i) => !i.revoked_at);
+    const generated = live.length;
+    const opened = live.filter((i) =>
+      ["opened", "started", "completed", "accepted"].includes(i.status)
+    ).length;
+    const started = live.filter((i) =>
+      ["started", "completed", "accepted"].includes(i.status)
+    ).length;
+    const completed = live.filter((i) =>
+      ["completed", "accepted"].includes(i.status)
+    ).length;
+    const pct = (n: number, d: number) => (d ? Math.round((n / d) * 100) : 0);
+    return { generated, opened, started, completed, pct };
+  }, [invites]);
+
+  /* ─── Filter chips for the active view ─── */
+  const filterChips = useMemo(() => {
+    const present: Record<string, number> = {};
+    base.forEach((i) => {
+      const s = effectiveStatus(i);
+      present[s] = (present[s] ?? 0) + 1;
+    });
+    const order = ["sent", "opened", "started", "completed", "accepted", "bounced", "expired", "revoked"];
+    return order
+      .filter((s) => present[s])
+      .map((s) => ({ key: s, count: present[s] }));
+  }, [base]);
+
+  /* ─── Search/filter ─── */
+  const filtered = useMemo(() => {
+    let r = base;
+    if (statusFilter !== "all") r = r.filter((i) => effectiveStatus(i) === statusFilter);
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      r = r.filter((i) =>
+        (
+          (i.name ?? "") +
+          " " +
+          (i.email ?? "") +
+          " " +
+          i.code +
+          " " +
+          (i.invited_by_name ?? "") +
+          " " +
+          (i.admin_label ?? "")
+        )
+          .toLowerCase()
+          .includes(q)
+      );
+    }
+    return [...r].sort(
+      (a, b) =>
+        new Date(b.last_activity).getTime() - new Date(a.last_activity).getTime()
+    );
+  }, [base, statusFilter, query]);
+
+  /* ─── Create invitation (link only) ─── */
+  async function createInvite(label: string): Promise<Invite | null> {
     const supabase = createClient();
     const {
       data: { user },
@@ -157,8 +295,6 @@ export default function AdminInvitesPage() {
       invitedByName = member?.full_name ?? user.email ?? null;
     }
 
-    const normalizedEmail = input.email.trim().toLowerCase();
-
     const { data: code, error: codeErr } = await supabase.rpc("generate_invite_code");
     if (codeErr || !code) {
       flash(`Code generation failed: ${codeErr?.message ?? "unknown"}`, "err");
@@ -169,9 +305,7 @@ export default function AdminInvitesPage() {
       .from("invites")
       .insert({
         code,
-        name: input.name.trim(),
-        email: normalizedEmail,
-        inviter_message: input.inviter_message?.trim() || null,
+        admin_label: label.trim() || null,
         invited_by: user?.id ?? null,
         invited_by_name: invitedByName,
         status: "sent",
@@ -183,34 +317,13 @@ export default function AdminInvitesPage() {
       flash(`Create failed: ${error.message}`, "err");
       return null;
     }
-
     const created = data as Invite;
     setInvites((prev) => [created, ...prev]);
-
-    if (input.sendEmail) {
-      fetch("/api/notify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          kind: "enrollment_invite",
-          name: input.name.trim(),
-          email: normalizedEmail,
-          details: {
-            code,
-            invited_by_name: invitedByName,
-            inviter_message: input.inviter_message?.trim() || null,
-          },
-        }),
-      });
-      flash(`Invitation sent to ${normalizedEmail}`);
-    } else {
-      flash(`Link generated for ${normalizedEmail}`);
-    }
-
+    flash(`Invitation link generated${label ? ` for "${label}"` : ""}`);
     return created;
   }
 
-  /* ─── Resend via RPC (1h cooldown enforced server-side) ─── */
+  /* ─── Resend ─── */
   async function resendInvite(inv: Invite) {
     if (inv.revoked_at) {
       flash("Cannot resend a revoked invitation.", "err");
@@ -220,31 +333,18 @@ export default function AdminInvitesPage() {
     const { data, error } = await supabase.rpc("resend_invite", { p_id: inv.id });
     if (error) {
       const msg = error.message.includes("cooldown_active")
-        ? "Resend cooldown: please wait at least 1 hour between sends."
+        ? "Resend cooldown — please wait at least 1 hour between sends."
         : `Resend failed: ${error.message}`;
       flash(msg, "err");
       return;
     }
     const updated = data as Invite;
     setInvites((prev) => prev.map((i) => (i.id === inv.id ? updated : i)));
-    fetch("/api/notify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        kind: "enrollment_invite",
-        name: inv.name,
-        email: inv.email,
-        details: {
-          code: inv.code,
-          invited_by_name: inv.invited_by_name,
-          inviter_message: inv.inviter_message,
-        },
-      }),
-    });
-    flash(`Nudge sent to ${inv.email}`);
+    if (active && active.id === inv.id) setActive(updated);
+    flash(`Invitation reset — link refreshed for 30 more days`);
   }
 
-  /* ─── Revoke (soft-delete) ─── */
+  /* ─── Revoke ─── */
   async function revokeInvite(inv: Invite) {
     const supabase = createClient();
     const { error } = await supabase.rpc("revoke_invite", { p_id: inv.id });
@@ -254,207 +354,250 @@ export default function AdminInvitesPage() {
     }
     const now = new Date().toISOString();
     setInvites((prev) =>
-      prev.map((i) => (i.id === inv.id ? { ...i, revoked_at: now, last_activity: now } : i)),
+      prev.map((i) =>
+        i.id === inv.id ? { ...i, revoked_at: now, last_activity: now } : i
+      )
     );
     setActive(null);
-    flash("Invitation revoked. The link will no longer work.");
+    flash("Invitation revoked — the link will no longer work");
   }
 
+  /* ─── Titles per view ─── */
+  const titleMap: Record<View, { t: string; s: string }> = {
+    all: { t: "All Invitations", s: "Every invitation link generated by the Council" },
+    awaiting: { t: "Awaiting Response", s: "Invitations still moving through the funnel" },
+    completed: { t: "Completed", s: "Applicants who finished their enrollment" },
+  };
+
   return (
-    <div>
-      <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl font-bold text-[var(--gray-900)]">Invites</h1>
-          <p className="text-[var(--gray-500)] mt-1 text-sm">
-            Send personal enrollment invitations and track their progress through the funnel.
-          </p>
+    <div className={styles.page}>
+      {/* Topbar */}
+      <header className={styles.topbar}>
+        <div className={styles.topbarL}>
+          <h1 className={styles.topbarTitle}>{titleMap[view].t}</h1>
+          <p className={styles.topbarSub}>{titleMap[view].s}</p>
         </div>
-        <button
-          onClick={() => setComposeOpen(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-[var(--dark-bg)] text-[var(--gold)] rounded-md hover:bg-black transition-colors"
-        >
-          + New Invitation
-        </button>
+        <div className={styles.topbarR}>
+          <button
+            type="button"
+            onClick={() => setComposeOpen(true)}
+            className={`${styles.btn} ${styles.btnGold}`}
+          >
+            <Icon d={I.link} /> New Invitation Link
+          </button>
+        </div>
+      </header>
+
+      {/* View tabs */}
+      <div className={styles.seg}>
+        {(["all", "awaiting", "completed"] as View[]).map((v) => (
+          <button
+            type="button"
+            key={v}
+            onClick={() => {
+              setView(v);
+              setStatusFilter("all");
+              setQuery("");
+            }}
+            className={view === v ? styles.on : ""}
+          >
+            <Icon d={v === "all" ? I.layers : v === "awaiting" ? I.eye : I.users} />
+            {v === "all" ? "All Invitations" : v === "awaiting" ? "Awaiting Response" : "Completed"}
+            <span className={styles.count}>{counts[v]}</span>
+          </button>
+        ))}
       </div>
 
       {/* Funnel */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-        <FunnelCell label="Sent" num={funnel.total} sub={`${funnel.delivered} delivered`} accent="#1E3D1A" />
-        <FunnelCell
-          label="Opened"
-          num={funnel.opened}
-          sub={`${funnel.pct(funnel.opened, funnel.delivered)}% open rate`}
-          accent="#A8893E"
-        />
-        <FunnelCell
-          label="Started"
-          num={funnel.started}
-          sub={`${funnel.pct(funnel.started, funnel.opened)}% of opened`}
-          accent="#2f6aa8"
-        />
-        <FunnelCell
-          label="Completed"
-          num={funnel.completed}
-          sub={`${funnel.pct(funnel.completed, funnel.delivered)}% conversion`}
-          accent="#2D5A27"
-        />
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <input
-          type="search"
-          placeholder="Search name, email, code…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 min-w-[220px] px-3 py-2 text-sm border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/40"
-        />
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-3 py-2 text-sm border border-[var(--gray-300)] rounded-md"
-        >
-          <option value="all">All (active)</option>
-          {Object.entries(STATUS_META).map(([k, m]) => (
-            <option key={k} value={k}>
-              {m.label}
-            </option>
-          ))}
-        </select>
-        <span className="ml-auto text-xs text-[var(--gray-500)]">
-          {filtered.length} of {invites.length}
-        </span>
-      </div>
-
-      {loading ? (
-        <div className="text-center py-12 text-[var(--gray-500)]">Loading…</div>
-      ) : filtered.length === 0 ? (
-        <div className="bg-white rounded-lg border border-[var(--gray-200)] p-10 text-center">
-          <p className="text-[var(--gray-500)] text-sm">
-            {invites.length === 0
-              ? "No invitations sent yet. Click + New Invitation to begin."
-              : "No invitations match those filters."}
-          </p>
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg border border-[var(--gray-200)] overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-[var(--gray-50)] border-b border-[var(--gray-200)]">
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Invitee</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Code</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Status</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Inviter</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Sent</th>
-                  <th className="text-left px-4 py-3 font-medium text-[var(--gray-700)]">Last activity</th>
-                  <th className="text-right px-4 py-3 font-medium text-[var(--gray-700)]">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((inv) => (
-                  <tr
-                    key={inv.id}
-                    className="border-b border-[var(--gray-100)] hover:bg-[var(--gray-50)] cursor-pointer"
-                    onClick={() => setActive(inv)}
-                  >
-                    <td className="px-4 py-3">
-                      <div className="font-medium text-[var(--gray-900)]">{inv.name}</div>
-                      <div className="text-xs text-[var(--gray-500)]">{inv.email}</div>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-xs text-[var(--gray-700)]">
-                      {inv.code}
-                    </td>
-                    <td className="px-4 py-3">
-                      <StatusPill status={effectiveStatus(inv)} />
-                    </td>
-                    <td className="px-4 py-3 text-[var(--gray-500)] text-xs">
-                      {inv.invited_by_name ?? "—"}
-                    </td>
-                    <td className="px-4 py-3 text-[var(--gray-500)] text-xs whitespace-nowrap">
-                      {fmt(inv.sent_at)}
-                    </td>
-                    <td className="px-4 py-3 text-[var(--gray-500)] text-xs whitespace-nowrap">
-                      {ago(inv.last_activity)}
-                    </td>
-                    <td
-                      className="px-4 py-3 text-right whitespace-nowrap"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <button
-                        onClick={() => resendInvite(inv)}
-                        disabled={!!inv.revoked_at}
-                        className="text-xs px-2 py-1 rounded border border-[var(--gray-300)] hover:bg-[var(--gray-50)] mr-1 disabled:opacity-40 disabled:cursor-not-allowed"
-                        title={inv.revoked_at ? "Revoked — cannot resend" : "Resend (1h cooldown)"}
-                      >
-                        Resend
-                      </button>
-                      <button
-                        onClick={() => setActive(inv)}
-                        className="text-xs px-2 py-1 rounded bg-[var(--dark-bg)] text-[var(--gold)]"
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      {view !== "completed" && (
+        <div className={styles.funnel}>
+          <FunnelCell
+            label="Generated"
+            num={funnel.generated}
+            icon={I.link}
+            tone="#1E3D1A"
+            bg="var(--forest-tint)"
+            meta={<span>Live invitation links</span>}
+            bar={100}
+            barColor="var(--forest)"
+          />
+          <FunnelCell
+            label="Opened"
+            num={funnel.opened}
+            icon={I.eye}
+            tone="#A8893E"
+            bg="var(--gold-tint)"
+            meta={
+              <>
+                <span className={styles.funnelRate}>
+                  {funnel.pct(funnel.opened, funnel.generated)}%
+                </span>
+                <span>open rate</span>
+              </>
+            }
+            bar={funnel.pct(funnel.opened, funnel.generated)}
+            barColor="var(--gold)"
+          />
+          <FunnelCell
+            label="Started"
+            num={funnel.started}
+            icon={I.pencil}
+            tone="#2f6aa8"
+            bg="#eef4fb"
+            meta={
+              <>
+                <span className={styles.funnelRate} style={{ background: "#eef4fb", color: "#2f6aa8" }}>
+                  {funnel.pct(funnel.started, funnel.opened)}%
+                </span>
+                <span>of opened</span>
+              </>
+            }
+            bar={funnel.pct(funnel.started, funnel.generated)}
+            barColor="#2f6aa8"
+          />
+          <FunnelCell
+            label="Completed"
+            num={funnel.completed}
+            icon={I.check}
+            tone="#2D5A27"
+            bg="var(--forest-tint)"
+            meta={
+              <>
+                <span className={styles.funnelRate} style={{ background: "var(--forest-tint)", color: "var(--forest-dark)" }}>
+                  {funnel.pct(funnel.completed, funnel.generated)}%
+                </span>
+                <span>conversion</span>
+              </>
+            }
+            bar={funnel.pct(funnel.completed, funnel.generated)}
+            barColor="var(--forest-dark)"
+          />
         </div>
       )}
 
+      {/* Panel */}
+      <div className={styles.panel}>
+        <div className={styles.panelBar}>
+          <div className={styles.panelTitle}>
+            Invitations <span className="dim">· {filtered.length}</span>
+          </div>
+          <div className={styles.panelBarR}>
+            <div className={styles.filters}>
+              <button
+                type="button"
+                onClick={() => setStatusFilter("all")}
+                className={`${styles.chipFilter} ${statusFilter === "all" ? styles.on : ""}`}
+              >
+                All <span className="c">{base.length}</span>
+              </button>
+              {filterChips.map((c) => (
+                <button
+                  type="button"
+                  key={c.key}
+                  onClick={() => setStatusFilter(c.key)}
+                  className={`${styles.chipFilter} ${statusFilter === c.key ? styles.on : ""}`}
+                >
+                  {STATUS_LABEL[c.key] ?? c.key} <span className="c">{c.count}</span>
+                </button>
+              ))}
+            </div>
+            <div className={styles.search}>
+              <Icon d={I.search} />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search code, label, claimant…"
+              />
+            </div>
+          </div>
+        </div>
+
+        {loading ? (
+          <div className={styles.empty}>
+            <p>Loading invitations…</p>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className={styles.empty}>
+            <div className={styles.ico}>
+              <Icon d={I.search} />
+            </div>
+            <h4>No matching invitations</h4>
+            <p>
+              {invites.length === 0
+                ? "Generate your first invitation link to begin."
+                : "Adjust your search or filters to see results."}
+            </p>
+          </div>
+        ) : (
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Recipient</th>
+                <th>Code</th>
+                <th>Status</th>
+                <th>Invited By</th>
+                <th>Generated</th>
+                <th>Last Activity</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((inv) => (
+                <InviteRow
+                  key={inv.id}
+                  inv={inv}
+                  onOpen={setActive}
+                  onResend={resendInvite}
+                />
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Compose modal */}
       {composeOpen && (
         <ComposeModal
           onClose={() => setComposeOpen(false)}
-          onCreate={async (input) => {
-            const created = await createInvite(input);
-            if (created) {
-              setComposeOpen(false);
-              if (!input.sendEmail) {
-                setLinkOnlyCreated(created);
-              }
-            }
-          }}
+          onCreate={createInvite}
         />
       )}
 
-      {linkOnlyCreated && (
-        <LinkOnlyModal
-          invite={linkOnlyCreated}
-          onClose={() => setLinkOnlyCreated(null)}
-        />
-      )}
-
+      {/* Drawer */}
       {active && (
-        <InviteDrawer
-          invite={active}
+        <DetailDrawer
+          invite={invites.find((i) => i.id === active.id) ?? active}
           onClose={() => setActive(null)}
           onResend={() => resendInvite(active)}
           onRevoke={() => revokeInvite(active)}
         />
       )}
 
+      {/* Toasts */}
       {toast && (
-        <div
-          className={`fixed bottom-6 right-6 px-4 py-3 rounded-md shadow-lg text-sm z-50 ${
-            toast.kind === "ok" ? "bg-green-600 text-white" : "bg-red-600 text-white"
-          }`}
-        >
-          {toast.msg}
+        <div className={styles.toastWrap}>
+          <div className={`${styles.toast} ${toast.kind === "err" ? styles.toastErr : ""}`}>
+            <Icon d={toast.kind === "ok" ? I.check : I.alert} />
+            {toast.msg}
+          </div>
         </div>
       )}
     </div>
   );
 }
 
-/* ─── Sub-components ─── */
+/* ============================================================ */
+/* Sub-components                                               */
+/* ============================================================ */
 
 function StatusPill({ status }: { status: string }) {
-  const m = STATUS_META[status] ?? STATUS_META.sent;
+  const cls = STATUS_PILL[status] ?? STATUS_PILL.sent;
+  const label = STATUS_LABEL[status] ?? status;
   return (
-    <span className={`text-xs font-medium px-2 py-1 rounded-full ${m.class}`}>
-      {m.label}
+    <span className={`${styles.pill} ${cls}`}>
+      <span className="d" />
+      {label}
     </span>
   );
 }
@@ -462,258 +605,254 @@ function StatusPill({ status }: { status: string }) {
 function FunnelCell({
   label,
   num,
-  sub,
-  accent,
+  icon,
+  tone,
+  bg,
+  meta,
+  bar,
+  barColor,
 }: {
   label: string;
   num: number;
-  sub: string;
-  accent: string;
+  icon: string;
+  tone: string;
+  bg: string;
+  meta: React.ReactNode;
+  bar: number;
+  barColor: string;
 }) {
   return (
-    <div className="bg-white rounded-lg border border-[var(--gray-200)] p-4">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] uppercase tracking-wider font-semibold text-[var(--gray-500)]">
-          {label}
+    <div className={styles.funnelCell}>
+      <div className={styles.funnelTop}>
+        <span className={styles.funnelIco} style={{ background: bg, color: tone }}>
+          <Icon d={icon} />
         </span>
-        <span className="w-2 h-2 rounded-full" style={{ background: accent }} />
+        <span className={styles.funnelLabel}>{label}</span>
       </div>
-      <div className="text-2xl font-bold text-[var(--gray-900)]">{num}</div>
-      <div className="text-xs text-[var(--gray-500)] mt-1">{sub}</div>
+      <div className={styles.funnelNum}>{num}</div>
+      <div className={styles.funnelMeta}>{meta}</div>
+      <div className={styles.funnelBar}>
+        <span style={{ width: bar + "%", background: barColor }} />
+      </div>
     </div>
   );
 }
 
-interface DuplicateMatch {
-  id: string;
-  code: string;
-  name: string;
-  email: string;
-  status: string;
-  sent_at: string;
+function InviteRow({
+  inv,
+  onOpen,
+  onResend,
+}: {
+  inv: Invite;
+  onOpen: (i: Invite) => void;
+  onResend: (i: Invite) => void;
+}) {
+  const seed = inv.name ?? inv.admin_label ?? inv.code;
+  const [bg, fg] = avatarTone(seed);
+  const status = effectiveStatus(inv);
+  const canNudge = ["sent", "opened", "started", "bounced", "expired"].includes(status);
+  return (
+    <tr onClick={() => onOpen(inv)}>
+      <td>
+        <div className={styles.cellName}>
+          <span className={styles.cellAv} style={{ background: bg, color: fg }}>
+            {initials(seed)}
+          </span>
+          <div className={styles.cellNameT}>
+            <span className="nm">{displayName(inv)}</span>
+            {inv.email ? (
+              <span className="em">{inv.email}</span>
+            ) : inv.admin_label && inv.name ? (
+              <span className="label">{inv.admin_label}</span>
+            ) : !inv.name ? (
+              <span className="em">Awaiting submission</span>
+            ) : null}
+          </div>
+        </div>
+      </td>
+      <td className={styles.cellCode}>{inv.code}</td>
+      <td>
+        <StatusPill status={status} />
+      </td>
+      <td className={styles.cellDim}>{inv.invited_by_name ?? "—"}</td>
+      <td className={styles.cellMono}>{fmt(inv.sent_at)}</td>
+      <td className={styles.cellMono}>{ago(inv.last_activity)}</td>
+      <td className={styles.actionCell} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.rowActions}>
+          {canNudge && (
+            <button
+              type="button"
+              className={styles.iconBtn}
+              onClick={() => onResend(inv)}
+              title="Resend (1h cooldown)"
+              disabled={!!inv.revoked_at}
+            >
+              <Icon d={I.refresh} />
+            </button>
+          )}
+          <button
+            type="button"
+            className={styles.iconBtn}
+            onClick={() => onOpen(inv)}
+            title="View details"
+          >
+            <Icon d={I.arrowRight} />
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
 }
 
+/* ─── Compose modal — label + linkbox only ─── */
 function ComposeModal({
   onClose,
   onCreate,
 }: {
   onClose: () => void;
-  onCreate: (input: {
-    name: string;
-    email: string;
-    inviter_message?: string;
-    sendEmail: boolean;
-  }) => Promise<void>;
+  onCreate: (label: string) => Promise<Invite | null>;
 }) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [sending, setSending] = useState(false);
+  const [label, setLabel] = useState("");
+  const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
-  const [duplicate, setDuplicate] = useState<DuplicateMatch | null>(null);
-  const [proceedAnyway, setProceedAnyway] = useState(false);
-
-  // Debounced duplicate check
-  useEffect(() => {
-    const trimmed = email.trim();
-    if (!trimmed || !trimmed.includes("@")) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setDuplicate(null);
-      return;
-    }
-    const t = setTimeout(async () => {
-      const supabase = createClient();
-      const { data } = await supabase
-        .rpc("find_live_invite", { p_email: trimmed })
-        .maybeSingle();
-      setDuplicate((data as DuplicateMatch | null) ?? null);
-      setProceedAnyway(false);
-    }, 350);
-    return () => clearTimeout(t);
-  }, [email]);
-
-  async function handleSubmit(sendEmail: boolean) {
-    if (!name.trim() || !email.trim()) {
-      setErr("Name and email are required.");
-      return;
-    }
-    if (duplicate && !proceedAnyway) {
-      setErr("A live invitation already exists for this email. Confirm to send anyway.");
-      return;
-    }
-    setErr("");
-    setSending(true);
-    await onCreate({ name, email, inviter_message: message, sendEmail });
-    setSending(false);
-  }
-
-  const inputCls =
-    "w-full px-3 py-2 text-sm border border-[var(--gray-300)] rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/40";
-
-  return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden">
-        <header className="px-6 py-4 border-b border-[var(--gray-200)] flex items-center justify-between">
-          <h2 className="text-lg font-bold text-[var(--gray-900)]">Send invitation</h2>
-          <button
-            onClick={onClose}
-            className="text-[var(--gray-500)] hover:text-[var(--gray-900)] text-xl leading-none"
-          >
-            ×
-          </button>
-        </header>
-        <div className="px-6 py-5 space-y-3">
-          <label className="block">
-            <span className="block text-xs font-medium text-[var(--gray-700)] mb-1">
-              Full name *
-            </span>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={inputCls}
-            />
-          </label>
-          <label className="block">
-            <span className="block text-xs font-medium text-[var(--gray-700)] mb-1">
-              Email *
-            </span>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={inputCls}
-            />
-          </label>
-
-          {duplicate && (
-            <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs">
-              <p className="text-amber-800 font-medium mb-1">
-                A live invitation already exists for this email
-              </p>
-              <p className="text-amber-700">
-                {duplicate.name} · code{" "}
-                <span className="font-mono">{duplicate.code}</span> · status{" "}
-                <span className="font-medium">{duplicate.status}</span> ·{" "}
-                {fmt(duplicate.sent_at)}
-              </p>
-              <label className="mt-2 flex items-center gap-2 text-amber-800">
-                <input
-                  type="checkbox"
-                  checked={proceedAnyway}
-                  onChange={(e) => setProceedAnyway(e.target.checked)}
-                />
-                <span>Send anyway (creates a second invitation)</span>
-              </label>
-            </div>
-          )}
-
-          <label className="block">
-            <span className="block text-xs font-medium text-[var(--gray-700)] mb-1">
-              Personal message <span className="text-[var(--gray-500)] font-normal">(optional)</span>
-            </span>
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              rows={3}
-              placeholder="A short, personal note. Included in the email and shown on the landing page."
-              className={inputCls}
-            />
-          </label>
-          {err && <p className="text-xs text-[var(--cherry-red)]">{err}</p>}
-          <p className="text-[11px] text-[var(--gray-500)]">
-            Invitation expires in 30 days. Use <strong>Generate link</strong> to skip the
-            email and copy the URL to deliver yourself.
-          </p>
-        </div>
-        <footer className="px-6 py-4 border-t border-[var(--gray-200)] flex justify-end gap-2 bg-[var(--gray-50)]">
-          <button
-            onClick={onClose}
-            disabled={sending}
-            className="text-sm px-3 py-2 rounded-md border border-[var(--gray-300)]"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => handleSubmit(false)}
-            disabled={sending}
-            className="text-sm px-3 py-2 rounded-md border border-[var(--gray-300)] disabled:opacity-50"
-          >
-            {sending ? "Working…" : "Generate link only"}
-          </button>
-          <button
-            onClick={() => handleSubmit(true)}
-            disabled={sending}
-            className="text-sm px-3 py-2 rounded-md bg-[var(--dark-bg)] text-[var(--gold)] font-semibold disabled:opacity-50"
-          >
-            {sending ? "Sending…" : "Send invitation"}
-          </button>
-        </footer>
-      </div>
-    </div>
-  );
-}
-
-function LinkOnlyModal({
-  invite,
-  onClose,
-}: {
-  invite: Invite;
-  onClose: () => void;
-}) {
-  const url =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/enroll/${invite.code}`
-      : `/enroll/${invite.code}`;
+  const [created, setCreated] = useState<Invite | null>(null);
   const [copied, setCopied] = useState(false);
 
-  async function copy() {
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  async function handleGenerate() {
+    setErr("");
+    setBusy(true);
+    const inv = await onCreate(label);
+    setBusy(false);
+    if (!inv) {
+      setErr("Could not generate the invitation. Try again.");
+      return;
+    }
+    setCreated(inv);
   }
 
+  async function handleCopy() {
+    if (!created) return;
+    try {
+      await navigator.clipboard.writeText(buildInviteUrl(created.code));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  const url = created ? buildInviteUrl(created.code) : null;
+
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden">
-        <header className="px-6 py-4 border-b border-[var(--gray-200)]">
-          <h2 className="text-lg font-bold text-[var(--gray-900)]">Invitation link ready</h2>
-          <p className="text-xs text-[var(--gray-500)] mt-1">
-            For {invite.name} · {invite.email} · no email was sent.
-          </p>
-        </header>
-        <div className="px-6 py-5 space-y-3">
-          <div className="flex items-center gap-2">
-            <input
-              readOnly
-              value={url}
-              className="flex-1 px-3 py-2 text-xs font-mono border border-[var(--gray-300)] rounded-md bg-[var(--gray-50)]"
-            />
-            <button
-              onClick={copy}
-              className="text-xs px-3 py-2 rounded-md bg-[var(--dark-bg)] text-[var(--gold)] whitespace-nowrap"
-            >
-              {copied ? "Copied!" : "Copy"}
-            </button>
-          </div>
-          <p className="text-[11px] text-[var(--gray-500)]">
-            The invitation is recorded in the hub. You can send it through any channel —
-            DM, signal, hand-deliver. The invite expires in 30 days.
-          </p>
-        </div>
-        <footer className="px-6 py-4 border-t border-[var(--gray-200)] flex justify-end gap-2 bg-[var(--gray-50)]">
-          <button
-            onClick={onClose}
-            className="text-sm px-3 py-2 rounded-md bg-[var(--dark-bg)] text-[var(--gold)]"
-          >
-            Done
+    <div
+      className={styles.overlay}
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className={styles.modal} role="dialog" aria-modal="true">
+        <div className={styles.modalHead}>
+          <div className={styles.mhPattern} />
+          <button type="button" className={styles.mhClose} onClick={onClose} aria-label="Close">
+            <Icon d={I.close} />
           </button>
-        </footer>
+          <p className={styles.mhEyebrow}>
+            {created ? "Invitation Generated" : "Extend an Invitation"}
+          </p>
+          <h3>
+            {created ? "Share this private link" : "Generate an enrollment link"}
+          </h3>
+        </div>
+        <div className={styles.modalBody}>
+          {err && <div className={styles.errBlock}>{err}</div>}
+
+          {!created && (
+            <>
+              <div className={styles.field}>
+                <label className={styles.fieldLabel} htmlFor="invite-label">
+                  Label <span className="hint">· optional, private to admins</span>
+                </label>
+                <input
+                  id="invite-label"
+                  className={styles.input}
+                  value={label}
+                  onChange={(e) => setLabel(e.target.value)}
+                  placeholder='e.g. "Cousin Marcus" or "Friday meeting attendee"'
+                  autoFocus
+                  maxLength={80}
+                />
+                <p className={styles.fieldHint}>
+                  Helps you find this link later. The recipient never sees it.
+                </p>
+              </div>
+              <p style={{ fontSize: 12.5, color: "var(--ink-3)", lineHeight: 1.55 }}>
+                Each link is single-use, expires in 30 days, and tracks opens and
+                completions back to this row. The recipient fills in their own name
+                and contact details when they submit the application.
+              </p>
+            </>
+          )}
+
+          {created && url && (
+            <div className={styles.linkbox}>
+              <div className={styles.linkboxLabel}>
+                <Icon d={I.link} /> Shareable invitation link
+              </div>
+              <div className={styles.linkboxRow}>
+                <input
+                  readOnly
+                  value={url}
+                  onFocus={(e) => e.currentTarget.select()}
+                />
+                <span className={styles.codeTag}>{created.code}</span>
+                <button type="button" className={styles.copyBtn} onClick={handleCopy}>
+                  <Icon d={copied ? I.check : I.copy} /> {copied ? "Copied" : "Copy"}
+                </button>
+              </div>
+              <p className={styles.fieldHint} style={{ marginTop: 10 }}>
+                Hand this link off through any channel — DM, signal, in person.
+                It expires in 30 days and can be revoked from the row at any time.
+              </p>
+            </div>
+          )}
+        </div>
+        <div className={styles.modalFoot}>
+          {!created ? (
+            <>
+              <button
+                type="button"
+                onClick={onClose}
+                className={`${styles.btn} ${styles.btnGhost}`}
+                disabled={busy}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleGenerate}
+                className={`${styles.btn} ${styles.btnGold}`}
+                disabled={busy}
+              >
+                <Icon d={I.link} /> {busy ? "Generating…" : "Generate Link"}
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={onClose}
+              className={`${styles.btn} ${styles.btnGold}`}
+            >
+              <Icon d={I.check} /> Done
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
-function InviteDrawer({
+/* ─── Drawer ─── */
+function DetailDrawer({
   invite,
   onClose,
   onResend,
@@ -724,191 +863,239 @@ function InviteDrawer({
   onResend: () => void;
   onRevoke: () => void;
 }) {
+  const status = effectiveStatus(invite);
+  const url = buildInviteUrl(invite.code);
+  const [copied, setCopied] = useState(false);
   const [confirmRevoke, setConfirmRevoke] = useState(false);
-  const timeline = [
-    { label: "Sent", at: invite.sent_at },
-    { label: "Opened", at: invite.opened_at },
-    { label: "Started", at: invite.started_at },
-    { label: "Completed", at: invite.completed_at },
-    { label: "Accepted", at: invite.accepted_at },
-    { label: "Revoked", at: invite.revoked_at },
-  ].filter((e) => e.at);
-
-  const enrollUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/enroll/${invite.code}`
-      : `/enroll/${invite.code}`;
 
   const isRevoked = !!invite.revoked_at;
+  const canResend = !isRevoked &&
+    ["sent", "opened", "started", "bounced", "expired"].includes(status);
+
+  async function copyLink() {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* noop */
+    }
+  }
+
+  const seed = invite.name ?? invite.admin_label ?? invite.code;
+  const headerName = displayName(invite);
+  const headerSub = invite.email
+    ? invite.email
+    : invite.admin_label && !invite.name
+      ? invite.admin_label
+      : "Awaiting submission";
+
+  /* Build timeline entries from invite columns */
+  const events: { t: string; at: string | null; note?: string }[] = [
+    { t: "sent", at: invite.sent_at, note: invite.admin_label ? `Labeled "${invite.admin_label}"` : undefined },
+    { t: "opened", at: invite.opened_at },
+    { t: "started", at: invite.started_at },
+    { t: "completed", at: invite.completed_at, note: invite.application_id ? "Application submitted" : undefined },
+    { t: "accepted", at: invite.accepted_at },
+    { t: "bounced", at: invite.status === "bounced" ? invite.last_activity : null, note: invite.bounce_reason ?? undefined },
+    { t: "expired", at: invite.status === "expired" ? invite.expires_at : null },
+    { t: "revoked", at: invite.revoked_at },
+  ].filter((e) => e.at);
+
+  const tlIcon: Record<string, string> = {
+    sent: I.link, opened: I.eye, started: I.pencil,
+    completed: I.check, accepted: I.badge,
+    bounced: I.alert, expired: I.clock, revoked: I.ban,
+  };
+  const tlTone: Record<string, string> = {
+    sent: styles.tlDotGold, opened: styles.tlDotGold, started: styles.tlDotDone,
+    completed: styles.tlDotDone, accepted: styles.tlDotGold,
+    bounced: styles.tlDotCherry, expired: styles.tlDotPending, revoked: styles.tlDotCherry,
+  };
+  const tlLabel: Record<string, string> = {
+    sent: "Link generated", opened: "Opened", started: "Started application",
+    completed: "Application submitted", accepted: "Accepted by Council",
+    bounced: "Bounced", expired: "Expired", revoked: "Revoked",
+  };
 
   return (
-    <div className="fixed inset-0 z-40 flex">
-      <div className="flex-1 bg-black/40" onClick={onClose} />
-      <aside className="w-full max-w-lg bg-white shadow-2xl flex flex-col overflow-hidden">
-        <header className="px-6 py-4 border-b border-[var(--gray-200)] flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-bold text-[var(--gray-900)]">{invite.name}</h2>
-            <p className="text-xs text-[var(--gray-500)] mt-0.5">{invite.email}</p>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-[var(--gray-500)] hover:text-[var(--gray-900)] text-xl leading-none"
-          >
-            ×
+    <div className={styles.drawerWrap}>
+      <div className={styles.drawerScrim} onClick={onClose} />
+      <aside className={styles.drawer} role="dialog" aria-modal="true">
+        <div className={styles.drawerHead}>
+          <div className={styles.dhPattern} />
+          <button type="button" className={styles.dhClose} onClick={onClose} aria-label="Close">
+            <Icon d={I.close} />
           </button>
-        </header>
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <StatusPill status={effectiveStatus(invite)} />
-              <span className="text-xs text-[var(--gray-500)]">
-                Code: <span className="font-mono">{invite.code}</span>
+          <div className={styles.drawerId}>
+            <span className={styles.drawerAv}>{initials(seed)}</span>
+            <div className="di">
+              <span className="diName">{headerName}</span>
+              <span className="diEmail">{headerSub}</span>
+              <span style={{ marginTop: 4 }}>
+                <StatusPill status={status} />
               </span>
             </div>
-            {invite.bounce_reason && (
-              <p className="text-xs text-red-700 mt-1">Bounce: {invite.bounce_reason}</p>
-            )}
-            {invite.resend_count > 0 && (
-              <p className="text-xs text-[var(--gray-500)] mt-1">
-                Resent {invite.resend_count}× — last {ago(invite.last_resent_at)}
-              </p>
-            )}
           </div>
+        </div>
 
-          <section>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--gray-500)] mb-2">
-              Invitation link
-            </h3>
-            <div className="flex items-center gap-2">
-              <input
-                readOnly
-                value={enrollUrl}
-                className="flex-1 px-3 py-2 text-xs font-mono border border-[var(--gray-300)] rounded-md bg-[var(--gray-50)]"
-              />
-              <button
-                onClick={() => navigator.clipboard.writeText(enrollUrl)}
-                className="text-xs px-3 py-2 rounded-md border border-[var(--gray-300)] hover:bg-[var(--gray-50)]"
-              >
-                Copy
+        <div className={styles.drawerBody}>
+          {invite.bounce_reason && status === "bounced" && (
+            <div className={styles.bounceBlock}>
+              <strong>Delivery failed:</strong> {invite.bounce_reason}
+            </div>
+          )}
+
+          {/* Link box */}
+          <div>
+            <div className={styles.sectionLabel}>Invitation Link</div>
+            <div className={styles.drawerLinkRow}>
+              <input readOnly value={url} onFocus={(e) => e.currentTarget.select()} />
+              <button type="button" className={styles.copyBtn} onClick={copyLink}>
+                <Icon d={copied ? I.check : I.copy} /> {copied ? "Copied" : "Copy"}
               </button>
             </div>
             {isRevoked && (
-              <p className="text-[11px] text-red-700 mt-1">
-                This link has been revoked and will no longer accept submissions.
+              <p style={{ fontSize: 11.5, color: "var(--cherry-dark)", marginTop: 8 }}>
+                Revoked — this link will no longer accept submissions.
               </p>
             )}
-          </section>
+          </div>
 
-          <section>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--gray-500)] mb-3">
-              Timeline
-            </h3>
-            <ol className="space-y-2">
-              {timeline.map((e) => (
-                <li key={e.label} className="flex items-center gap-3 text-sm">
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      e.label === "Revoked" ? "bg-red-600" : "bg-[#2D5A27]"
-                    }`}
-                  />
-                  <span className="font-medium text-[var(--gray-700)]">{e.label}</span>
-                  <span className="text-[var(--gray-500)] text-xs ml-auto whitespace-nowrap">
-                    {fmt(e.at)}
-                  </span>
-                </li>
-              ))}
-              {timeline.length === 0 && (
-                <li className="text-sm text-[var(--gray-500)] italic">No activity yet</li>
-              )}
-            </ol>
-          </section>
+          {/* Meta grid */}
+          <div className={styles.drawerMeta}>
+            <div className={styles.drawerMetaCell}>
+              <div className={styles.dmLabel}>Invite Code</div>
+              <div className={`${styles.dmValue} ${styles.dmValueMono}`}>{invite.code}</div>
+            </div>
+            <div className={styles.drawerMetaCell}>
+              <div className={styles.dmLabel}>Invited By</div>
+              <div className={styles.dmValue}>{invite.invited_by_name ?? "—"}</div>
+            </div>
+            <div className={styles.drawerMetaCell}>
+              <div className={styles.dmLabel}>Generated</div>
+              <div className={styles.dmValue}>{fmt(invite.sent_at)}</div>
+            </div>
+            <div className={styles.drawerMetaCell}>
+              <div className={styles.dmLabel}>Expires</div>
+              <div className={styles.dmValue}>{fmt(invite.expires_at)}</div>
+            </div>
+            {invite.admin_label && (
+              <div className={styles.drawerMetaCell} style={{ gridColumn: "1 / -1" }}>
+                <div className={styles.dmLabel}>Label</div>
+                <div className={styles.dmValue}>{invite.admin_label}</div>
+              </div>
+            )}
+            {invite.resend_count > 0 && (
+              <div className={styles.drawerMetaCell} style={{ gridColumn: "1 / -1" }}>
+                <div className={styles.dmLabel}>Resends</div>
+                <div className={styles.dmValue}>
+                  {invite.resend_count}× — last {ago(invite.last_resent_at)}
+                </div>
+              </div>
+            )}
+            {invite.application_id && (
+              <div className={styles.drawerMetaCell} style={{ gridColumn: "1 / -1" }}>
+                <div className={styles.dmLabel}>Linked Application</div>
+                <div className={`${styles.dmValue} ${styles.dmValueMono}`}>
+                  {invite.application_id}
+                </div>
+              </div>
+            )}
+          </div>
 
           {invite.inviter_message && (
-            <section>
-              <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--gray-500)] mb-2">
-                Personal message
-              </h3>
-              <p className="text-sm text-[var(--gray-700)] italic leading-relaxed bg-[var(--gray-50)] p-3 rounded-md border border-[var(--gray-200)]">
+            <div>
+              <div className={styles.sectionLabel}>Personal Note</div>
+              <div className={styles.messageBlock}>
                 &ldquo;{invite.inviter_message}&rdquo;
-              </p>
-            </section>
+              </div>
+            </div>
           )}
 
-          <section>
-            <h3 className="text-xs uppercase tracking-wider font-semibold text-[var(--gray-500)] mb-2">
-              Details
-            </h3>
-            <div className="text-xs space-y-1 text-[var(--gray-700)]">
-              <div>
-                <span className="text-[var(--gray-500)]">Inviter:</span>{" "}
-                {invite.invited_by_name ?? "—"}
-              </div>
-              <div>
-                <span className="text-[var(--gray-500)]">Expires:</span>{" "}
-                {fmt(invite.expires_at)}
-              </div>
-              <div>
-                <span className="text-[var(--gray-500)]">Last activity:</span>{" "}
-                {ago(invite.last_activity)}
-              </div>
-              {invite.application_id && (
-                <div>
-                  <span className="text-[var(--gray-500)]">Linked application:</span>{" "}
-                  <span className="font-mono text-[10px]">{invite.application_id}</span>
-                </div>
+          {/* Timeline */}
+          <div>
+            <div className={styles.sectionLabel}>Activity Timeline</div>
+            <div className={styles.timeline}>
+              {events.length === 0 ? (
+                <p style={{ fontSize: 13, color: "var(--ink-3)", fontStyle: "italic" }}>
+                  No activity yet.
+                </p>
+              ) : (
+                events.map((e, i) => (
+                  <div key={e.t} className={styles.tlItem}>
+                    <div className={styles.tlRail}>
+                      <div className={`${styles.tlDot} ${tlTone[e.t] ?? styles.tlDotDone}`}>
+                        <Icon d={tlIcon[e.t] ?? I.check} />
+                      </div>
+                      {i < events.length - 1 && <div className={styles.tlLine} />}
+                    </div>
+                    <div className={styles.tlBody}>
+                      <div className={styles.tlTitle}>{tlLabel[e.t] ?? e.t}</div>
+                      <div className={styles.tlTime}>
+                        {fmtDateTime(e.at)} · {ago(e.at)}
+                      </div>
+                      {e.note && <div className={styles.tlNote}>{e.note}</div>}
+                    </div>
+                  </div>
+                ))
               )}
             </div>
-          </section>
+          </div>
         </div>
-        <footer className="px-6 py-4 border-t border-[var(--gray-200)] flex items-center justify-between gap-2">
+
+        <div className={styles.drawerFoot}>
           {confirmRevoke ? (
             <>
-              <span className="text-xs text-[var(--cherry-red)]">Revoke this invitation?</span>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setConfirmRevoke(false)}
-                  className="text-sm px-3 py-2 rounded-md border border-[var(--gray-300)]"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={onRevoke}
-                  className="text-sm px-3 py-2 rounded-md bg-[var(--cherry-red)] text-white"
-                >
-                  Revoke
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setConfirmRevoke(false)}
+                className={`${styles.btn} ${styles.btnGhost}`}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={onRevoke}
+                className={`${styles.btn} ${styles.btnCherry}`}
+              >
+                <Icon d={I.ban} /> Confirm Revoke
+              </button>
             </>
           ) : (
             <>
-              {!isRevoked ? (
+              {!isRevoked && (
                 <button
+                  type="button"
                   onClick={() => setConfirmRevoke(true)}
-                  className="text-sm text-[var(--cherry-red)] hover:underline"
+                  className={`${styles.btn} ${styles.btnGhost}`}
+                  title="Disable this link"
                 >
-                  Revoke
+                  <Icon d={I.ban} /> Revoke
                 </button>
-              ) : (
-                <span className="text-xs text-[var(--gray-500)]">Revoked {ago(invite.revoked_at)}</span>
               )}
-              <div className="flex gap-2">
+              {canResend && (
                 <button
+                  type="button"
                   onClick={onResend}
-                  disabled={isRevoked}
-                  className="text-sm px-3 py-2 rounded-md border border-[var(--gray-300)] hover:bg-[var(--gray-50)] disabled:opacity-40 disabled:cursor-not-allowed"
+                  className={`${styles.btn} ${styles.btnGold}`}
                 >
-                  Resend
+                  <Icon d={I.refresh} /> Refresh Link
                 </button>
+              )}
+              {!canResend && isRevoked && (
                 <button
+                  type="button"
                   onClick={onClose}
-                  className="text-sm px-3 py-2 rounded-md bg-[var(--dark-bg)] text-[var(--gold)]"
+                  className={`${styles.btn} ${styles.btnGhost}`}
+                  style={{ flex: 1 }}
                 >
                   Close
                 </button>
-              </div>
+              )}
             </>
           )}
-        </footer>
+        </div>
       </aside>
     </div>
   );
