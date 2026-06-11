@@ -21,7 +21,7 @@ interface Invite {
 // The honorific shown next to the inviter's name when no admin_label is set.
 const INVITER_DEFAULT_TITLE = "of the Supreme Grand Council";
 
-interface CohortStats {
+interface RollStats {
   cap: number;
   sealed: number;
   in_flight: number;
@@ -30,17 +30,17 @@ interface CohortStats {
 
 const PRINCIPLES = ["Love", "Truth", "Peace", "Freedom", "Justice"];
 
-// The three things that compound the longer you hold membership — every
-// founding seat keeps these forever, every later cohort pays more for
-// less. This is the FOMO engine; phrase it like a deed, not a brochure.
+// The three things Original Standing holds forever. Every name on the
+// Original Roll keeps these; every name added later pays more for less.
+// This is the FOMO engine — phrase it like a deed, not a brochure.
 const COMPOUND = [
   {
-    title: "Founders' Dues — Locked for Life",
+    title: "Original Standing Dues — Locked for Life",
     rate: "$50",
     cadence: "per month, forever",
     desc:
-      "Every name in the first cohort pays the founding tier for as long as their seat stands. The roll has never been re-rated, and the Council does not retroactively raise on those who came in first.",
-    note: "Later cohorts will be priced against the cooperative's grown ledger — not against your seat.",
+      "Every name on the Original Roll pays the Original Standing rate for as long as their seat stands. The Roll has never been re-rated, and the Council does not retroactively raise on those who were entered first.",
+    note: "Later admissions will be priced against the cooperative's grown ledger — not against your seat.",
     icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
   },
   {
@@ -48,8 +48,8 @@ const COMPOUND = [
     rate: "1 → 2 → ∞",
     cadence: "passed by blood",
     desc:
-      "Your seat is not a subscription. It is a recorded name, inheritable by your descendants without re-application, without re-vetting, without a new cohort buy-in. What you take today, your grandchildren still hold.",
-    note: "Citizenship by descent is the oldest right a nation issues. Founders write the line.",
+      "Your seat is not a subscription. It is a recorded name, inheritable by your descendants without re-application, without re-vetting, without re-purchase. What you take today, your grandchildren still hold.",
+    note: "Citizenship by descent is the oldest right a nation issues. The Original Roll writes the line.",
     icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7zM5 21l-2 2M19 21l2 2",
   },
   {
@@ -57,8 +57,8 @@ const COMPOUND = [
     rate: "Pro-rata",
     cadence: "across every venture",
     desc:
-      "Every commercial undertaking the Sultanate launches — services, real estate, lending, ventures — holds a pro-rata share for its founding members. Later members buy in at a higher cost basis against a larger ledger.",
-    note: "The cost of entry only goes up. The cohort you arrive in is the cohort you compound from.",
+      "Every commercial undertaking the Sultanate launches — services, real estate, lending, ventures — holds a pro-rata share for the names on the Original Roll. Later admissions buy in at a higher cost basis against a larger ledger.",
+    note: "The cost of entry only goes up. Original Standing is the basis you compound from.",
     icon: "M3 20h18M5 20V10m4 10V4m4 16V8m4 12v-6m4 6V12",
   },
 ];
@@ -67,7 +67,7 @@ const COMPOUND = [
 // what a non-member can never assemble on their own.
 const GAP_ROWS: { label: string; member: string; outside: string }[] = [
   { label: "Recognized nationality", member: "Documented, recorded, defensible", outside: "Whatever the state assigns you" },
-  { label: "Dues rate", member: "$50/mo locked for life", outside: "Re-priced every cohort" },
+  { label: "Dues rate", member: "$50/mo locked for life", outside: "Re-priced at every admission" },
   { label: "Cooperative equity", member: "Pro-rata in every venture", outside: "Customer of others' ventures" },
   { label: "Hereditary seat", member: "Passes to descendants", outside: "Nothing to pass" },
   { label: "Standing in Council", member: "Voice + vote, seniority-weighted", outside: "Outside the room" },
@@ -88,7 +88,7 @@ export default function EnrollPage() {
   const [notFound, setNotFound] = useState(false);
 
   const [rateLimited, setRateLimited] = useState(false);
-  const [cohort, setCohort] = useState<CohortStats | null>(null);
+  const [roll, setRoll] = useState<RollStats | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -116,14 +116,14 @@ export default function EnrollPage() {
       setLoading(false);
       const uaHint = typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 200) : "";
       supabase.rpc("mark_invite_viewed", { p_code: code, p_ua_hint: uaHint }).then(() => undefined);
-      // Founders' Cohort scarcity counter — pulled live so the page
-      // shows the actual seats remaining, not a marketing fiction.
+      // Original Roll scarcity counter — pulled live so the page shows
+      // the actual seats remaining, not a marketing fiction.
       supabase
         .rpc("get_founders_cohort_stats")
         .maybeSingle()
         .then(({ data: stats }) => {
           if (cancelled || !stats) return;
-          setCohort(stats as CohortStats);
+          setRoll(stats as RollStats);
         });
     }
     load();
@@ -199,7 +199,7 @@ export default function EnrollPage() {
     );
   }
 
-  return <EnrollContent invite={invite} cohort={cohort} />;
+  return <EnrollContent invite={invite} roll={roll} />;
 }
 
 /* ─── Shared gate screen — emblem ring, eyebrow, italic serif, gold rule ─── */
@@ -438,21 +438,21 @@ function Overture({ inviterName }: { inviterName: string | null }) {
   );
 }
 
-/* ─── Founders' Cohort scarcity band — live counter pulled from the
+/* ─── The Original Roll — live scarcity band. Counter pulled from the
        members + in-flight invites tables. The page degrades gracefully
        if the RPC hasn't returned yet; the band only renders once we
        have real numbers. ─── */
-function FoundersCohort({
-  cohort,
+function OriginalRoll({
+  roll,
   onEnroll,
 }: {
-  cohort: CohortStats | null;
+  roll: RollStats | null;
   onEnroll: () => void;
 }) {
-  if (!cohort) return null;
-  const filled = Math.max(0, Math.min(cohort.cap, cohort.sealed));
-  const pct = cohort.cap > 0 ? (filled / cohort.cap) * 100 : 0;
-  const closed = cohort.remaining <= 0;
+  if (!roll) return null;
+  const filled = Math.max(0, Math.min(roll.cap, roll.sealed));
+  const pct = roll.cap > 0 ? (filled / roll.cap) * 100 : 0;
+  const closed = roll.remaining <= 0;
   return (
     <section className="relative bg-[#0F1A0E] text-white overflow-hidden border-b border-[#C5A55A]/30">
       <div
@@ -467,21 +467,22 @@ function FoundersCohort({
         <div className="grid md:grid-cols-[1.1fr_1fr] gap-10 items-center">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#C5A55A] mb-3">
-              The Founders&rsquo; Cohort
+              The Original Roll
             </p>
             <h2
               className="text-3xl md:text-4xl leading-[1.1] mb-4"
               style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
             >
               {closed
-                ? "The founding roll is full."
-                : "One thousand names. Once written, never re-issued."}
+                ? "The Original Roll is closed."
+                : "One thousand names. Once entered, never re-issued."}
             </h2>
             <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-lg">
-              The Sultanate is a nation, not a subscription &mdash; and a nation has a
-              founding class. The Council caps it at one thousand seats. After that,
-              membership reopens at a new cohort rate, with no claim on the founders&rsquo;
-              equity, dues, or seniority. This door does not reopen at the same price.
+              The Sultanate is a nation, not a subscription. The Original Roll is the
+              record of those first recognized by the Council &mdash; capped at one
+              thousand names. After that, admission reopens at a new rate, with no
+              claim on the Original Standing held by the names already entered. This
+              instrument is granted once.
             </p>
           </div>
           <div className="bg-white/[0.04] border border-[#C5A55A]/30 rounded-2xl p-6 md:p-7 backdrop-blur-sm">
@@ -491,20 +492,20 @@ function FoundersCohort({
                   className="text-5xl md:text-6xl font-bold leading-none text-[#C5A55A] tabular-nums"
                   style={{ letterSpacing: "-0.02em" }}
                 >
-                  {closed ? 0 : cohort.remaining.toLocaleString()}
+                  {closed ? 0 : roll.remaining.toLocaleString()}
                 </div>
                 <p className="text-[11px] uppercase tracking-[0.22em] text-white/55 mt-2">
-                  {closed ? "Roll closed" : "Seats remain"}
+                  {closed ? "Roll closed" : "Names unwritten"}
                 </p>
               </div>
               <div className="text-right">
                 <div className="text-sm text-white/70 tabular-nums">
                   <strong className="text-white font-semibold">{filled.toLocaleString()}</strong>
-                  <span className="text-white/40"> of {cohort.cap.toLocaleString()} sealed</span>
+                  <span className="text-white/40"> of {roll.cap.toLocaleString()} entered</span>
                 </div>
-                {cohort.in_flight > 0 && !closed && (
+                {roll.in_flight > 0 && !closed && (
                   <div className="text-[11px] text-[#C5A55A]/85 mt-1 tabular-nums">
-                    + {cohort.in_flight.toLocaleString()} in flight today
+                    + {roll.in_flight.toLocaleString()} standing for entry today
                   </div>
                 )}
               </div>
@@ -520,7 +521,7 @@ function FoundersCohort({
                 onClick={onEnroll}
                 className="mt-5 w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
               >
-                Seal your seat <span aria-hidden>→</span>
+                Take your name on the Roll <span aria-hidden>→</span>
               </button>
             )}
           </div>
@@ -531,7 +532,7 @@ function FoundersCohort({
 }
 
 /* ─── Main landing content ─── */
-function EnrollContent({ invite, cohort }: { invite: Invite; cohort: CohortStats | null }) {
+function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | null }) {
   function scrollToEnroll() {
     const el = document.getElementById("enroll");
     if (el) {
@@ -602,24 +603,24 @@ function EnrollContent({ invite, cohort }: { invite: Invite; cohort: CohortStats
             <span className="block">Found your <span className="text-[#C5A55A]">lineage.</span></span>
           </h1>
           <p className="text-lg text-white/72 max-w-2xl leading-relaxed mb-8">
-            Membership is a recorded name on the roll of the custodial governing authority
-            for the descendants of the Nation of Moab — modernly identified as Moorish
-            American. Three things you cannot buy elsewhere, locked in for the cohort
-            that founds it: lawful standing, equity in cooperative ventures, and a seat
-            your descendants inherit.
+            Membership is a name entered on the Original Roll of the custodial governing
+            authority for the descendants of the Nation of Moab &mdash; modernly
+            identified as Moorish American. Three things only the Original Roll holds:
+            lawful standing, equity in cooperative ventures, and a seat your descendants
+            inherit.
           </p>
 
           {/* Scarcity chips — three things every visitor sees before scrolling */}
           <div className="flex flex-wrap items-center gap-2.5 mb-8">
-            {cohort && cohort.remaining > 0 && (
+            {roll && roll.remaining > 0 && (
               <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A55A]/10 border border-[#C5A55A]/40 text-xs text-[#C5A55A]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#C5A55A] animate-pulse" />
-                Founders&rsquo; Cohort · <strong className="font-semibold text-white">{cohort.remaining.toLocaleString()}</strong> of {cohort.cap.toLocaleString()} seats remain
+                The Original Roll · <strong className="font-semibold text-white">{roll.remaining.toLocaleString()}</strong> of {roll.cap.toLocaleString()} names unwritten
               </span>
             )}
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/15 text-xs text-white/80">
               <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
-              <strong className="font-semibold text-white">$50/mo</strong>&nbsp;locked for life
+              <strong className="font-semibold text-white">$50/mo</strong>&nbsp;Original Standing
             </span>
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/15 text-xs text-white/80">
               <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
@@ -643,13 +644,13 @@ function EnrollContent({ invite, cohort }: { invite: Invite; cohort: CohortStats
               onClick={scrollToEnroll}
               className="inline-flex items-center gap-2 px-7 py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
             >
-              Seal your seat <span aria-hidden>→</span>
+              Take your name on the Roll <span aria-hidden>→</span>
             </button>
             <a
               href="#learn"
               className="inline-flex items-center gap-2 px-7 py-3 border border-white/20 rounded-lg hover:bg-white/5 transition-colors text-sm font-semibold"
             >
-              What founders keep forever
+              What Original Standing holds
             </a>
           </div>
 
@@ -677,26 +678,26 @@ function EnrollContent({ invite, cohort }: { invite: Invite; cohort: CohortStats
         </div>
       </div>
 
-      {/* Founders' Cohort scarcity band */}
-      <FoundersCohort cohort={cohort} onEnroll={scrollToEnroll} />
+      {/* The Original Roll scarcity band */}
+      <OriginalRoll roll={roll} onEnroll={scrollToEnroll} />
 
-      {/* Compound interest — what every founding seat keeps forever */}
+      {/* Compound interest — what Original Standing holds forever */}
       <section id="learn" className="py-16 md:py-24 bg-white">
         <div className="max-w-[1120px] mx-auto px-6">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-3 mb-5">
               <span className="h-px w-12 bg-[#C5A55A]" />
               <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
-                What Compounds
+                What Original Standing Holds
               </span>
               <span className="h-px w-12 bg-[#C5A55A]" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              The cost of arriving early
+              The cost of arriving on the Original Roll
             </h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Three things the Founders&rsquo; Cohort writes into stone. Later cohorts can
-              join the Sultanate &mdash; they cannot join this rate, this seat, this share.
+              Three things only the Original Roll holds. Names entered later can join
+              the Sultanate &mdash; they cannot join this rate, this seat, this share.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -780,7 +781,7 @@ function EnrollContent({ invite, cohort }: { invite: Invite; cohort: CohortStats
               onClick={scrollToEnroll}
               className="inline-flex items-center gap-2 px-7 py-3 bg-[#0F1A0E] text-[#C5A55A] font-semibold rounded-lg hover:bg-[#1a2c19] transition-colors"
             >
-              Take the seat <span aria-hidden>→</span>
+              Take your name on the Roll <span aria-hidden>→</span>
             </button>
             <p className="text-xs text-gray-500">Invitation {invite.code} · expires {new Date(invite.expires_at).toLocaleDateString()}</p>
           </div>
@@ -837,17 +838,17 @@ function EnrollContent({ invite, cohort }: { invite: Invite; cohort: CohortStats
             <div className="inline-flex items-center gap-3 mb-5">
               <span className="h-px w-12 bg-[#C5A55A]" />
               <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
-                Seal Your Seat
+                Take Your Name on the Roll
               </span>
               <span className="h-px w-12 bg-[#C5A55A]" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-3">
-              Write your name into the founding roll
+              Be entered onto the Original Roll
             </h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Four short steps. Submitting locks your $50/mo founders&rsquo; rate, your
-              pro-rata share of cooperative ventures, and a seat your descendants inherit.
-              Your information is used only for Council review.
+              Four short steps. Submitting locks your $50/mo Original Standing rate,
+              your pro-rata share of cooperative ventures, and a seat your descendants
+              inherit. Your information is used only for Council review.
             </p>
           </div>
           <EnrollmentForm invite={invite} />
