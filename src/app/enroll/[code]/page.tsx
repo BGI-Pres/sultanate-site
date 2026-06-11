@@ -541,7 +541,7 @@ function OriginalRoll({
                 onClick={onEnroll}
                 className="mt-5 w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 md:py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
               >
-                Take your name on the Roll <span aria-hidden>→</span>
+                Take your place on the Roll <span aria-hidden>→</span>
               </button>
             )}
           </div>
@@ -669,7 +669,7 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
               onClick={scrollToEnroll}
               className="inline-flex items-center justify-center gap-2 px-6 md:px-7 py-3.5 md:py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
             >
-              Take your name on the Roll <span aria-hidden>→</span>
+              Take your place on the Roll <span aria-hidden>→</span>
             </button>
             <a
               href="#learn"
@@ -783,12 +783,13 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             className="text-[26px] md:text-4xl leading-[1.15] mb-3 md:mb-4"
             style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
           >
-            What faithful standing requires
+            What carries the title <span className="not-italic font-semibold text-[#C5A55A]">Faithful</span>
           </h2>
           <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-xl mx-auto mb-7 md:mb-8">
-            The Original Roll grants. The member carries. To be recorded as a
-            <em> faithful member</em>, you bear the obligations below alongside the
-            standing they preserve.
+            <em>Faithful</em> is a title entered next to the names of active members on
+            the Original Roll of the custodial governing authority for the descendants
+            of the Nation of Moab. It is not given. It is carried. These are the
+            obligations a member bears to keep it entered beside their name.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 text-left">
             {[
@@ -817,7 +818,7 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             ))}
           </div>
           <p className="mt-7 md:mt-8 text-[11.5px] md:text-xs uppercase tracking-[0.22em] text-[#C5A55A]/90">
-            Only those who carry these are recorded as Faithful Members of the Sultanate.
+            Carry these and the title Faithful is entered beside your name on the Original Roll.
           </p>
         </div>
       </section>
@@ -916,12 +917,41 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
               onClick={scrollToEnroll}
               className="inline-flex items-center justify-center gap-2 px-6 py-3.5 md:py-3 bg-[#0F1A0E] text-[#C5A55A] font-semibold rounded-lg hover:bg-[#1a2c19] transition-colors text-sm md:text-base"
             >
-              Take your name on the Roll <span aria-hidden>→</span>
+              Take your place on the Roll <span aria-hidden>→</span>
             </button>
             <p className="text-[11px] md:text-xs text-gray-500 text-center">
               Invitation {invite.code} · expires {new Date(invite.expires_at).toLocaleDateString()}
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* In Reverence — Noble Drew Ali and all true and divine prophets */}
+      <section className="relative py-10 md:py-16 bg-[#0c1409] text-white overflow-hidden border-y border-[#C5A55A]/20">
+        <div
+          className="absolute inset-0 opacity-[0.045] pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 50% 50%, #C5A55A 0 1.1px, transparent 1.5px)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+        <div className="max-w-[760px] mx-auto px-5 md:px-6 text-center relative">
+          <p className="text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] font-semibold text-[#C5A55A] mb-4">
+            In Reverence
+          </p>
+          <p
+            className="text-xl md:text-3xl leading-[1.3] text-white/92 mb-5"
+            style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
+          >
+            Honor to <span className="text-[#C5A55A] not-italic font-semibold">Noble Drew Ali</span>,
+            Prophet of the Moorish Science Temple, and to all true and divine
+            prophets who carried the word before him.
+          </p>
+          <div className="w-14 md:w-16 h-px bg-[#C5A55A] mx-auto my-5 md:my-6" />
+          <p className="text-[12.5px] md:text-sm text-[#C5A55A]/85 leading-relaxed">
+            Their work is the ground we stand on. The Sultanate proceeds in their light.
+          </p>
         </div>
       </section>
 
@@ -975,7 +1005,7 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             <div className="inline-flex items-center gap-3 mb-4 md:mb-5">
               <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
               <span className="text-[11px] md:text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
-                Take Your Name on the Roll
+                Take Your Place on the Roll
               </span>
               <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
             </div>
