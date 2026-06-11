@@ -21,27 +21,57 @@ interface Invite {
 // The honorific shown next to the inviter's name when no admin_label is set.
 const INVITER_DEFAULT_TITLE = "of the Supreme Grand Council";
 
+interface CohortStats {
+  cap: number;
+  sealed: number;
+  in_flight: number;
+  remaining: number;
+}
+
 const PRINCIPLES = ["Love", "Truth", "Peace", "Freedom", "Justice"];
 
-const PILLARS = [
+// The three things that compound the longer you hold membership — every
+// founding seat keeps these forever, every later cohort pays more for
+// less. This is the FOMO engine; phrase it like a deed, not a brochure.
+const COMPOUND = [
   {
-    title: "Nationality & Standing",
-    desc: "Formal identity under the custodianship of the Sultanate — documentation, constitutional protections, and proclaimed standing.",
-    items: ["Official identification", "Constitutional protections", "Proclaimed nationality status"],
-    icon: "M3 21V7l9-4 9 4v14M3 21h18M9 21V11h6v10",
-  },
-  {
-    title: "Economic Security",
-    desc: "A nation that does not control its economics controls nothing. Cooperative commerce and ventures born from our own membership.",
-    items: ["Cooperative commercial ventures", "Collective business network", "Institutional development"],
+    title: "Founders' Dues — Locked for Life",
+    rate: "$50",
+    cadence: "per month, forever",
+    desc:
+      "Every name in the first cohort pays the founding tier for as long as their seat stands. The roll has never been re-rated, and the Council does not retroactively raise on those who came in first.",
+    note: "Later cohorts will be priced against the cooperative's grown ledger — not against your seat.",
     icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
   },
   {
-    title: "Culture & Presence",
-    desc: "Our customs and culture presented to the world on our terms — ensuring our heritage is recognized and preserved for generations.",
-    items: ["Global cultural presentation", "Heritage preservation", "Community network"],
-    icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253",
+    title: "Hereditary Standing",
+    rate: "1 → 2 → ∞",
+    cadence: "passed by blood",
+    desc:
+      "Your seat is not a subscription. It is a recorded name, inheritable by your descendants without re-application, without re-vetting, without a new cohort buy-in. What you take today, your grandchildren still hold.",
+    note: "Citizenship by descent is the oldest right a nation issues. Founders write the line.",
+    icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7zM5 21l-2 2M19 21l2 2",
   },
+  {
+    title: "Cooperative Equity",
+    rate: "Pro-rata",
+    cadence: "across every venture",
+    desc:
+      "Every commercial undertaking the Sultanate launches — services, real estate, lending, ventures — holds a pro-rata share for its founding members. Later members buy in at a higher cost basis against a larger ledger.",
+    note: "The cost of entry only goes up. The cohort you arrive in is the cohort you compound from.",
+    icon: "M3 20h18M5 20V10m4 10V4m4 16V8m4 12v-6m4 6V12",
+  },
+];
+
+// The gap that makes refusal indefensible — what a member holds versus
+// what a non-member can never assemble on their own.
+const GAP_ROWS: { label: string; member: string; outside: string }[] = [
+  { label: "Recognized nationality", member: "Documented, recorded, defensible", outside: "Whatever the state assigns you" },
+  { label: "Dues rate", member: "$50/mo locked for life", outside: "Re-priced every cohort" },
+  { label: "Cooperative equity", member: "Pro-rata in every venture", outside: "Customer of others' ventures" },
+  { label: "Hereditary seat", member: "Passes to descendants", outside: "Nothing to pass" },
+  { label: "Standing in Council", member: "Voice + vote, seniority-weighted", outside: "Outside the room" },
+  { label: "Network of members", member: "Direct access — by introduction", outside: "Cold outreach, no warrant" },
 ];
 
 const HOW = [
@@ -58,6 +88,7 @@ export default function EnrollPage() {
   const [notFound, setNotFound] = useState(false);
 
   const [rateLimited, setRateLimited] = useState(false);
+  const [cohort, setCohort] = useState<CohortStats | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -83,10 +114,17 @@ export default function EnrollPage() {
       }
       setInvite(data as Invite);
       setLoading(false);
-      // View counter + last-viewer fingerprint. UA hint is hashed server-side
-      // together with the requester IP.
       const uaHint = typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 200) : "";
       supabase.rpc("mark_invite_viewed", { p_code: code, p_ua_hint: uaHint }).then(() => undefined);
+      // Founders' Cohort scarcity counter — pulled live so the page
+      // shows the actual seats remaining, not a marketing fiction.
+      supabase
+        .rpc("get_founders_cohort_stats")
+        .maybeSingle()
+        .then(({ data: stats }) => {
+          if (cancelled || !stats) return;
+          setCohort(stats as CohortStats);
+        });
     }
     load();
     return () => {
@@ -161,7 +199,7 @@ export default function EnrollPage() {
     );
   }
 
-  return <EnrollContent invite={invite} />;
+  return <EnrollContent invite={invite} cohort={cohort} />;
 }
 
 /* ─── Shared gate screen — emblem ring, eyebrow, italic serif, gold rule ─── */
@@ -400,8 +438,100 @@ function Overture({ inviterName }: { inviterName: string | null }) {
   );
 }
 
+/* ─── Founders' Cohort scarcity band — live counter pulled from the
+       members + in-flight invites tables. The page degrades gracefully
+       if the RPC hasn't returned yet; the band only renders once we
+       have real numbers. ─── */
+function FoundersCohort({
+  cohort,
+  onEnroll,
+}: {
+  cohort: CohortStats | null;
+  onEnroll: () => void;
+}) {
+  if (!cohort) return null;
+  const filled = Math.max(0, Math.min(cohort.cap, cohort.sealed));
+  const pct = cohort.cap > 0 ? (filled / cohort.cap) * 100 : 0;
+  const closed = cohort.remaining <= 0;
+  return (
+    <section className="relative bg-[#0F1A0E] text-white overflow-hidden border-b border-[#C5A55A]/30">
+      <div
+        className="absolute inset-0 opacity-[0.05] pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 50% 50%, #C5A55A 0 1.2px, transparent 1.6px)",
+          backgroundSize: "36px 36px",
+        }}
+      />
+      <div className="max-w-[1120px] mx-auto px-6 py-12 md:py-14 relative">
+        <div className="grid md:grid-cols-[1.1fr_1fr] gap-10 items-center">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#C5A55A] mb-3">
+              The Founders&rsquo; Cohort
+            </p>
+            <h2
+              className="text-3xl md:text-4xl leading-[1.1] mb-4"
+              style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
+            >
+              {closed
+                ? "The founding roll is full."
+                : "One thousand names. Once written, never re-issued."}
+            </h2>
+            <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-lg">
+              The Sultanate is a nation, not a subscription &mdash; and a nation has a
+              founding class. The Council caps it at one thousand seats. After that,
+              membership reopens at a new cohort rate, with no claim on the founders&rsquo;
+              equity, dues, or seniority. This door does not reopen at the same price.
+            </p>
+          </div>
+          <div className="bg-white/[0.04] border border-[#C5A55A]/30 rounded-2xl p-6 md:p-7 backdrop-blur-sm">
+            <div className="flex items-end justify-between mb-3">
+              <div>
+                <div
+                  className="text-5xl md:text-6xl font-bold leading-none text-[#C5A55A] tabular-nums"
+                  style={{ letterSpacing: "-0.02em" }}
+                >
+                  {closed ? 0 : cohort.remaining.toLocaleString()}
+                </div>
+                <p className="text-[11px] uppercase tracking-[0.22em] text-white/55 mt-2">
+                  {closed ? "Roll closed" : "Seats remain"}
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-white/70 tabular-nums">
+                  <strong className="text-white font-semibold">{filled.toLocaleString()}</strong>
+                  <span className="text-white/40"> of {cohort.cap.toLocaleString()} sealed</span>
+                </div>
+                {cohort.in_flight > 0 && !closed && (
+                  <div className="text-[11px] text-[#C5A55A]/85 mt-1 tabular-nums">
+                    + {cohort.in_flight.toLocaleString()} in flight today
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="h-1.5 rounded-full bg-white/8 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-[#A8893E] to-[#C5A55A]"
+                style={{ width: `${Math.max(2, pct)}%` }}
+              />
+            </div>
+            {!closed && (
+              <button
+                onClick={onEnroll}
+                className="mt-5 w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
+              >
+                Seal your seat <span aria-hidden>→</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Main landing content ─── */
-function EnrollContent({ invite }: { invite: Invite }) {
+function EnrollContent({ invite, cohort }: { invite: Invite; cohort: CohortStats | null }) {
   function scrollToEnroll() {
     const el = document.getElementById("enroll");
     if (el) {
@@ -461,19 +591,41 @@ function EnrollContent({ invite }: { invite: Invite }) {
           />
 
           <p
-            className="text-2xl md:text-3xl text-white/85 leading-[1.25] mb-5 max-w-3xl"
+            className="text-2xl md:text-3xl text-white/85 leading-[1.25] mb-7 max-w-3xl"
             style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
           >
             You have been invited to the Sultanate of Amexem.
           </p>
-          <h1 className="text-4xl md:text-6xl font-bold leading-[1.05] mb-6">
-            Proclaim Your <span className="text-[#C5A55A]">Nationality</span>
+          <h1 className="text-4xl md:text-6xl font-bold leading-[1.02] tracking-[-0.01em] mb-7">
+            <span className="block">Reclaim your <span className="text-[#C5A55A]">nationality.</span></span>
+            <span className="block">Secure your <span className="text-[#C5A55A]">economy.</span></span>
+            <span className="block">Found your <span className="text-[#C5A55A]">lineage.</span></span>
           </h1>
-          <p className="text-lg text-white/70 max-w-2xl leading-relaxed mb-8">
-            Enroll as a member of the custodial governing authority for the descendants
-            of the Nation of Moab — modernly identified as Moorish American. Standing,
-            economic security, and heritage — secured from within our own membership.
+          <p className="text-lg text-white/72 max-w-2xl leading-relaxed mb-8">
+            Membership is a recorded name on the roll of the custodial governing authority
+            for the descendants of the Nation of Moab — modernly identified as Moorish
+            American. Three things you cannot buy elsewhere, locked in for the cohort
+            that founds it: lawful standing, equity in cooperative ventures, and a seat
+            your descendants inherit.
           </p>
+
+          {/* Scarcity chips — three things every visitor sees before scrolling */}
+          <div className="flex flex-wrap items-center gap-2.5 mb-8">
+            {cohort && cohort.remaining > 0 && (
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A55A]/10 border border-[#C5A55A]/40 text-xs text-[#C5A55A]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C5A55A] animate-pulse" />
+                Founders&rsquo; Cohort · <strong className="font-semibold text-white">{cohort.remaining.toLocaleString()}</strong> of {cohort.cap.toLocaleString()} seats remain
+              </span>
+            )}
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/15 text-xs text-white/80">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
+              <strong className="font-semibold text-white">$50/mo</strong>&nbsp;locked for life
+            </span>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/15 text-xs text-white/80">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
+              Hereditary seat
+            </span>
+          </div>
 
           {invite.inviter_message && (
             <div className="mb-8 max-w-2xl p-5 rounded-lg border border-[#C5A55A]/30 bg-[#C5A55A]/5">
@@ -491,13 +643,13 @@ function EnrollContent({ invite }: { invite: Invite }) {
               onClick={scrollToEnroll}
               className="inline-flex items-center gap-2 px-7 py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
             >
-              Begin Enrollment <span aria-hidden>→</span>
+              Seal your seat <span aria-hidden>→</span>
             </button>
             <a
               href="#learn"
               className="inline-flex items-center gap-2 px-7 py-3 border border-white/20 rounded-lg hover:bg-white/5 transition-colors text-sm font-semibold"
             >
-              What membership secures
+              What founders keep forever
             </a>
           </div>
 
@@ -525,45 +677,112 @@ function EnrollContent({ invite }: { invite: Invite }) {
         </div>
       </div>
 
-      {/* Pillars */}
-      <section id="learn" className="py-16 md:py-24">
+      {/* Founders' Cohort scarcity band */}
+      <FoundersCohort cohort={cohort} onEnroll={scrollToEnroll} />
+
+      {/* Compound interest — what every founding seat keeps forever */}
+      <section id="learn" className="py-16 md:py-24 bg-white">
         <div className="max-w-[1120px] mx-auto px-6">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-3 mb-5">
               <span className="h-px w-12 bg-[#C5A55A]" />
               <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
-                What Membership Secures
+                What Compounds
               </span>
               <span className="h-px w-12 bg-[#C5A55A]" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Nationality Is the Order of the Day
+              The cost of arriving early
             </h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Without nationality, there is no standing, no protection, no commerce.
-              The Sultanate secures all three.
+              Three things the Founders&rsquo; Cohort writes into stone. Later cohorts can
+              join the Sultanate &mdash; they cannot join this rate, this seat, this share.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {PILLARS.map((pl) => (
-              <div key={pl.title} className="p-6 rounded-xl border border-gray-200 bg-white hover:border-[#C5A55A] hover:shadow-lg transition-all">
+            {COMPOUND.map((c) => (
+              <div
+                key={c.title}
+                className="relative p-7 rounded-2xl border border-gray-200 bg-white hover:border-[#C5A55A] hover:shadow-[0_24px_60px_-30px_rgba(15,26,14,0.4)] transition-all"
+              >
                 <div className="w-12 h-12 rounded-xl bg-[#0F1A0E] text-[#C5A55A] flex items-center justify-center mb-5">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={pl.icon} />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={c.icon} />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold mb-2">{pl.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">{pl.desc}</p>
-                <ul className="space-y-2">
-                  {pl.items.map((it) => (
-                    <li key={it} className="flex items-start gap-2 text-sm text-gray-700">
-                      <span className="w-1 h-1 rounded-full bg-[#C5A55A] mt-2 shrink-0" />
-                      {it}
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex items-baseline gap-2 mb-1">
+                  <span className="text-3xl md:text-4xl font-bold text-[#0F1A0E] tracking-tight">{c.rate}</span>
+                  <span className="text-xs uppercase tracking-[0.16em] text-[#A8893E] font-semibold">{c.cadence}</span>
+                </div>
+                <h3 className="text-lg font-bold mb-3 mt-2">{c.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">{c.desc}</p>
+                <p className="text-xs italic text-[#A8893E]/90 border-t border-gray-100 pt-3">{c.note}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Member vs Non-Member gap — loss-aversion engine */}
+      <section className="py-16 md:py-24 bg-[#f6f5f1]">
+        <div className="max-w-[1040px] mx-auto px-6">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-3 mb-5">
+              <span className="h-px w-12 bg-[#C5A55A]" />
+              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
+                The Gap
+              </span>
+              <span className="h-px w-12 bg-[#C5A55A]" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              What a member holds. What no outsider can assemble.
+            </h2>
+            <p className="text-gray-500 max-w-2xl mx-auto">
+              Side by side. Decide whether what you give up by staying outside is
+              cheaper than what membership costs to keep.
+            </p>
+          </div>
+          <div className="rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-[0_24px_60px_-40px_rgba(15,26,14,0.45)]">
+            <div className="grid grid-cols-[1.1fr_1fr_1fr] text-xs uppercase tracking-[0.14em] font-semibold bg-[#0F1A0E] text-white/85">
+              <div className="px-5 py-4">&nbsp;</div>
+              <div className="px-5 py-4 flex items-center gap-2 border-l border-white/10">
+                <span className="w-2 h-2 rounded-full bg-[#C5A55A]" />
+                Sealed member
+              </div>
+              <div className="px-5 py-4 flex items-center gap-2 border-l border-white/10 text-white/55">
+                <span className="w-2 h-2 rounded-full bg-white/30" />
+                Outside the roll
+              </div>
+            </div>
+            {GAP_ROWS.map((row, i) => (
+              <div
+                key={row.label}
+                className={`grid grid-cols-[1.1fr_1fr_1fr] text-sm ${i % 2 ? "bg-[#fafaf6]" : "bg-white"}`}
+              >
+                <div className="px-5 py-4 font-semibold text-gray-800 border-t border-gray-100">{row.label}</div>
+                <div className="px-5 py-4 text-[#1E3D1A] border-t border-l border-gray-100 flex items-start gap-2">
+                  <svg className="w-4 h-4 mt-0.5 shrink-0 text-[#2D5A27]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>{row.member}</span>
+                </div>
+                <div className="px-5 py-4 text-gray-500 border-t border-l border-gray-100 flex items-start gap-2">
+                  <svg className="w-4 h-4 mt-0.5 shrink-0 text-[#9B1B30]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  <span>{row.outside}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={scrollToEnroll}
+              className="inline-flex items-center gap-2 px-7 py-3 bg-[#0F1A0E] text-[#C5A55A] font-semibold rounded-lg hover:bg-[#1a2c19] transition-colors"
+            >
+              Take the seat <span aria-hidden>→</span>
+            </button>
+            <p className="text-xs text-gray-500">Invitation {invite.code} · expires {new Date(invite.expires_at).toLocaleDateString()}</p>
           </div>
         </div>
       </section>
@@ -618,16 +837,17 @@ function EnrollContent({ invite }: { invite: Invite }) {
             <div className="inline-flex items-center gap-3 mb-5">
               <span className="h-px w-12 bg-[#C5A55A]" />
               <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
-                Enroll Now
+                Seal Your Seat
               </span>
               <span className="h-px w-12 bg-[#C5A55A]" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-3">
-              Begin Your Membership Application
+              Write your name into the founding roll
             </h2>
             <p className="text-gray-500 max-w-2xl mx-auto">
-              Complete the application below. Your information is used for membership
-              processing only.
+              Four short steps. Submitting locks your $50/mo founders&rsquo; rate, your
+              pro-rata share of cooperative ventures, and a seat your descendants inherit.
+              Your information is used only for Council review.
             </p>
           </div>
           <EnrollmentForm invite={invite} />
