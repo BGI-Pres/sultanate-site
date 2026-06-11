@@ -42,14 +42,14 @@
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 16px;
-  padding-bottom: 18px;
-  margin-bottom: 24px;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
   border-bottom: 1px solid var(--line);
 }
-.topbar-l { display: flex; flex-direction: column; gap: 4px; }
-.topbar-title { font-size: 22px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
-.topbar-sub { font-size: 13px; color: var(--ink-3); }
+.topbar-l { display: flex; flex-direction: column; gap: 2px; }
+.topbar-title { font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: -0.01em; }
+.topbar-sub { font-size: 12.5px; color: var(--ink-3); }
 .topbar-r { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
 /* segmented view tabs (All / Awaiting / Completed) */
@@ -60,7 +60,7 @@
   border-radius: 9px;
   padding: 3px;
   gap: 2px;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
 }
 .seg button {
   border: none;
@@ -127,40 +127,40 @@
 .funnel {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
   background: var(--surface); border: 1px solid var(--line);
-  border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-sm);
-  margin-bottom: 26px;
+  border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
 }
-.funnelCell { position: relative; padding: 22px 24px; }
+.funnelCell { position: relative; padding: 14px 18px; }
 .funnelCell + .funnelCell::before {
-  content: ""; position: absolute; left: 0; top: 20px; bottom: 20px;
+  content: ""; position: absolute; left: 0; top: 14px; bottom: 14px;
   width: 1px; background: var(--line);
 }
-.funnelTop { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.funnelTop { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
 .funnelIco {
-  width: 30px; height: 30px; border-radius: 8px;
+  width: 26px; height: 26px; border-radius: 7px;
   display: flex; align-items: center; justify-content: center; flex: none;
 }
-.funnelIco svg { width: 16px; height: 16px; }
+.funnelIco svg { width: 14px; height: 14px; }
 .funnelLabel {
-  font-size: 11.5px; font-weight: 600; color: var(--ink-2);
+  font-size: 11px; font-weight: 600; color: var(--ink-2);
   text-transform: uppercase; letter-spacing: 0.08em;
 }
 .funnelNum {
-  font-size: 34px; font-weight: 600; letter-spacing: -0.02em;
+  font-size: 26px; font-weight: 600; letter-spacing: -0.02em;
   color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1;
 }
 .funnelMeta {
-  font-size: 12px; color: var(--ink-3); margin-top: 8px;
-  display: flex; align-items: center; gap: 7px;
+  font-size: 11.5px; color: var(--ink-3); margin-top: 6px;
+  display: flex; align-items: center; gap: 6px;
 }
 .funnelRate {
-  font-family: var(--mono); font-size: 11.5px; font-weight: 600;
-  padding: 2px 7px; border-radius: 5px;
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  padding: 2px 6px; border-radius: 5px;
   background: var(--gold-tint); color: var(--gold-dark);
 }
 .funnelBar {
-  height: 4px; border-radius: 3px; background: var(--line);
-  margin-top: 14px; overflow: hidden;
+  height: 3px; border-radius: 3px; background: var(--line);
+  margin-top: 10px; overflow: hidden;
 }
 .funnelBar > span { display: block; height: 100%; border-radius: 3px; }
 
@@ -175,8 +175,8 @@
   border-radius: 16px; box-shadow: var(--shadow-sm); overflow: hidden;
 }
 .panelBar {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px 20px; border-bottom: 1px solid var(--line); flex-wrap: wrap;
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 16px; border-bottom: 1px solid var(--line); flex-wrap: wrap;
 }
 /* The panel clips its rounded corners, so the table needs its own
    scroll surface — otherwise the right-hand action column gets cut
@@ -220,25 +220,25 @@
 
 .table { width: 100%; border-collapse: collapse; }
 .table thead th {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em;
   color: var(--ink-3); font-weight: 600; text-align: left;
-  padding: 12px 20px; border-bottom: 1px solid var(--line);
+  padding: 9px 16px; border-bottom: 1px solid var(--line);
   white-space: nowrap; background: var(--bg);
 }
 .table tbody td {
-  padding: 14px 20px; border-bottom: 1px solid var(--line);
-  font-size: 13.5px; color: var(--ink); vertical-align: middle;
+  padding: 10px 16px; border-bottom: 1px solid var(--line);
+  font-size: 13px; color: var(--ink); vertical-align: middle;
 }
 .table tbody tr { cursor: pointer; transition: background 0.14s; }
 .table tbody tr:hover { background: var(--gold-tint); }
 .table tbody tr:last-child td { border-bottom: none; }
 .table .actionCell { text-align: right; }
 
-.cellName { display: flex; align-items: center; gap: 12px; }
+.cellName { display: flex; align-items: center; gap: 10px; }
 .cellAv {
-  width: 34px; height: 34px; border-radius: 50%; flex: none;
+  width: 30px; height: 30px; border-radius: 50%; flex: none;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12.5px; font-weight: 600; border: 1px solid var(--line-strong);
+  font-size: 11.5px; font-weight: 600; border: 1px solid var(--line-strong);
 }
 .cellNameT { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .cellNameT .nm { font-weight: 600; font-size: 13.5px; color: var(--ink); }
@@ -252,7 +252,7 @@
 
 .rowActions { display: flex; gap: 6px; justify-content: flex-end; }
 
-.empty { text-align: center; padding: 56px 20px; color: var(--ink-3); }
+.empty { text-align: center; padding: 40px 20px; color: var(--ink-3); }
 .empty .ico {
   width: 52px; height: 52px; margin: 0 auto 16px; border-radius: 14px;
   background: var(--bg); display: flex; align-items: center; justify-content: center;
