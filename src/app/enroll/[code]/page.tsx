@@ -36,12 +36,12 @@ const PRINCIPLES = ["Love", "Truth", "Peace", "Freedom", "Justice"];
 // This is the FOMO engine — phrase it like a deed, not a brochure.
 const COMPOUND = [
   {
-    title: "Original Standing Dues — Locked for Life",
-    rate: "$50",
-    cadence: "per month, forever",
+    title: "Founders' Welcome Dues",
+    rate: "$5 → $50",
+    cadence: "first year, then standard",
     desc:
-      "Every name on the Original Roll pays the Original Standing rate for as long as their seat stands. The Roll has never been re-rated, and the Council does not retroactively raise on those who were entered first.",
-    note: "Later admissions will be priced against the cooperative's grown ledger — not against your seat.",
+      "Your founding year of standing is carried at five dollars a month — a tenth of the $50 standard rate every member settles into after year one. Every later admission pays the standard rate from day one.",
+    note: "The welcome year is granted once, only to the names on the Original Roll.",
     icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
   },
   {
@@ -54,12 +54,12 @@ const COMPOUND = [
     icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7zM5 21l-2 2M19 21l2 2",
   },
   {
-    title: "Cooperative Equity",
+    title: "Uplifting Fund Equity",
     rate: "Pro-rata",
-    cadence: "across every venture",
+    cadence: "to your Uplifting Fund subscription",
     desc:
-      "Every commercial undertaking the Sultanate launches — services, real estate, lending, ventures — holds a pro-rata share for the names on the Original Roll. Later admissions buy in at a higher cost basis against a larger ledger.",
-    note: "The cost of entry only goes up. Original Standing is the basis you compound from.",
+      "Every cooperative venture the Sultanate launches — services, real estate, lending — allocates equity pro-rata to each member's subscription to the Uplifting Fund. Subscription is open: every member contributes as they are able, and the Fund accepts what you carry. Equity follows what you put in. Your subscription is marked on your standing card and inscribed in the Roll, so the road behind you and the road ahead are always visible.",
+    note: "What you put in early compounds forever. The Fund opens with the Original Roll — every venture established from this day forward is anchored by what you subscribe today.",
     icon: "M3 20h18M5 20V10m4 10V4m4 16V8m4 12v-6m4 6V12",
   },
 ];
@@ -68,8 +68,8 @@ const COMPOUND = [
 // what a non-member can never assemble on their own.
 const GAP_ROWS: { label: string; member: string; outside: string }[] = [
   { label: "Recognized nationality", member: "Documented, recorded, defensible", outside: "Whatever the state assigns you" },
-  { label: "Dues rate", member: "$50/mo locked for life", outside: "Re-priced at every admission" },
-  { label: "Cooperative equity", member: "Pro-rata in every venture", outside: "Customer of others' ventures" },
+  { label: "Welcome year dues", member: "$5/mo first year, $50/mo standard after", outside: "$50/mo from day one" },
+  { label: "Cooperative equity", member: "Pro-rata to your Uplifting Fund subscription", outside: "Customer of others' ventures" },
   { label: "Hereditary seat", member: "Passes to descendants", outside: "Nothing to pass" },
   { label: "Standing in Council", member: "Voice + vote, seniority-weighted", outside: "Outside the room" },
   { label: "Network of members", member: "Direct access — by introduction", outside: "Cold outreach, no warrant" },
@@ -732,6 +732,79 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
               </div>
             ))}
           </div>
+
+          {/* Supplementary perks held by every name on the Original Roll */}
+          <div className="mt-7 md:mt-10 max-w-2xl mx-auto text-center">
+            <p className="text-[11px] md:text-xs uppercase tracking-[0.22em] font-semibold text-[#A8893E] mb-2">
+              Also held by every name on the Roll
+            </p>
+            <p className="text-[13px] md:text-sm text-gray-600 leading-relaxed">
+              The right to extend invitations forward &mdash; each sponsored name carries
+              your seal &mdash; and your own name recorded in the Original Roll as a
+              founder of the Sultanate, in perpetuity.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Covenant of Faithful Standing — what is required in return */}
+      <section className="py-12 md:py-20 bg-[#0F1A0E] text-white relative overflow-hidden border-y border-[#C5A55A]/25">
+        <div
+          className="absolute inset-0 opacity-[0.05] pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 50% 50%, #C5A55A 0 1.2px, transparent 1.6px)",
+            backgroundSize: "36px 36px",
+          }}
+        />
+        <div className="max-w-[860px] mx-auto px-5 md:px-6 relative text-center">
+          <div className="inline-flex items-center gap-3 mb-4 md:mb-5">
+            <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
+            <span className="text-[11px] md:text-xs uppercase tracking-[0.22em] font-semibold text-[#C5A55A]">
+              The Covenant
+            </span>
+            <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
+          </div>
+          <h2
+            className="text-[26px] md:text-4xl leading-[1.15] mb-3 md:mb-4"
+            style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
+          >
+            What faithful standing requires
+          </h2>
+          <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-xl mx-auto mb-7 md:mb-8">
+            The Original Roll grants. The member carries. To be recorded as a
+            <em> faithful member</em>, you bear the obligations below alongside the
+            standing they preserve.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 text-left">
+            {[
+              {
+                label: "Attendance",
+                body: "Attend meetings of the Sultanate as the Council convenes them.",
+              },
+              {
+                label: "Dues",
+                body: "Subscribe and pay dues at the standing rate, on schedule, without lapse.",
+              },
+              {
+                label: "Endeavors",
+                body: "Keep in line with the endeavors and necessities the Council establishes for the nation.",
+              },
+            ].map((c) => (
+              <div
+                key={c.label}
+                className="p-5 rounded-2xl bg-white/[0.04] border border-[#C5A55A]/25 backdrop-blur-sm"
+              >
+                <div className="text-[10.5px] md:text-[11px] uppercase tracking-[0.24em] font-semibold text-[#C5A55A] mb-2">
+                  {c.label}
+                </div>
+                <p className="text-[13.5px] md:text-sm text-white/85 leading-relaxed">{c.body}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-7 md:mt-8 text-[11.5px] md:text-xs uppercase tracking-[0.22em] text-[#C5A55A]/90">
+            Only those who carry these are recorded as Faithful Members of the Sultanate.
+          </p>
         </div>
       </section>
 
