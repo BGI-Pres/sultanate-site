@@ -630,7 +630,9 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             <span className="text-[#C5A55A] font-semibold">Faithful</span> is a title
             entered next to the names of active members on the Original Roll of the
             custodial governing authority for the descendants of the Nation of Moab
-            &mdash; modernly identified as Moorish American.
+            &mdash; modernly identified as Moorish American. Three things only the
+            Original Roll holds: proclaimed nationality, economic security inside the
+            cooperative, and the ancestral lineage your descendants inherit.
           </p>
 
           {/* Scarcity chips — three things every visitor sees before scrolling */}
