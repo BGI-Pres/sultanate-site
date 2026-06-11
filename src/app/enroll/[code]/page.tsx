@@ -945,10 +945,27 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
           >
             Honor to <span className="text-[#C5A55A] not-italic font-semibold">Noble Drew Ali</span>,
-            Prophet of the Moorish Science Temple, and to all true and divine
-            prophets who carried the word before him.
+            Prophet of the Moorish Science Temple, who restored the nationality to
+            the Moorish American.
           </p>
-          <div className="w-14 md:w-16 h-px bg-[#C5A55A] mx-auto my-5 md:my-6" />
+
+          <p className="text-[10.5px] md:text-[11px] uppercase tracking-[0.28em] font-semibold text-[#C5A55A]/80 mt-7 mb-3">
+            In the lineage of
+          </p>
+          <p className="text-[15px] md:text-[17px] font-semibold text-[#C5A55A] tracking-[0.04em] flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 leading-tight">
+            <span>Jesus</span>
+            <span className="text-[#C5A55A]/45">&middot;</span>
+            <span>Mohammed</span>
+            <span className="text-[#C5A55A]/45">&middot;</span>
+            <span>Buddha</span>
+            <span className="text-[#C5A55A]/45">&middot;</span>
+            <span>Confucius</span>
+          </p>
+          <p className="mt-3 text-[12.5px] md:text-sm text-white/72 leading-relaxed max-w-md mx-auto">
+            and to all true and divine prophets who have carried the word.
+          </p>
+
+          <div className="w-14 md:w-16 h-px bg-[#C5A55A] mx-auto my-6 md:my-7" />
           <p className="text-[12.5px] md:text-sm text-[#C5A55A]/85 leading-relaxed">
             Their work is the ground we stand on. The Sultanate proceeds in their light.
           </p>
