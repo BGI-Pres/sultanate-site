@@ -627,11 +627,10 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             <span className="block">Restore your <span className="text-[#C5A55A]">ancestral lineage.</span></span>
           </h1>
           <p className="text-base md:text-lg text-white/72 max-w-2xl leading-relaxed mb-6 md:mb-8">
-            Membership is a name entered on the Original Roll of the custodial governing
-            authority for the descendants of the Nation of Moab &mdash; modernly
-            identified as Moorish American. Three things only the Original Roll holds:
-            proclaimed nationality, economic security inside the cooperative, and the
-            ancestral lineage your descendants inherit.
+            <span className="text-[#C5A55A] font-semibold">Faithful</span> is a title
+            entered next to the names of active members on the Original Roll of the
+            custodial governing authority for the descendants of the Nation of Moab
+            &mdash; modernly identified as Moorish American.
           </p>
 
           {/* Scarcity chips — three things every visitor sees before scrolling */}
@@ -786,10 +785,8 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             What carries the title <span className="not-italic font-semibold text-[#C5A55A]">Faithful</span>
           </h2>
           <p className="text-sm md:text-base text-white/70 leading-relaxed max-w-xl mx-auto mb-7 md:mb-8">
-            <em>Faithful</em> is a title entered next to the names of active members on
-            the Original Roll of the custodial governing authority for the descendants
-            of the Nation of Moab. It is not given. It is carried. These are the
-            obligations a member bears to keep it entered beside their name.
+            The title is not given. It is carried. These are the obligations a member
+            bears to keep it entered beside their name on the Roll.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 text-left">
             {[
