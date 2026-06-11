@@ -926,6 +926,35 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
         </div>
       </section>
 
+      {/* In Reverence — Noble Drew Ali and all true and divine prophets */}
+      <section className="relative py-10 md:py-16 bg-[#0c1409] text-white overflow-hidden border-y border-[#C5A55A]/20">
+        <div
+          className="absolute inset-0 opacity-[0.045] pointer-events-none"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 50% 50%, #C5A55A 0 1.1px, transparent 1.5px)",
+            backgroundSize: "32px 32px",
+          }}
+        />
+        <div className="max-w-[760px] mx-auto px-5 md:px-6 text-center relative">
+          <p className="text-[10.5px] md:text-[11px] uppercase tracking-[0.32em] font-semibold text-[#C5A55A] mb-4">
+            In Reverence
+          </p>
+          <p
+            className="text-xl md:text-3xl leading-[1.3] text-white/92 mb-5"
+            style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
+          >
+            Honor to <span className="text-[#C5A55A] not-italic font-semibold">Noble Drew Ali</span>,
+            Prophet of the Moorish Science Temple, and to all true and divine
+            prophets who carried the word before him.
+          </p>
+          <div className="w-14 md:w-16 h-px bg-[#C5A55A] mx-auto my-5 md:my-6" />
+          <p className="text-[12.5px] md:text-sm text-[#C5A55A]/85 leading-relaxed">
+            Their work is the ground we stand on. The Sultanate proceeds in their light.
+          </p>
+        </div>
+      </section>
+
       {/* Constitution quote */}
       <section className="py-12 md:py-24 bg-[#0F1A0E] text-white">
         <div className="max-w-[760px] mx-auto px-5 md:px-6 text-center">
