@@ -310,12 +310,11 @@ function Overture({ inviterName }: { inviterName: string | null }) {
     WORDS.forEach((_, i) => {
       wordTimers.push(setTimeout(() => setShownWords(i + 1), 420 + i * 140));
     });
-    const fadeOut = setTimeout(() => setPhase("out"), 420 + WORDS.length * 140 + 900);
-    const done = setTimeout(() => setPhase("done"), 420 + WORDS.length * 140 + 1500);
+    // No auto-fadeout. The overture sits open until the recipient
+    // explicitly taps to enter — this is an invitation, and an
+    // invitation has to be accepted, not handed over while you blink.
     return () => {
       wordTimers.forEach(clearTimeout);
-      clearTimeout(fadeOut);
-      clearTimeout(done);
     };
     // Intentionally run once on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -425,15 +424,21 @@ function Overture({ inviterName }: { inviterName: string | null }) {
             Extended by {inviterName}
           </p>
         )}
-        <p
-          className="mt-10 text-[11px] uppercase tracking-[0.28em] text-white/35"
+        <button
+          type="button"
+          onClick={skip}
+          disabled={!emblemBloomed}
+          aria-label="Tap to enter the invitation"
+          className="mt-10 inline-flex items-center gap-3 px-7 py-3 rounded-full border border-[#C5A55A]/55 bg-white/[0.03] hover:bg-[#C5A55A]/10 hover:border-[#C5A55A]/80 text-[#C5A55A] text-[12px] uppercase tracking-[0.28em] font-semibold transition-all disabled:opacity-0 disabled:pointer-events-none"
           style={{
             opacity: emblemBloomed ? 1 : 0,
-            transition: "opacity 600ms ease-out",
+            transition: "opacity 600ms ease-out, background 200ms ease-out, border-color 200ms ease-out",
           }}
         >
+          <span className="h-px w-6 bg-[#C5A55A]" />
           Tap to enter
-        </p>
+          <span className="h-px w-6 bg-[#C5A55A]" />
+        </button>
       </div>
     </div>
   );
