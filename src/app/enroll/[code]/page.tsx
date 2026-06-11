@@ -463,14 +463,14 @@ function OriginalRoll({
           backgroundSize: "36px 36px",
         }}
       />
-      <div className="max-w-[1120px] mx-auto px-6 py-12 md:py-14 relative">
-        <div className="grid md:grid-cols-[1.1fr_1fr] gap-10 items-center">
+      <div className="max-w-[1120px] mx-auto px-5 md:px-6 py-10 md:py-14 relative">
+        <div className="grid md:grid-cols-[1.1fr_1fr] gap-7 md:gap-10 items-center">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#C5A55A] mb-3">
+            <p className="text-[10.5px] md:text-[11px] font-semibold uppercase tracking-[0.28em] text-[#C5A55A] mb-2.5 md:mb-3">
               The Original Roll
             </p>
             <h2
-              className="text-3xl md:text-4xl leading-[1.1] mb-4"
+              className="text-[26px] md:text-4xl leading-[1.12] mb-3 md:mb-4"
               style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
             >
               {closed
@@ -485,27 +485,27 @@ function OriginalRoll({
               instrument is granted once.
             </p>
           </div>
-          <div className="bg-white/[0.04] border border-[#C5A55A]/30 rounded-2xl p-6 md:p-7 backdrop-blur-sm">
-            <div className="flex items-end justify-between mb-3">
+          <div className="bg-white/[0.04] border border-[#C5A55A]/30 rounded-2xl p-5 md:p-7 backdrop-blur-sm">
+            <div className="flex items-end justify-between gap-3 mb-3">
               <div>
                 <div
-                  className="text-5xl md:text-6xl font-bold leading-none text-[#C5A55A] tabular-nums"
+                  className="text-[44px] md:text-6xl font-bold leading-none text-[#C5A55A] tabular-nums"
                   style={{ letterSpacing: "-0.02em" }}
                 >
                   {closed ? 0 : roll.remaining.toLocaleString()}
                 </div>
-                <p className="text-[11px] uppercase tracking-[0.22em] text-white/55 mt-2">
+                <p className="text-[10.5px] md:text-[11px] uppercase tracking-[0.22em] text-white/55 mt-2">
                   {closed ? "Roll closed" : "Names unwritten"}
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-sm text-white/70 tabular-nums">
+                <div className="text-[12.5px] md:text-sm text-white/70 tabular-nums leading-tight">
                   <strong className="text-white font-semibold">{filled.toLocaleString()}</strong>
                   <span className="text-white/40"> of {roll.cap.toLocaleString()} entered</span>
                 </div>
                 {roll.in_flight > 0 && !closed && (
-                  <div className="text-[11px] text-[#C5A55A]/85 mt-1 tabular-nums">
-                    + {roll.in_flight.toLocaleString()} standing for entry today
+                  <div className="text-[10.5px] md:text-[11px] text-[#C5A55A]/85 mt-1 tabular-nums leading-tight">
+                    + {roll.in_flight.toLocaleString()} standing for entry
                   </div>
                 )}
               </div>
@@ -519,7 +519,7 @@ function OriginalRoll({
             {!closed && (
               <button
                 onClick={onEnroll}
-                className="mt-5 w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
+                className="mt-5 w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 md:py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
               >
                 Take your name on the Roll <span aria-hidden>→</span>
               </button>
@@ -549,15 +549,15 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
       <Overture inviterName={inviterName} />
       {/* Utility bar */}
       <div className="bg-[#0F1A0E] border-b border-white/5">
-        <div className="max-w-[1120px] mx-auto px-6 flex items-center justify-between h-9">
-          <span className="text-[11px] uppercase tracking-[0.15em] text-[#C5A55A]">
+        <div className="max-w-[1120px] mx-auto px-5 md:px-6 flex items-center justify-between h-9">
+          <span className="text-[10.5px] md:text-[11px] uppercase tracking-[0.15em] text-[#C5A55A]">
             Reconstituted October 2020
           </span>
           <button
             onClick={scrollToEnroll}
-            className="text-xs text-gray-400 hover:text-[#C5A55A] transition-colors"
+            className="text-[11px] md:text-xs text-gray-400 hover:text-[#C5A55A] transition-colors"
           >
-            Enroll Now
+            Take name on Roll
           </button>
         </div>
       </div>
@@ -567,10 +567,10 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
         <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
           style={{ backgroundImage:
             "radial-gradient(circle at 20% 20%, rgba(197,165,90,0.6) 0%, transparent 35%), radial-gradient(circle at 80% 60%, rgba(45,90,39,0.4) 0%, transparent 40%)" }} />
-        <div className="max-w-[1120px] mx-auto px-6 py-16 md:py-24 relative">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-[#C5A55A]/30 text-xs text-[#C5A55A] mb-8">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C5A55A]" />
-            <span>
+        <div className="max-w-[1120px] mx-auto px-5 md:px-6 py-12 md:py-24 relative">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-[#C5A55A]/30 text-[11px] md:text-xs text-[#C5A55A] mb-6 md:mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#C5A55A] shrink-0" />
+            <span className="leading-tight">
               {inviterName ? (
                 <>
                   Extended by{" "}
@@ -588,21 +588,21 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             alt="Sultanate of Amexem emblem"
             width={96}
             height={96}
-            className="mb-8"
+            className="mb-6 md:mb-8 w-[72px] h-[72px] md:w-[96px] md:h-[96px]"
           />
 
           <p
-            className="text-2xl md:text-3xl text-white/85 leading-[1.25] mb-7 max-w-3xl"
+            className="text-xl md:text-3xl text-white/85 leading-[1.25] mb-5 md:mb-7 max-w-3xl"
             style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
           >
             You have been invited to the Sultanate of Amexem.
           </p>
-          <h1 className="text-4xl md:text-6xl font-bold leading-[1.02] tracking-[-0.01em] mb-7">
+          <h1 className="text-[34px] md:text-6xl font-bold leading-[1.04] md:leading-[1.02] tracking-[-0.01em] mb-5 md:mb-7">
             <span className="block">Reclaim your <span className="text-[#C5A55A]">nationality.</span></span>
             <span className="block">Secure your <span className="text-[#C5A55A]">economy.</span></span>
             <span className="block">Found your <span className="text-[#C5A55A]">lineage.</span></span>
           </h1>
-          <p className="text-lg text-white/72 max-w-2xl leading-relaxed mb-8">
+          <p className="text-base md:text-lg text-white/72 max-w-2xl leading-relaxed mb-6 md:mb-8">
             Membership is a name entered on the Original Roll of the custodial governing
             authority for the descendants of the Nation of Moab &mdash; modernly
             identified as Moorish American. Three things only the Original Roll holds:
@@ -611,26 +611,26 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
           </p>
 
           {/* Scarcity chips — three things every visitor sees before scrolling */}
-          <div className="flex flex-wrap items-center gap-2.5 mb-8">
+          <div className="flex flex-wrap items-center gap-2 md:gap-2.5 mb-6 md:mb-8">
             {roll && roll.remaining > 0 && (
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A55A]/10 border border-[#C5A55A]/40 text-xs text-[#C5A55A]">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C5A55A] animate-pulse" />
-                The Original Roll · <strong className="font-semibold text-white">{roll.remaining.toLocaleString()}</strong> of {roll.cap.toLocaleString()} names unwritten
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#C5A55A]/10 border border-[#C5A55A]/40 text-[11px] md:text-xs text-[#C5A55A]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C5A55A] animate-pulse shrink-0" />
+                <span>The Original Roll · <strong className="font-semibold text-white">{roll.remaining.toLocaleString()}</strong> of {roll.cap.toLocaleString()} names unwritten</span>
               </span>
             )}
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/15 text-xs text-white/80">
-              <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
-              <strong className="font-semibold text-white">$50/mo</strong>&nbsp;Original Standing
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/15 text-[11px] md:text-xs text-white/80">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/50 shrink-0" />
+              <span><strong className="font-semibold text-white">$50/mo</strong>&nbsp;Original Standing</span>
             </span>
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/15 text-xs text-white/80">
-              <span className="w-1.5 h-1.5 rounded-full bg-white/50" />
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/15 text-[11px] md:text-xs text-white/80">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/50 shrink-0" />
               Hereditary seat
             </span>
           </div>
 
           {invite.inviter_message && (
-            <div className="mb-8 max-w-2xl p-5 rounded-lg border border-[#C5A55A]/30 bg-[#C5A55A]/5">
-              <p className="text-xs uppercase tracking-wider text-[#C5A55A] mb-2 font-semibold">
+            <div className="mb-6 md:mb-8 max-w-2xl p-4 md:p-5 rounded-lg border border-[#C5A55A]/30 bg-[#C5A55A]/5">
+              <p className="text-[11px] md:text-xs uppercase tracking-wider text-[#C5A55A] mb-2 font-semibold">
                 A word from {invite.invited_by_name ?? "your inviter"}
               </p>
               <p className="text-white/85 text-sm leading-relaxed italic">
@@ -639,22 +639,23 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
             </div>
           )}
 
-          <div className="flex flex-wrap gap-3 mb-10">
+          {/* Mobile: stacked, full-width primary CTA. Desktop: side-by-side. */}
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mb-8 md:mb-10">
             <button
               onClick={scrollToEnroll}
-              className="inline-flex items-center gap-2 px-7 py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 md:px-7 py-3.5 md:py-3 bg-[#C5A55A] text-[#0F1A0E] font-semibold rounded-lg hover:bg-[#D4BA7A] transition-colors"
             >
               Take your name on the Roll <span aria-hidden>→</span>
             </button>
             <a
               href="#learn"
-              className="inline-flex items-center gap-2 px-7 py-3 border border-white/20 rounded-lg hover:bg-white/5 transition-colors text-sm font-semibold"
+              className="inline-flex items-center justify-center gap-2 px-6 md:px-7 py-3.5 md:py-3 border border-white/20 rounded-lg hover:bg-white/5 transition-colors text-sm font-semibold"
             >
               What Original Standing holds
             </a>
           </div>
 
-          <div className="flex items-center gap-3 text-xs text-white/50 flex-wrap">
+          <div className="flex items-center gap-2 md:gap-3 text-[11px] md:text-xs text-white/50 flex-wrap">
             <span>Chicago, Illinois</span>
             <span className="w-1 h-1 rounded-full bg-white/30" />
             <span>House of Simmons Bey</span>
@@ -666,12 +667,12 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
 
       {/* Principles band */}
       <div className="bg-[#162214] text-white">
-        <div className="max-w-[1120px] mx-auto px-6 py-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+        <div className="max-w-[1120px] mx-auto px-5 md:px-6 py-4 md:py-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-3 md:gap-6">
             {PRINCIPLES.map((p, i) => (
-              <div key={p} className="flex items-center gap-3">
-                <span className="text-xs font-mono text-[#C5A55A]/60">{String(i + 1).padStart(2, "0")}</span>
-                <span className="text-sm uppercase tracking-[0.15em] font-semibold text-white/85">{p}</span>
+              <div key={p} className="flex items-center gap-2 md:gap-3">
+                <span className="text-[11px] md:text-xs font-mono text-[#C5A55A]/60">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-[12px] md:text-sm uppercase tracking-[0.14em] md:tracking-[0.15em] font-semibold text-white/85">{p}</span>
               </div>
             ))}
           </div>
@@ -682,42 +683,42 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
       <OriginalRoll roll={roll} onEnroll={scrollToEnroll} />
 
       {/* Compound interest — what Original Standing holds forever */}
-      <section id="learn" className="py-16 md:py-24 bg-white">
-        <div className="max-w-[1120px] mx-auto px-6">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-3 mb-5">
-              <span className="h-px w-12 bg-[#C5A55A]" />
-              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
+      <section id="learn" className="py-12 md:py-24 bg-white">
+        <div className="max-w-[1120px] mx-auto px-5 md:px-6">
+          <div className="text-center mb-9 md:mb-12">
+            <div className="inline-flex items-center gap-3 mb-4 md:mb-5">
+              <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
+              <span className="text-[11px] md:text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
                 What Original Standing Holds
               </span>
-              <span className="h-px w-12 bg-[#C5A55A]" />
+              <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-[26px] md:text-4xl font-bold mb-3 md:mb-4 leading-[1.15]">
               The cost of arriving on the Original Roll
             </h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">
+            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
               Three things only the Original Roll holds. Names entered later can join
               the Sultanate &mdash; they cannot join this rate, this seat, this share.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {COMPOUND.map((c) => (
               <div
                 key={c.title}
-                className="relative p-7 rounded-2xl border border-gray-200 bg-white hover:border-[#C5A55A] hover:shadow-[0_24px_60px_-30px_rgba(15,26,14,0.4)] transition-all"
+                className="relative p-5 md:p-7 rounded-2xl border border-gray-200 bg-white hover:border-[#C5A55A] hover:shadow-[0_24px_60px_-30px_rgba(15,26,14,0.4)] transition-all"
               >
-                <div className="w-12 h-12 rounded-xl bg-[#0F1A0E] text-[#C5A55A] flex items-center justify-center mb-5">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-[#0F1A0E] text-[#C5A55A] flex items-center justify-center mb-4 md:mb-5">
+                  <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={c.icon} />
                   </svg>
                 </div>
-                <div className="flex items-baseline gap-2 mb-1">
-                  <span className="text-3xl md:text-4xl font-bold text-[#0F1A0E] tracking-tight">{c.rate}</span>
-                  <span className="text-xs uppercase tracking-[0.16em] text-[#A8893E] font-semibold">{c.cadence}</span>
+                <div className="flex items-baseline flex-wrap gap-x-2 gap-y-1 mb-1">
+                  <span className="text-2xl md:text-4xl font-bold text-[#0F1A0E] tracking-tight">{c.rate}</span>
+                  <span className="text-[11px] md:text-xs uppercase tracking-[0.16em] text-[#A8893E] font-semibold">{c.cadence}</span>
                 </div>
-                <h3 className="text-lg font-bold mb-3 mt-2">{c.title}</h3>
-                <p className="text-sm text-gray-600 leading-relaxed mb-4">{c.desc}</p>
-                <p className="text-xs italic text-[#A8893E]/90 border-t border-gray-100 pt-3">{c.note}</p>
+                <h3 className="text-base md:text-lg font-bold mb-2 md:mb-3 mt-1.5 md:mt-2 leading-snug">{c.title}</h3>
+                <p className="text-[13.5px] md:text-sm text-gray-600 leading-relaxed mb-3 md:mb-4">{c.desc}</p>
+                <p className="text-[11.5px] md:text-xs italic text-[#A8893E]/90 border-t border-gray-100 pt-3 leading-relaxed">{c.note}</p>
               </div>
             ))}
           </div>
@@ -725,25 +726,27 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
       </section>
 
       {/* Member vs Non-Member gap — loss-aversion engine */}
-      <section className="py-16 md:py-24 bg-[#f6f5f1]">
-        <div className="max-w-[1040px] mx-auto px-6">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-3 mb-5">
-              <span className="h-px w-12 bg-[#C5A55A]" />
-              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
+      <section className="py-12 md:py-24 bg-[#f6f5f1]">
+        <div className="max-w-[1040px] mx-auto px-5 md:px-6">
+          <div className="text-center mb-9 md:mb-12">
+            <div className="inline-flex items-center gap-3 mb-4 md:mb-5">
+              <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
+              <span className="text-[11px] md:text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
                 The Gap
               </span>
-              <span className="h-px w-12 bg-[#C5A55A]" />
+              <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-[26px] md:text-4xl font-bold mb-3 md:mb-4 leading-[1.15]">
               What a member holds. What no outsider can assemble.
             </h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">
+            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
               Side by side. Decide whether what you give up by staying outside is
               cheaper than what membership costs to keep.
             </p>
           </div>
-          <div className="rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-[0_24px_60px_-40px_rgba(15,26,14,0.45)]">
+
+          {/* md+ : three-column comparison table */}
+          <div className="hidden md:block rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-[0_24px_60px_-40px_rgba(15,26,14,0.45)]">
             <div className="grid grid-cols-[1.1fr_1fr_1fr] text-xs uppercase tracking-[0.14em] font-semibold bg-[#0F1A0E] text-white/85">
               <div className="px-5 py-4">&nbsp;</div>
               <div className="px-5 py-4 flex items-center gap-2 border-l border-white/10">
@@ -776,55 +779,92 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
               </div>
             ))}
           </div>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+
+          {/* Mobile: one card per row, member/outside stacked.
+              Squeezing three columns onto a 360px viewport crushed the
+              copy; on a phone the comparison reads cleaner card-by-card. */}
+          <div className="md:hidden flex flex-col gap-3">
+            {GAP_ROWS.map((row) => (
+              <div
+                key={row.label}
+                className="rounded-xl border border-gray-200 bg-white overflow-hidden shadow-[0_10px_24px_-18px_rgba(15,26,14,0.4)]"
+              >
+                <div className="px-4 py-2.5 text-[11px] uppercase tracking-[0.16em] font-semibold text-[#C5A55A] bg-[#0F1A0E]">
+                  {row.label}
+                </div>
+                <div className="px-4 py-3 flex items-start gap-2.5 border-b border-gray-100">
+                  <svg className="w-4 h-4 mt-0.5 shrink-0 text-[#2D5A27]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <div className="text-sm leading-snug">
+                    <div className="text-[10px] uppercase tracking-[0.16em] text-[#2D5A27]/70 font-semibold mb-0.5">Sealed member</div>
+                    <div className="text-[#1E3D1A]">{row.member}</div>
+                  </div>
+                </div>
+                <div className="px-4 py-3 flex items-start gap-2.5 bg-[#fafaf6]">
+                  <svg className="w-4 h-4 mt-0.5 shrink-0 text-[#9B1B30]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  <div className="text-sm leading-snug">
+                    <div className="text-[10px] uppercase tracking-[0.16em] text-gray-400 font-semibold mb-0.5">Outside the Roll</div>
+                    <div className="text-gray-500">{row.outside}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-7 md:mt-8 flex flex-col md:flex-row items-stretch md:items-center justify-center gap-3 md:gap-4">
             <button
               onClick={scrollToEnroll}
-              className="inline-flex items-center gap-2 px-7 py-3 bg-[#0F1A0E] text-[#C5A55A] font-semibold rounded-lg hover:bg-[#1a2c19] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 md:py-3 bg-[#0F1A0E] text-[#C5A55A] font-semibold rounded-lg hover:bg-[#1a2c19] transition-colors text-sm md:text-base"
             >
               Take your name on the Roll <span aria-hidden>→</span>
             </button>
-            <p className="text-xs text-gray-500">Invitation {invite.code} · expires {new Date(invite.expires_at).toLocaleDateString()}</p>
+            <p className="text-[11px] md:text-xs text-gray-500 text-center">
+              Invitation {invite.code} · expires {new Date(invite.expires_at).toLocaleDateString()}
+            </p>
           </div>
         </div>
       </section>
 
       {/* Constitution quote */}
-      <section className="py-16 md:py-24 bg-[#0F1A0E] text-white">
-        <div className="max-w-[760px] mx-auto px-6 text-center">
-          <blockquote className="text-xl md:text-2xl font-serif italic leading-relaxed text-white/90">
-            &ldquo;We, the Moorish American people of the Sultanate of Amexem — descendants
-            and successors in interest to the ancient Nation of Moab — gather in fidelity
-            to the principles of Love, Truth, Peace, Freedom, and Justice, and in
-            reverence to Allah, the Most High.&rdquo;
+      <section className="py-12 md:py-24 bg-[#0F1A0E] text-white">
+        <div className="max-w-[760px] mx-auto px-5 md:px-6 text-center">
+          <blockquote className="text-lg md:text-2xl font-serif italic leading-relaxed text-white/90">
+            &ldquo;We, the Moorish American people of the Sultanate of Amexem &mdash;
+            descendants and successors in interest to the ancient Nation of Moab
+            &mdash; gather in fidelity to the principles of Love, Truth, Peace, Freedom,
+            and Justice, and in reverence to Allah, the Most High.&rdquo;
           </blockquote>
-          <div className="w-16 h-px bg-[#C5A55A] mx-auto my-8" />
-          <p className="text-sm text-[#C5A55A]/80">
-            From the Constitution of the Sultanate of Amexem — Chicago, Illinois
+          <div className="w-14 md:w-16 h-px bg-[#C5A55A] mx-auto my-6 md:my-8" />
+          <p className="text-[12.5px] md:text-sm text-[#C5A55A]/80">
+            From the Constitution of the Sultanate of Amexem &mdash; Chicago, Illinois
           </p>
         </div>
       </section>
 
       {/* How it works */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-[1120px] mx-auto px-6">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-3 mb-5">
-              <span className="h-px w-12 bg-[#C5A55A]" />
-              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
+      <section className="py-12 md:py-24">
+        <div className="max-w-[1120px] mx-auto px-5 md:px-6">
+          <div className="text-center mb-9 md:mb-12">
+            <div className="inline-flex items-center gap-3 mb-4 md:mb-5">
+              <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
+              <span className="text-[11px] md:text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
                 The Path to Membership
               </span>
-              <span className="h-px w-12 bg-[#C5A55A]" />
+              <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold">How Enrollment Works</h2>
+            <h2 className="text-[26px] md:text-4xl font-bold leading-[1.15]">How Enrollment Works</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             {HOW.map((s, i) => (
-              <div key={s.h} className="p-6 rounded-xl border border-gray-200 bg-white">
-                <div className="text-3xl font-mono font-bold text-[#C5A55A]/40 mb-3">
+              <div key={s.h} className="p-5 md:p-6 rounded-xl border border-gray-200 bg-white">
+                <div className="text-2xl md:text-3xl font-mono font-bold text-[#C5A55A]/40 mb-2 md:mb-3">
                   {String(i + 1).padStart(2, "0")}
                 </div>
-                <h4 className="text-lg font-bold mb-2">{s.h}</h4>
-                <p className="text-sm text-gray-600 leading-relaxed">{s.p}</p>
+                <h4 className="text-base md:text-lg font-bold mb-2">{s.h}</h4>
+                <p className="text-[13.5px] md:text-sm text-gray-600 leading-relaxed">{s.p}</p>
               </div>
             ))}
           </div>
@@ -832,20 +872,20 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
       </section>
 
       {/* Enrollment form */}
-      <section id="enroll" className="py-16 md:py-24 bg-[#f6f5f1]">
-        <div className="max-w-[1120px] mx-auto px-6">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-3 mb-5">
-              <span className="h-px w-12 bg-[#C5A55A]" />
-              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
+      <section id="enroll" className="py-12 md:py-24 bg-[#f6f5f1]">
+        <div className="max-w-[1120px] mx-auto px-5 md:px-6">
+          <div className="text-center mb-9 md:mb-12">
+            <div className="inline-flex items-center gap-3 mb-4 md:mb-5">
+              <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
+              <span className="text-[11px] md:text-xs uppercase tracking-[0.2em] font-semibold text-[#C5A55A]">
                 Take Your Name on the Roll
               </span>
-              <span className="h-px w-12 bg-[#C5A55A]" />
+              <span className="h-px w-9 md:w-12 bg-[#C5A55A]" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">
+            <h2 className="text-[26px] md:text-4xl font-bold mb-3 leading-[1.15]">
               Be entered onto the Original Roll
             </h2>
-            <p className="text-gray-500 max-w-2xl mx-auto">
+            <p className="text-sm md:text-base text-gray-500 max-w-2xl mx-auto leading-relaxed">
               Four short steps. Submitting locks your $50/mo Original Standing rate,
               your pro-rata share of cooperative ventures, and a seat your descendants
               inherit. Your information is used only for Council review.
@@ -856,19 +896,19 @@ function EnrollContent({ invite, roll }: { invite: Invite; roll: RollStats | nul
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#0F1A0E] text-white py-12">
-        <div className="max-w-[1120px] mx-auto px-6 text-center">
+      <footer className="bg-[#0F1A0E] text-white py-10 md:py-12">
+        <div className="max-w-[1120px] mx-auto px-5 md:px-6 text-center">
           <Image
             src="/images/emblem.svg"
             alt=""
             width={56}
             height={56}
-            className="mx-auto mb-4 opacity-80"
+            className="mx-auto mb-4 opacity-80 w-12 h-12 md:w-14 md:h-14"
           />
           <p className="text-sm font-semibold text-[#C5A55A] mb-1">Sultanate of Amexem</p>
-          <p className="text-xs text-white/60 mb-4">Custodian of the Nation of Moab</p>
-          <p className="text-xs text-white/40 leading-relaxed">
-            Chicago, Illinois · Reconstituted October 2020 · House of Simmons Bey
+          <p className="text-[11px] md:text-xs text-white/60 mb-4">Custodian of the Nation of Moab</p>
+          <p className="text-[11px] md:text-xs text-white/40 leading-relaxed">
+            Chicago, Illinois &middot; Reconstituted October 2020 &middot; House of Simmons Bey
             <br />
             sultanateofamexem.com
           </p>
@@ -1029,7 +1069,7 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
 
   if (submitted) {
     return (
-      <div className="relative max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 p-10 md:p-14 text-center shadow-[0_24px_60px_-30px_rgba(15,26,14,0.4)] overflow-hidden">
+      <div className="relative max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 p-7 md:p-14 text-center shadow-[0_24px_60px_-30px_rgba(15,26,14,0.4)] overflow-hidden">
         <span className="absolute top-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,#C5A55A,transparent)]" />
         <span className="absolute bottom-0 left-0 right-0 h-px bg-[linear-gradient(90deg,transparent,#C5A55A,transparent)]" />
         <div className="relative w-[108px] h-[108px] mx-auto mb-7 flex items-center justify-center">
@@ -1065,13 +1105,13 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
   const inputCls = "w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C5A55A]/40 focus:border-transparent bg-white";
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-white rounded-2xl border border-gray-200 p-8 md:p-10 shadow-sm">
+    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto bg-white rounded-2xl border border-gray-200 p-5 md:p-10 shadow-sm">
       {/* Stepper */}
-      <div className="flex items-center mb-10">
+      <div className="flex items-center mb-7 md:mb-10">
         {Array.from({ length: TOTAL_STEPS }, (_, i) => i + 1).map((s) => (
           <div key={s} className="flex-1 flex items-center last:flex-none">
             <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0 ${
+              className={`w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center text-[11px] md:text-xs font-semibold shrink-0 ${
                 step >= s
                   ? "bg-[#C5A55A] text-[#0F1A0E]"
                   : "bg-gray-100 text-gray-400"
@@ -1080,16 +1120,16 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
               {s}
             </div>
             {s < TOTAL_STEPS && (
-              <div className={`flex-1 h-px mx-2 ${step > s ? "bg-[#C5A55A]" : "bg-gray-200"}`} />
+              <div className={`flex-1 h-px mx-1.5 md:mx-2 ${step > s ? "bg-[#C5A55A]" : "bg-gray-200"}`} />
             )}
           </div>
         ))}
       </div>
 
-      <p className="text-xs uppercase tracking-wider text-[#C5A55A] font-semibold mb-2">
+      <p className="text-[11px] md:text-xs uppercase tracking-wider text-[#C5A55A] font-semibold mb-2">
         Step {step} of {TOTAL_STEPS}
       </p>
-      <h3 className="text-xl font-bold mb-6">{STEP_LABELS[step - 1]}</h3>
+      <h3 className="text-lg md:text-xl font-bold mb-5 md:mb-6">{STEP_LABELS[step - 1]}</h3>
 
       {/* Step 1: Personal */}
       {step === 1 && (
@@ -1280,12 +1320,12 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
       )}
 
       {/* Navigation */}
-      <div className="flex items-center justify-between mt-10 pt-6 border-t border-gray-200">
+      <div className="flex items-center justify-between gap-3 mt-8 md:mt-10 pt-5 md:pt-6 border-t border-gray-200">
         <button
           type="button"
           onClick={() => setStep((s) => Math.max(1, s - 1))}
           disabled={step === 1 || submitting}
-          className="text-sm px-4 py-2 rounded-lg border border-gray-300 text-gray-700 disabled:opacity-50 hover:bg-gray-50"
+          className="text-sm px-4 py-3 md:py-2 rounded-lg border border-gray-300 text-gray-700 disabled:opacity-50 hover:bg-gray-50"
         >
           Back
         </button>
@@ -1294,7 +1334,7 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
             type="button"
             onClick={() => setStep((s) => s + 1)}
             disabled={!canNext}
-            className="text-sm px-6 py-2.5 rounded-lg bg-[#C5A55A] text-[#0F1A0E] font-semibold disabled:opacity-50 hover:bg-[#D4BA7A]"
+            className="flex-1 sm:flex-none text-sm px-6 py-3 md:py-2.5 rounded-lg bg-[#C5A55A] text-[#0F1A0E] font-semibold disabled:opacity-50 hover:bg-[#D4BA7A]"
           >
             Continue →
           </button>
@@ -1302,7 +1342,7 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
           <button
             type="submit"
             disabled={submitting}
-            className="text-sm px-6 py-2.5 rounded-lg bg-[#2D5A27] text-white font-semibold disabled:opacity-50 hover:bg-[#1E3D1A]"
+            className="flex-1 sm:flex-none text-sm px-6 py-3 md:py-2.5 rounded-lg bg-[#2D5A27] text-white font-semibold disabled:opacity-50 hover:bg-[#1E3D1A]"
           >
             {submitting ? "Submitting…" : "Submit Application"}
           </button>
