@@ -1,20 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
 
 interface Invite {
   code: string;
-  name: string;
-  email: string;
+  name: string | null;
+  email: string | null;
   status: string;
   invited_by_name: string | null;
   inviter_message: string | null;
+  admin_label: string | null;
   expires_at: string;
   revoked_at: string | null;
+  draft_payload: Record<string, unknown> | null;
 }
+
+// The honorific shown next to the inviter's name when no admin_label is set.
+const INVITER_DEFAULT_TITLE = "of the Supreme Grand Council";
 
 const PRINCIPLES = ["Love", "Truth", "Peace", "Freedom", "Justice"];
 
@@ -52,6 +57,8 @@ export default function EnrollPage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
+  const [rateLimited, setRateLimited] = useState(false);
+
   useEffect(() => {
     let cancelled = false;
     async function load() {
@@ -60,15 +67,26 @@ export default function EnrollPage() {
         .rpc("get_invite_by_code", { p_code: code })
         .maybeSingle();
       if (cancelled) return;
-      if (error || !data) {
+      if (error) {
+        if (error.message?.includes("rate_limited")) {
+          setRateLimited(true);
+        } else {
+          setNotFound(true);
+        }
+        setLoading(false);
+        return;
+      }
+      if (!data) {
         setNotFound(true);
         setLoading(false);
         return;
       }
       setInvite(data as Invite);
       setLoading(false);
-      // Fire-and-forget: bump status from sent → opened.
-      supabase.rpc("mark_invite_opened", { p_code: code }).then(() => undefined);
+      // View counter + last-viewer fingerprint. UA hint is hashed server-side
+      // together with the requester IP.
+      const uaHint = typeof navigator !== "undefined" ? navigator.userAgent.slice(0, 200) : "";
+      supabase.rpc("mark_invite_viewed", { p_code: code, p_ua_hint: uaHint }).then(() => undefined);
     }
     load();
     return () => {
@@ -81,6 +99,16 @@ export default function EnrollPage() {
       <div className="min-h-screen flex items-center justify-center bg-[#0F1A0E] text-white/70 text-sm">
         Opening your invitation…
       </div>
+    );
+  }
+
+  if (rateLimited) {
+    return (
+      <SacredScreen
+        eyebrow="Slow down"
+        title="Too many lookups from this network"
+        body="For everyone's protection, invitation codes can only be checked a few times in a short window. Please wait a few minutes and try again from the link you were sent."
+      />
     );
   }
 
@@ -119,11 +147,16 @@ export default function EnrollPage() {
   }
 
   if (invite.status === "completed" || invite.status === "accepted") {
+    const greet = invite.name?.split(" ")[0];
     return (
       <SacredScreen
         eyebrow="Application Received"
         title="Already submitted"
-        body={`We have your enrollment, ${invite.name.split(" ")[0]}. The Supreme Grand Council will be in touch by email within two to four weeks.`}
+        body={
+          greet
+            ? `We have your enrollment, ${greet}. The Supreme Grand Council will be in touch by email within two to four weeks.`
+            : "We have your enrollment. The Supreme Grand Council will be in touch by email within two to four weeks."
+        }
       />
     );
   }
@@ -213,6 +246,160 @@ function SacredScreen({
   );
 }
 
+/* ─── Opening overture — black overlay, italic line word-by-word,
+       gold emblem pulse, then dissolves to reveal the hero. Shown once
+       per browser session per invite code, dismissable on tap/scroll. ─── */
+function Overture({ inviterName }: { inviterName: string | null }) {
+  const WORDS = ["You", "have", "been", "invited", "to", "the", "Sultanate", "of", "Amexem."];
+  // Played-once latch lives in sessionStorage so a refresh doesn't replay it
+  // (animations are charming once and grating after that), but a fresh
+  // session — a new visit — gets the full reveal.
+  const [phase, setPhase] = useState<"hidden" | "in" | "out" | "done">("hidden");
+  const [shownWords, setShownWords] = useState(0);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const key = "sultanate.overture.played";
+    if (sessionStorage.getItem(key)) {
+      setPhase("done");
+      return;
+    }
+    sessionStorage.setItem(key, "1");
+    setPhase("in");
+    const wordTimers: ReturnType<typeof setTimeout>[] = [];
+    // 320ms emblem fade-in, then ~140ms between words.
+    WORDS.forEach((_, i) => {
+      wordTimers.push(setTimeout(() => setShownWords(i + 1), 420 + i * 140));
+    });
+    const fadeOut = setTimeout(() => setPhase("out"), 420 + WORDS.length * 140 + 900);
+    const done = setTimeout(() => setPhase("done"), 420 + WORDS.length * 140 + 1500);
+    return () => {
+      wordTimers.forEach(clearTimeout);
+      clearTimeout(fadeOut);
+      clearTimeout(done);
+    };
+    // Intentionally run once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const skip = useCallback(() => {
+    setShownWords(WORDS.length);
+    setPhase("out");
+    setTimeout(() => setPhase("done"), 450);
+  }, [WORDS.length]);
+
+  useEffect(() => {
+    if (phase !== "in") return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === " " || e.key === "Enter") skip();
+    };
+    const onPointer = () => skip();
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("pointerdown", onPointer);
+    window.addEventListener("wheel", onPointer, { passive: true });
+    window.addEventListener("touchstart", onPointer, { passive: true });
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("pointerdown", onPointer);
+      window.removeEventListener("wheel", onPointer);
+      window.removeEventListener("touchstart", onPointer);
+    };
+  }, [phase, skip]);
+
+  if (phase === "done") return null;
+
+  const emblemBloomed = shownWords >= WORDS.length;
+
+  return (
+    <div
+      role="presentation"
+      aria-hidden
+      className="fixed inset-0 z-[60] flex items-center justify-center text-white text-center px-6 select-none"
+      style={{
+        background: "#050808",
+        opacity: phase === "out" ? 0 : 1,
+        transition: "opacity 480ms ease-out",
+      }}
+    >
+      <div
+        className="absolute inset-0 opacity-[0.08] pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 50% 50%, #C5A55A 0 1.2px, transparent 1.6px)",
+          backgroundSize: "34px 34px",
+        }}
+      />
+      <div className="relative max-w-2xl">
+        <div
+          className="relative w-[124px] h-[124px] mx-auto mb-9 flex items-center justify-center"
+          style={{
+            opacity: phase === "in" ? 1 : 0,
+            transform: emblemBloomed ? "scale(1.06)" : "scale(1)",
+            transition: "opacity 380ms ease-out, transform 700ms ease-out",
+            filter: emblemBloomed
+              ? "drop-shadow(0 0 22px rgba(197,165,90,0.55))"
+              : "drop-shadow(0 0 0 rgba(197,165,90,0))",
+          }}
+        >
+          <span className="absolute inset-[-10px] rounded-full border border-[#C5A55A]/55" />
+          <span className="absolute inset-[-22px] rounded-full border border-[#C5A55A]/20" />
+          <Image
+            src="/images/emblem.svg"
+            alt=""
+            width={88}
+            height={88}
+            priority
+            className="drop-shadow-[0_10px_28px_rgba(0,0,0,0.55)]"
+          />
+        </div>
+        <p
+          className="text-2xl md:text-4xl leading-[1.25]"
+          style={{
+            fontFamily: 'Georgia, "Times New Roman", Times, serif',
+            fontStyle: "italic",
+            fontWeight: 400,
+          }}
+        >
+          {WORDS.map((w, i) => (
+            <span
+              key={`${w}-${i}`}
+              style={{
+                display: "inline-block",
+                opacity: i < shownWords ? 1 : 0,
+                transform: i < shownWords ? "translateY(0)" : "translateY(8px)",
+                transition: "opacity 380ms ease-out, transform 380ms ease-out",
+                marginRight: "0.32em",
+              }}
+            >
+              {w}
+            </span>
+          ))}
+        </p>
+        {inviterName && (
+          <p
+            className="mt-6 text-[11px] uppercase tracking-[0.32em] text-[#C5A55A]"
+            style={{
+              opacity: emblemBloomed ? 1 : 0,
+              transition: "opacity 500ms ease-out",
+            }}
+          >
+            Extended by {inviterName}
+          </p>
+        )}
+        <p
+          className="mt-10 text-[11px] uppercase tracking-[0.28em] text-white/35"
+          style={{
+            opacity: emblemBloomed ? 1 : 0,
+            transition: "opacity 600ms ease-out",
+          }}
+        >
+          Tap to enter
+        </p>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Main landing content ─── */
 function EnrollContent({ invite }: { invite: Invite }) {
   function scrollToEnroll() {
@@ -223,10 +410,12 @@ function EnrollContent({ invite }: { invite: Invite }) {
     }
   }
 
-  const firstName = invite.name.split(" ")[0] || "Friend";
+  const inviterLabel = invite.admin_label?.trim() || INVITER_DEFAULT_TITLE;
+  const inviterName = invite.invited_by_name?.trim() || null;
 
   return (
     <div className="bg-white text-[#1a1a1a] min-h-screen">
+      <Overture inviterName={inviterName} />
       {/* Utility bar */}
       <div className="bg-[#0F1A0E] border-b border-white/5">
         <div className="max-w-[1120px] mx-auto px-6 flex items-center justify-between h-9">
@@ -251,13 +440,14 @@ function EnrollContent({ invite }: { invite: Invite }) {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-[#C5A55A]/30 text-xs text-[#C5A55A] mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-[#C5A55A]" />
             <span>
-              {invite.invited_by_name ? (
+              {inviterName ? (
                 <>
-                  Personal invitation for <strong className="font-semibold text-white">{firstName}</strong>{" "}
-                  from <strong className="font-semibold text-white">{invite.invited_by_name}</strong>
+                  Extended by{" "}
+                  <strong className="font-semibold text-white">{inviterName}</strong>
+                  <span className="text-white/55"> · {inviterLabel}</span>
                 </>
               ) : (
-                <>Personal invitation for <strong className="font-semibold text-white">{firstName}</strong></>
+                <>By private invitation of the Supreme Grand Council</>
               )}
             </span>
           </div>
@@ -270,14 +460,19 @@ function EnrollContent({ invite }: { invite: Invite }) {
             className="mb-8"
           />
 
+          <p
+            className="text-2xl md:text-3xl text-white/85 leading-[1.25] mb-5 max-w-3xl"
+            style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
+          >
+            You have been invited to the Sultanate of Amexem.
+          </p>
           <h1 className="text-4xl md:text-6xl font-bold leading-[1.05] mb-6">
             Proclaim Your <span className="text-[#C5A55A]">Nationality</span>
           </h1>
           <p className="text-lg text-white/70 max-w-2xl leading-relaxed mb-8">
-            You are invited to enroll as a member of the Sultanate of Amexem — the
-            custodial governing authority for the descendants of the Nation of Moab,
-            modernly identified as Moorish American. Standing, economic security, and
-            heritage — secured from within our own membership.
+            Enroll as a member of the custodial governing authority for the descendants
+            of the Nation of Moab — modernly identified as Moorish American. Standing,
+            economic security, and heritage — secured from within our own membership.
           </p>
 
           {invite.inviter_message && (
@@ -467,30 +662,70 @@ const TOTAL_STEPS = 4;
 const STEP_LABELS = ["Personal", "Heritage & Intent", "Commitments", "Review"];
 
 function EnrollmentForm({ invite }: { invite: Invite }) {
-  const [step, setStep] = useState(1);
+  // Draft + invite prefill. Draft wins when both exist; an empty draft string
+  // is honored so a user who cleared a prefilled field doesn't get it back.
+  const draft = (invite.draft_payload ?? {}) as Record<string, unknown>;
+  const draftStr = (k: string, fallback = "") => {
+    const v = draft[k];
+    return typeof v === "string" ? v : fallback;
+  };
+  const draftBool = (k: string) => draft[k] === true;
+
+  const [step, setStep] = useState(typeof draft.step === "number" ? (draft.step as number) : 1);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [touchedOnce, setTouchedOnce] = useState(false);
 
-  // Form fields, prefilled from the invite where possible
-  const [fullName, setFullName] = useState(invite.name);
-  const [dob, setDob] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState(invite.email);
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [stateVal, setStateVal] = useState("");
-  const [zip, setZip] = useState("");
-  const [moorishStatus, setMoorishStatus] = useState("");
-  const [duration, setDuration] = useState("");
-  const [surnamePref, setSurnamePref] = useState("");
-  const [statement, setStatement] = useState("");
-  const [howHeard, setHowHeard] = useState(invite.invited_by_name ?? "");
-  const [canAttend, setCanAttend] = useState(false);
-  const [canDues, setCanDues] = useState(false);
-  const [canParticipate, setCanParticipate] = useState(false);
-  const [affirm, setAffirm] = useState(false);
+  // Form fields. Prefer the saved draft, then the invite, then empty.
+  const [fullName, setFullName] = useState(draftStr("fullName", invite.name ?? ""));
+  const [dob, setDob] = useState(draftStr("dob"));
+  const [phone, setPhone] = useState(draftStr("phone"));
+  const [email, setEmail] = useState(draftStr("email", invite.email ?? ""));
+  const [address, setAddress] = useState(draftStr("address"));
+  const [city, setCity] = useState(draftStr("city"));
+  const [stateVal, setStateVal] = useState(draftStr("stateVal"));
+  const [zip, setZip] = useState(draftStr("zip"));
+  const [moorishStatus, setMoorishStatus] = useState(draftStr("moorishStatus"));
+  const [duration, setDuration] = useState(draftStr("duration"));
+  const [surnamePref, setSurnamePref] = useState(draftStr("surnamePref"));
+  const [statement, setStatement] = useState(draftStr("statement"));
+  const [howHeard, setHowHeard] = useState(draftStr("howHeard", invite.invited_by_name ?? ""));
+  const [canAttend, setCanAttend] = useState(draftBool("canAttend"));
+  const [canDues, setCanDues] = useState(draftBool("canDues"));
+  const [canParticipate, setCanParticipate] = useState(draftBool("canParticipate"));
+  const [affirm, setAffirm] = useState(draftBool("affirm"));
+
+  // Debounced auto-save of the form state to the invite row, so a user
+  // who closes the tab mid-application can pick up where they left off.
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (submitted) return;
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      const supabase = createClient();
+      supabase
+        .rpc("save_enrollment_draft", {
+          p_code: invite.code,
+          p_partial: {
+            step,
+            fullName, dob, phone, email,
+            address, city, stateVal, zip,
+            moorishStatus, duration, surnamePref, statement, howHeard,
+            canAttend, canDues, canParticipate, affirm,
+          },
+        })
+        .then(() => undefined);
+    }, 1200);
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
+  }, [
+    invite.code, submitted, step,
+    fullName, dob, phone, email, address, city, stateVal, zip,
+    moorishStatus, duration, surnamePref, statement, howHeard,
+    canAttend, canDues, canParticipate, affirm,
+  ]);
 
   // Mark "started" the first time a user types anything.
   const markStarted = useCallback(() => {
@@ -592,7 +827,7 @@ function EnrollmentForm({ invite }: { invite: Invite }) {
           className="text-3xl md:text-4xl text-[#1a1a1a] mb-4 leading-tight"
           style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif', fontStyle: "italic", fontWeight: 400 }}
         >
-          Welcome, {fullName.split(" ")[0]}
+          {fullName.trim() ? `Welcome, ${fullName.trim().split(" ")[0]}` : "Welcome"}
         </h3>
         <div
           className="mx-auto mb-5 h-px"
